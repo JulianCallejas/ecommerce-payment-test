@@ -43,3 +43,7 @@ lerna-debug.log*
 # Environment variables
 .env
 **/.env
+
+#Prisma - Postgres
+ecommerce-api/postgres
+ecommerce-api/prisma/migrations
