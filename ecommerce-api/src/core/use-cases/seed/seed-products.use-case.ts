@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { ProductRepositoryPort } from '../../ports/repositories/product.repository.port';
 import { seedingProducts } from 'src/application/common/seeding-products';
 
@@ -11,7 +11,10 @@ export class SeedProductsUseCase {
 
   async execute() {
     try {
-      await this.productRepository.deleteMany();
+      const existingProducts = await this.productRepository.findAll(1, 10);
+      
+
+      if (existingProducts[1] > 0) throw new Error('Products already seeded');
 
       const createManyPosts = seedingProducts.map(
         async (product) =>
@@ -24,8 +27,7 @@ export class SeedProductsUseCase {
 
       return createdProducts;
     } catch (error) {
-      console.log(error);
-      return [];
+      throw new BadRequestException(error.message);
     }
   }
 }
