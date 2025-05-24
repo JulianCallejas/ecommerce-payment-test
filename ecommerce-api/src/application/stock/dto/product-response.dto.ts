@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Decimal } from '@prisma/client/runtime/library';
 import { Product } from 'src/core/entities/product.entity';
 
 export class ProductResponseDto {
@@ -18,7 +19,7 @@ export class ProductResponseDto {
   stock: number;
 
   @ApiProperty({ description: 'Unit price' })
-  unitPrice: number;
+  unitPrice: Decimal;
 
   @ApiProperty({ description: 'Product images', type: [String] })
   images: string[];
@@ -35,7 +36,7 @@ export class ProductResponseDto {
     dto.name = product.product;
     dto.description = product.description;
     dto.stock = product.stock;
-    dto.unitPrice = product.unitPrice as any;
+    dto.unitPrice = product.unitPrice;
     dto.images = product.images;
     dto.createdAt = product.createdAt;
     
