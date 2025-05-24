@@ -7,6 +7,7 @@ import { PrismaCustomerRepository } from 'src/infrastructure/database/repositori
 @Module({
   controllers: [CustomersController],
   providers: [
+    PrismaCustomerRepository,
     {
       provide: 'CustomerRepositoryPort',
       useExisting: PrismaCustomerRepository

@@ -3,6 +3,7 @@ import { PrismaModule } from './infrastructure/database/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { StockModule } from './application/stock/stock.module';
 import { SeedModule } from './application/seed/seed.module';
+import { CustomersModule } from './application/customers/customers.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { SeedModule } from './application/seed/seed.module';
     }),
     PrismaModule,
     StockModule,
+    CustomersModule,
     SeedModule
   ],
   controllers: [],

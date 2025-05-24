@@ -4,17 +4,16 @@ import { CustomerRepositoryPort } from '../../ports/repositories/customer.reposi
 @Injectable()
 export class GetCustomerWithOrdersUseCase {
   constructor(
-    @Inject('CustomerRepositoryPort')
-    private readonly customerRepository: CustomerRepositoryPort
-  ) {}
+      @Inject('CustomerRepositoryPort')
+      private readonly customerRepository: CustomerRepositoryPort
+    ) {}
 
   async execute(customerId: string) {
-    const customer =
-      await this.customerRepository.findCustomerWithOrders(customerId);
+    const customer = await this.customerRepository.findCustomerWithOrders(customerId);
     if (!customer) {
       throw new NotFoundException(`Customer with id ${customerId} not found`);
     }
-
+    
     return customer;
   }
 }
