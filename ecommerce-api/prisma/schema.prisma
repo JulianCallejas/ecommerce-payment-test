@@ -56,7 +56,25 @@ model Order {
   customerId   String         @map("customer_id") @db.Uuid
   createdAt    DateTime       @default(now()) @map("created_at")
   updatedAt    DateTime       @updatedAt @map("updated_at")
-  
+  address      OrderAddress   @relation(fields: [addressId], references: [id])
+  addressId    String         @map("address_id") @db.Uuid
 
   @@map("orders")
+}
+
+model OrderAddress {
+  id           String     @id @default(uuid()) @db.Uuid
+  addressLine1 String     @map("address_line_1")
+  addressLine2 String?    @map("address_line_2")
+  country      String     @default("CO")
+  region       String
+  city         String
+  postalCode   String     @map("postal_code")
+  contactName  String?    @map("contact_name")
+  phoneNumber  String     @map("phone_number")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  orders       Order[]
+  
+  @@map("order_addresses")
 }
