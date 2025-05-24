@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -58,7 +58,7 @@ export class CustomersController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get customer by ID' })
-  @ApiParam({ name: 'id', description: 'Customer ID' })
+  @ApiParam({ name: 'id', description: 'Record ID' })
   @ApiResponse({
     status: 200,
     description: 'Customer details',
@@ -66,7 +66,9 @@ export class CustomersController {
   })
   async getCustomerById(@Param('id') id: string): Promise<CustomerResponseDto> {
     const customer = await this.getCustomerWithOrdersUseCase.execute(id);
-
+    if (!customer) {
+      throw new NotFoundException(`Customer with id ${id} not found`);
+    }
     return {
       id: customer.id,
       customerId: customer.customerId,

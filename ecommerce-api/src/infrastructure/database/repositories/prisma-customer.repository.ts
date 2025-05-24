@@ -3,12 +3,16 @@ import { CustomerRepositoryPort } from 'src/core/ports/repositories/customer.rep
 import { PrismaService } from '../prisma.service';
 import { Customer } from 'src/core/entities/customer.entity';
 import { Prisma } from '@prisma/client';
+import { validate as uuidValidate } from 'uuid';
+
+
 
 @Injectable()
 export class PrismaCustomerRepository implements CustomerRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Customer | null> {
+    if (!uuidValidate('not a UUID')) return null;
     return this.prisma.customer.findUnique({
       where: { id },
     });
@@ -42,6 +46,7 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   }
 
   async findCustomerWithOrders(id: string): Promise<Customer | null> {
+    if (!uuidValidate('not a UUID')) return null;
     return this.prisma.customer.findUnique({
       where: { id },
       //TODO - include orders
