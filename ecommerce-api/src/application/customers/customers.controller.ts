@@ -1,6 +1,5 @@
 import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -23,7 +22,6 @@ export class CustomersController {
   ) {}
 
   @Get()
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get all customers (protected)' })
   @ApiResponse({
     status: 200,

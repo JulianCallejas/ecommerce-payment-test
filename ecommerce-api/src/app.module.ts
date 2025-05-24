@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { StockModule } from './application/stock/stock.module';
 import { SeedModule } from './application/seed/seed.module';
 import { CustomersModule } from './application/customers/customers.module';
+import { DeliveriesModule } from './application/deliveries/deliveries.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { CustomersModule } from './application/customers/customers.module';
     PrismaModule,
     StockModule,
     CustomersModule,
+    DeliveriesModule,
     SeedModule
   ],
   controllers: [],
