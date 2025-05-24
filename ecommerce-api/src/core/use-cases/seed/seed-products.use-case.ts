@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ProductRepositoryPort } from '../../ports/repositories/product.repository.port';
 
 export interface SeedProductInput {
@@ -53,12 +53,15 @@ const seedingProducts: SeedProductInput[] = [
 
 @Injectable()
 export class SeedProductsUseCase {
-  constructor(private readonly productRepository: ProductRepositoryPort) {}
+  constructor(
+    @Inject('ProductRepositoryPort')
+    private readonly productRepository: ProductRepositoryPort
+  ) { }
 
   async execute() {
-    
+
     this.productRepository.deleteMany();
-   
+
     const createManyPosts = seedingProducts.map(
       async (post) =>
         await this.productRepository.create({
@@ -67,7 +70,7 @@ export class SeedProductsUseCase {
     );
 
     const createdProducts = await Promise.all(createManyPosts);
-    
+
 
     return createdProducts;
   }
