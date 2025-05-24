@@ -67,6 +67,7 @@ model Order {
   address      OrderAddress   @relation(fields: [addressId], references: [id])
   addressId    String         @map("address_id") @db.Uuid
   deliveries   Delivery[]
+  transactions Transaction[]
 
   @@map("orders")
 }
@@ -99,4 +100,19 @@ model Delivery {
   updatedAt DateTime          @updatedAt @map("updated_at")
 
   @@map("deliveries")
+}
+
+model Transaction {
+  id         String   @id @default(uuid()) @db.Uuid
+  externalId String   @map("external_id")
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    String   @map("order_id") @db.Uuid
+  status     String // PENDING, APPROVED, DECLINED, VOIDED, ERROR (external provider status)
+  amount     Decimal  @db.Decimal(10, 2)
+  details    Json
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([externalId])
+  @@map("transactions")
 }
