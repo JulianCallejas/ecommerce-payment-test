@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { ProductRepositoryPort } from 'src/core/ports/repositories/product.repository.port';
 import { Product } from 'src/core/entities/product.entity';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { validate as uuidValidate } from 'uuid';
 
 @Injectable()
 export class PrismaProductRepository implements ProductRepositoryPort {
@@ -15,6 +16,7 @@ export class PrismaProductRepository implements ProductRepositoryPort {
   }
 
   async findById(id: string): Promise<Product | null> {
+    if (!uuidValidate(id)) return null;
     return this.prisma.product.findUnique({
       where: { id },
     });
@@ -42,6 +44,7 @@ export class PrismaProductRepository implements ProductRepositoryPort {
   }
 
   async updateStock(id: string, quantity: number, currentVersion: number): Promise<Product> {
+    
     try {
       return await this.prisma.product.update({
         where: {
