@@ -16,14 +16,14 @@ export class SeedProductsUseCase {
 
       if (existingProducts[1] > 0) throw new Error('Products already seeded');
 
-      const createManyPosts = seedingProducts.map(
+      const createManyProducts = seedingProducts.map(
         async (product) =>
           await this.productRepository.create({
             ...product
           })
       );
 
-      const createdProducts = await Promise.all(createManyPosts);
+      const createdProducts = await Promise.all(createManyProducts);
 
       return createdProducts;
     } catch (error) {

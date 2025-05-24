@@ -6,17 +6,20 @@ const prisma = new PrismaClient();
 async function main() {
   try {
     await prisma.product.deleteMany();
+    await prisma.customer.deleteMany();
     console.info('Database cleared');
 
-    const createManyPosts = seedingProducts.map(async (product) => {
+    const createMany = seedingProducts.map(async (product) => {
       await prisma.product.create({
         data: product as Prisma.ProductCreateInput
       });
     });
 
-    await Promise.all(createManyPosts);
+    await Promise.all(createMany);
     console.info('3 Products created');
-  } catch (error) {}
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 main()
