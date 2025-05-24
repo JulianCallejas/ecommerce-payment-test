@@ -12,7 +12,7 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Customer | null> {
-    if (!uuidValidate('not a UUID')) return null;
+    if (!uuidValidate(id)) return null;
     return this.prisma.customer.findUnique({
       where: { id },
     });
@@ -46,7 +46,7 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   }
 
   async findCustomerWithOrders(id: string): Promise<Customer | null> {
-    if (!uuidValidate('not a UUID')) return null;
+    if (!uuidValidate(id)) return null;
     return this.prisma.customer.findUnique({
       where: { id },
       //TODO - include orders
