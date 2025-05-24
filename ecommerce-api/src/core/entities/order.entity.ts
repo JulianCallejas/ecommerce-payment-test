@@ -2,6 +2,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 import { Customer } from './customer.entity';
 import { OrderAddress } from './order-address.entity';
 import { Product } from './product.entity';
+import { Transaction } from './transaction.entity';
 
 export class Order {
   id: string;
@@ -14,6 +15,7 @@ export class Order {
   customer?: Customer;
   addressId: string;
   address?: OrderAddress;
+  transactions?: Transaction[];
   createdAt: Date;
   updatedAt: Date;
 }
