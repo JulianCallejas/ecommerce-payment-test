@@ -5,4 +5,5 @@ export interface ProductRepositoryPort {
   findAll(page: number, pageSize: number): Promise<[Product[], number]>;
   create(product: Partial<Product>): Promise<Product>;
   updateStock(id: string, quantity: number, currentVersion: number): Promise<Product>;
+  deleteMany(): Promise<void>;
 }
