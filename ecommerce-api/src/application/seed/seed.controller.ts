@@ -14,6 +14,11 @@ export class SeedController {
     description: 'Products created',
     type: [ProductResponseDto],
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Products already seeded',
+    type: String,
+  })
   async seedProducts(): Promise<ProductResponseDto[]> {
     const products = await this.seedProductsUseCase.execute();
     return products.map(product => ProductResponseDto.fromEntity(product));
