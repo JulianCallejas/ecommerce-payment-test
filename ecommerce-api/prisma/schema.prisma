@@ -13,6 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum DeliveryStatus {
+  PROCESSING
+  SHIPPING
+  RETURNED
+  COMPLETED
+  CANCELED
+}
+
 model Product {
   id          String   @id @default(uuid()) @db.Uuid
   slug        String   @unique
@@ -58,6 +66,7 @@ model Order {
   updatedAt    DateTime       @updatedAt @map("updated_at")
   address      OrderAddress   @relation(fields: [addressId], references: [id])
   addressId    String         @map("address_id") @db.Uuid
+  deliveries   Delivery[]
 
   @@map("orders")
 }
@@ -76,5 +85,18 @@ model OrderAddress {
   updatedAt    DateTime   @updatedAt @map("updated_at")
   orders       Order[]
   
+  
   @@map("order_addresses")
+}
+
+model Delivery {
+  id        String            @id @default(uuid()) @db.Uuid
+  order     Order             @relation(fields: [orderId], references: [id])
+  orderId   String            @map("order_id") @db.Uuid
+  status    DeliveryStatus    @default(PROCESSING)
+  addressId String            @map("address_id") @db.Uuid
+  createdAt DateTime          @default(now()) @map("created_at")
+  updatedAt DateTime          @updatedAt @map("updated_at")
+
+  @@map("deliveries")
 }
