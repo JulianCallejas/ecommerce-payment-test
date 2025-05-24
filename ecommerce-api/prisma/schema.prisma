@@ -24,6 +24,7 @@ model Product {
   version     Int      @default(0) // For optimistic locking
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  orders      Order[]
   
   
   @@index([slug])
@@ -38,7 +39,24 @@ model Customer {
   phone      String
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
+  orders      Order[]
   
   @@index([customerId])
   @@map("customers")
+}
+
+model Order {
+  id           String         @id @default(uuid()) @db.Uuid
+  product      Product        @relation(fields: [productId], references: [id])
+  productId    String         @map("product_id") @db.Uuid
+  quantity     Int
+  unitPrice    Decimal        @map("unit_price") @db.Decimal(10, 2)
+  deliveryFee  Decimal        @map("delivery_fee") @db.Decimal(10, 2)
+  customer     Customer       @relation(fields: [customerId], references: [id])
+  customerId   String         @map("customer_id") @db.Uuid
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  
+
+  @@map("orders")
 }
