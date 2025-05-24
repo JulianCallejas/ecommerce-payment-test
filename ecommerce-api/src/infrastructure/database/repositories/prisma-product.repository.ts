@@ -64,4 +64,10 @@ export class PrismaProductRepository implements ProductRepositoryPort {
       throw error;
     }
   }
+
+  async deleteMany(): Promise<void> {
+    await this.prisma.product.deleteMany();
+  }
+
+
 }
