@@ -6,6 +6,7 @@ import { SeedModule } from './application/seed/seed.module';
 import { CustomersModule } from './application/customers/customers.module';
 import { DeliveriesModule } from './application/deliveries/deliveries.module';
 import { OrdersModule } from './application/orders/orders.module';
+import { TransactionsModule } from './application/transactions/transactions.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { OrdersModule } from './application/orders/orders.module';
     OrdersModule,
     CustomersModule,
     DeliveriesModule,
+    TransactionsModule,
     SeedModule
   ],
   controllers: [],

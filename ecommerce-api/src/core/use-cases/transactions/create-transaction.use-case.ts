@@ -6,19 +6,18 @@ import { OrderAddressRepositoryPort } from '../../ports/repositories/order-addre
 import { TransactionRepositoryPort } from '../../ports/repositories/transaction.repository.port';
 
 export interface CreateTransactionInput {
-  productSlug: string;
+  productId: string;
   quantity: number;
   customer: {
     customerId: string;
     fullname: string;
     email: string;
-    phone: string;
   };
   address: {
     addressLine1: string;
     addressLine2?: string;
-    phoneNumber: string;
-    country: string;
+    phoneNumber?: string;
+    country?: string;
     region: string;
     city: string;
     postalCode?: string;
@@ -68,10 +67,10 @@ export class CreateTransactionUseCase {
     }
 
     // 2. Find product and check stock
-    const product = await this.productRepository.findBySlug(input.productSlug);
+    const product = await this.productRepository.findById(input.productId);
     if (!product) {
       throw new BadRequestException(
-        `Product with slug ${input.productSlug} not found`
+        `Product with id ${input.productId} not found`
       );
     }
 
@@ -99,7 +98,7 @@ export class CreateTransactionUseCase {
     
 
       return {
-        transactionId: 10,
+        transactionId: "asdfa-dsfds-asdfasd-sdfas",
         status: "ACCEPTED",
       };
    

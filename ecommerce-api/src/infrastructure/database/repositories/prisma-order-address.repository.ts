@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { OrderAddressRepositoryPort } from 'src/core/ports/repositories/order-address.repository.port';
 import { OrderAddress } from 'src/core/entities/order-address.entity';
 import { validate as uuidValidate } from 'uuid';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaOrderAddressRepository
@@ -19,7 +20,7 @@ export class PrismaOrderAddressRepository
 
   async create(address: Partial<OrderAddress>): Promise<OrderAddress> {
     return this.prisma.orderAddress.create({
-      data: address as any
+      data: address as Prisma.OrderAddressCreateInput
     });
   }
 }
