@@ -5,6 +5,7 @@ import { StockModule } from './application/stock/stock.module';
 import { SeedModule } from './application/seed/seed.module';
 import { CustomersModule } from './application/customers/customers.module';
 import { DeliveriesModule } from './application/deliveries/deliveries.module';
+import { OrdersModule } from './application/orders/orders.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { DeliveriesModule } from './application/deliveries/deliveries.module';
     }),
     PrismaModule,
     StockModule,
+    OrdersModule,
     CustomersModule,
     DeliveriesModule,
     SeedModule

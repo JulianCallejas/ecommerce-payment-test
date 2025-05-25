@@ -5,9 +5,9 @@ export class OrderAddress {
   country: string;
   region: string;
   city: string;
-  postalCode: string;
-  contactName: string;
-  phoneNumber: string;
+  postalCode?: string;
+  contactName?: string;
+  phoneNumber?: string;
   createdAt: Date;
   updatedAt: Date;
 }

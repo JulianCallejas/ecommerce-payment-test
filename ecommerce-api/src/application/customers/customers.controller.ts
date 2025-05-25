@@ -42,7 +42,6 @@ export class CustomersController {
       customerId: customer.customerId,
       fullname: customer.fullname,
       email: customer.email,
-      phone: customer.phone,
       createdAt: customer.createdAt
     }));
 
@@ -72,7 +71,6 @@ export class CustomersController {
       customerId: customer.customerId,
       fullname: customer.fullname,
       email: customer.email,
-      phone: customer.phone,
       createdAt: customer.createdAt
     };
   }

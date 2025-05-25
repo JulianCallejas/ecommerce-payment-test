@@ -71,7 +71,6 @@ export class DeliveriesController {
           customerId: delivery.order?.customer?.customerId,
           fullname: delivery.order?.customer?.fullname,
           email: delivery.order?.customer?.email,
-          phone: delivery.order?.customer?.phone,
           createdAt: delivery.order?.customer?.createdAt
         },
         address: {
@@ -81,7 +80,7 @@ export class DeliveriesController {
           region: delivery.address?.region,
           country: delivery.address?.country,
           postalCode: delivery.address?.postalCode,
-          contact: delivery.address?.contact,
+          contactName: delivery.address?.contact,
           phoneNumber: delivery.address?.phoneNumber
         }
       };

@@ -12,10 +12,7 @@ export class CustomerResponseDto {
 
   @ApiProperty({ description: 'Email address' })
   email: string;
-
-  @ApiProperty({ description: 'Phone number' })
-  phone: string;
-
+  
   @ApiProperty({ description: 'Creation date' })
   createdAt: Date;
 }

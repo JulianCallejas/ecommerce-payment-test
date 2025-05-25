@@ -64,7 +64,6 @@ export class CreateTransactionUseCase {
         customerId: input.customer.customerId,
         fullname: input.customer.fullname,
         email: input.customer.email,
-        phone: input.customer.phone
       });
     }
 

@@ -22,7 +22,7 @@ export class AddressInfoDto {
   postalCode: string;
 
   @ApiProperty({ description: 'Contact name' })
-  contact: string;
+  contactName: string;
 
   @ApiProperty({ description: 'Phone number' })
   phoneNumber: string;

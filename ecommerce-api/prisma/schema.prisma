@@ -44,7 +44,6 @@ model Customer {
   customerId String   @unique @map("customer_id") // Format: ${id_type}${personal_id}
   fullname   String
   email      String
-  phone      String
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
   orders      Order[]
@@ -79,9 +78,9 @@ model OrderAddress {
   country      String     @default("CO")
   region       String
   city         String
-  postalCode   String     @map("postal_code")
+  postalCode   String?    @map("postal_code")
   contactName  String?    @map("contact_name")
-  phoneNumber  String     @map("phone_number")
+  phoneNumber  String?    @map("phone_number")
   createdAt    DateTime   @default(now()) @map("created_at")
   updatedAt    DateTime   @updatedAt @map("updated_at")
   orders       Order[]
