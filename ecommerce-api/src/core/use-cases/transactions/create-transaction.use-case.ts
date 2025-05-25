@@ -18,6 +18,7 @@ export interface CreateTransactionInput {
     cvc: string;
     expMonth: string;
     expYear: string;
+    installments: number;
     cardholderName: string;
     acceptanceToken: string;
     acceptPersonalAuth: string;

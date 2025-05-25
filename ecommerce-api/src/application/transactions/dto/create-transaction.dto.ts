@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsString,
   IsUUID,
   Length,
   Matches,
+  Max,
+  Min,
   ValidateNested
 } from 'class-validator';
 
@@ -46,6 +49,16 @@ export class PaymentDto {
   @IsString()
   @Length(2, 2)
   expYear: string;
+  
+  @ApiProperty({
+    description: 'Expiration year',
+    example: '29'
+  })
+  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
+  @Max(60)
+  installments: number;
 
   @ApiProperty({
     description: 'Cardholder name',
