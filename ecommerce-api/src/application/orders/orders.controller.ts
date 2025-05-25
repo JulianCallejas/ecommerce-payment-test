@@ -37,7 +37,6 @@ export class OrdersController {
   async confirmOrder(
     @Body() confirmOrderDto: ConfirmOrderDto
   ): Promise<ConfirmOrderResponseDto> {
-    console.log('prueba');
     const confirmationData = await this.confirmOrderUseCase.execute(
       confirmOrderDto.productId,
       confirmOrderDto.quantity

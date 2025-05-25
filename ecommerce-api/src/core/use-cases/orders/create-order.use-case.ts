@@ -35,8 +35,7 @@ export class CreateOrderUseCase {
     private readonly productRepository: ProductRepositoryPort,
 
     @Inject('OrderRepositoryPort')
-    private readonly orderRepository: OrderRepositoryPort,
-    
+    private readonly orderRepository: OrderRepositoryPort
   ) {}
 
   async execute(createOrderInput: CreateOrderInput) {
@@ -54,7 +53,7 @@ export class CreateOrderUseCase {
 
     const baseAmount = Number(product.unitPrice) * createOrderInput.quantity;
     this.checkOrThrowBadrequest(
-      baseAmount !== createOrderInput.baseAmount,
+      baseAmount === createOrderInput.baseAmount,
       `Invalid base amount ${createOrderInput.baseAmount}, price out of date`
     );
 
@@ -62,27 +61,23 @@ export class CreateOrderUseCase {
       baseAmount *
       ((this.configService.get<number>('DELIVERY_RATE') || 10) / 100);
     this.checkOrThrowBadrequest(
-      deliveryFee !== createOrderInput.deliveryFee,
+      deliveryFee === createOrderInput.deliveryFee,
       `Invalid delivery fee ${createOrderInput.deliveryFee}, delivery fee out of date`
     );
 
-    const [address, customer] =
-      await this.orderRepository.createAddressAndCustomer(
+    const newOrder =
+      await this.orderRepository.createAddressAndCustomerAndOrder(
         createOrderInput.address,
-        createOrderInput.customer
+        createOrderInput.customer,
+        {
+          productId: product.id,
+          quantity: createOrderInput.quantity,
+          unitPrice: Decimal(product.unitPrice),
+          deliveryFee: Decimal(deliveryFee)
+        }
       );
-    this.checkOrThrowBadrequest(!!address.id, `Invalid address data`);
-    this.checkOrThrowBadrequest(!!customer.id, `Invalid customer data`);
-
-    const order = await this.orderRepository.create({
-      productId: product.id,
-      quantity: createOrderInput.quantity,
-      unitPrice: product.unitPrice,
-      deliveryFee: Decimal(deliveryFee),
-      customerId: customer.id
-    });
-
-    return order;
+    
+    return newOrder;
   }
 
   checkOrThrowBadrequest(condition: boolean, message: string) {

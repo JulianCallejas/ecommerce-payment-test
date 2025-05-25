@@ -34,20 +34,44 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
     });
   }
 
-  async createAddressAndCustomer(address: Partial<OrderAddress>, customer: Partial<Customer>): Promise<[OrderAddress, Customer]> {
-   return this.prisma.$transaction(async (tx)=>{
+  async createAddressAndCustomerAndOrder(
+    address: Partial<OrderAddress>,
+    customer: Partial<Customer>,
+    order: Partial<Order>
+  ): Promise<Order> {
+    return this.prisma.$transaction(async (tx) => {
+      const addressData = await tx.orderAddress.create({
+        data: address as Prisma.OrderAddressCreateInput
+      });
 
-    const addressData = await tx.orderAddress.create({
-      data: address as Prisma.OrderAddressCreateInput
+      let customerData = await tx.customer.findUnique({
+        where: {
+          customerId: customer.customerId
+        }
+      });
+
+      if (!customerData) {
+        customerData = await tx.customer.create({
+          data: customer as Prisma.CustomerCreateInput
+        });
+      }
+
+      const orderData = await tx.order.create({
+        data: {
+          productId: order.productId,
+          quantity: order.quantity,
+          unitPrice: order.unitPrice,
+          deliveryFee: order.deliveryFee,
+          customerId: customerData.id,
+          addressId: addressData.id
+        },
+        include: {
+          product: true,
+          customer: true,
+          address: true
+        }
+      });
+      return orderData;
     });
-
-    const customerData = await tx.customer.create({
-      data: customer as Prisma.CustomerCreateInput
-    });
-
-    return [addressData, customerData];
-   }); 
-    
   }
-
 }
