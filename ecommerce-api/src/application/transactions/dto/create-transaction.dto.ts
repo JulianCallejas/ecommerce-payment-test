@@ -1,19 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsInt,
   IsNotEmpty,
+  IsNumber,
   IsString,
   IsUUID,
   Length,
   Matches,
-  Min,
   ValidateNested
 } from 'class-validator';
-import {
-  OrderAddressDto,
-  OrderCustomerDto
-} from 'src/application/orders/dto/confirm-order.dto';
 
 export class PaymentDto {
   @ApiProperty({
@@ -59,43 +54,34 @@ export class PaymentDto {
   @IsNotEmpty()
   @IsString()
   cardholderName: string;
+
+  @ApiProperty({
+    description: 'Cardholder name',
+    example: 'XXXXXXX'
+  })
+  @IsNotEmpty()
+  @IsString()
+  acceptanceToken: string;
+  
+  @ApiProperty({
+    description: 'Cardholder name',
+    example: 'XXXXXXX'
+  })
+  @IsNotEmpty()
+  @IsString()
+  acceptPersonalAuth: string;
+
 }
 
 export class CreateTransactionDto {
   @ApiProperty({ description: 'Product ID' })
   @IsUUID()
-  productId: string;
+  orderId: string;
 
-  @ApiProperty({
-    description: 'Quantity (minimum 1)',
-    example: 1
-  })
-  @IsInt()
-  @Min(1)
-  quantity: number;
-
-  @ApiProperty({ description: 'Total value before delivery fee' })
-  baseAmount: number;
-
-  @ApiProperty({ description: 'Delivery fee' })
-  deliveryFee: number;
-
-  @ApiProperty({
-    description: 'Customer information',
-    type: OrderCustomerDto
-  })
-  @ValidateNested()
-  @Type(() => OrderCustomerDto)
-  customer: OrderCustomerDto;
-
-  @ApiProperty({
-    description: 'Shipping address',
-    type: OrderAddressDto
-  })
-  @ValidateNested()
-  @Type(() => OrderAddressDto)
-  address: OrderAddressDto;
-
+  @ApiProperty({ description: 'Total value including delivery fee' })
+  @IsNumber()
+  totalAmount: number;
+  
   @ApiProperty({
     description: 'Payment information',
     type: PaymentDto

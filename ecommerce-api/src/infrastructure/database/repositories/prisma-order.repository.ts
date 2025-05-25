@@ -6,6 +6,7 @@ import { validate as uuidValidate } from 'uuid';
 import { OrderAddress } from 'src/core/entities/order-address.entity';
 import { Customer } from 'src/core/entities/customer.entity';
 import { Prisma } from '@prisma/client';
+import { TransactionStatus } from 'src/core/entities/transaction.entity';
 
 @Injectable()
 export class PrismaOrderRepository implements OrderRepositoryPort {
@@ -13,14 +14,24 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
 
   async findById(id: string): Promise<Order | null> {
     if (!uuidValidate(id)) return null;
-    return this.prisma.order.findUnique({
+    const order = await this.prisma.order.findUnique({
       where: { id },
       include: {
         product: true,
         customer: true,
-        address: true
+        address: true,
+        transactions: true
       }
     });
+
+    [0];
+    return {
+      ...order,
+      transactions: order.transactions.map((transaction) => ({
+        ...transaction,
+        status: transaction.status as TransactionStatus
+      }))
+    };
   }
 
   async create(order: Partial<Order>): Promise<Order> {

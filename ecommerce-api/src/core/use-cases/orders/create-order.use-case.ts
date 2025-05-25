@@ -1,8 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Decimal } from '@prisma/client/runtime/library';
 import { OrderRepositoryPort } from 'src/core/ports/repositories/order.repository.port';
 import { ProductRepositoryPort } from 'src/core/ports/repositories/product.repository.port';
+import { checkOrThrowBadrequest } from '../../common/check-or-throw-bad-request';
 
 export interface CreateOrderInput {
   productId: string;
@@ -42,17 +43,17 @@ export class CreateOrderUseCase {
     const product = await this.productRepository.findById(
       createOrderInput.productId
     );
-    this.checkOrThrowBadrequest(
+    checkOrThrowBadrequest(
       !!product,
       `Invalid product id ${createOrderInput.productId}`
     );
-    this.checkOrThrowBadrequest(
+    checkOrThrowBadrequest(
       product.stock >= createOrderInput.quantity,
       `Not enough stock for product ${createOrderInput.productId}`
     );
 
     const baseAmount = Number(product.unitPrice) * createOrderInput.quantity;
-    this.checkOrThrowBadrequest(
+    checkOrThrowBadrequest(
       baseAmount === createOrderInput.baseAmount,
       `Invalid base amount ${createOrderInput.baseAmount}, price out of date`
     );
@@ -60,7 +61,7 @@ export class CreateOrderUseCase {
     const deliveryFee =
       baseAmount *
       ((this.configService.get<number>('DELIVERY_RATE') || 10) / 100);
-    this.checkOrThrowBadrequest(
+    checkOrThrowBadrequest(
       deliveryFee === createOrderInput.deliveryFee,
       `Invalid delivery fee ${createOrderInput.deliveryFee}, delivery fee out of date`
     );
@@ -80,9 +81,5 @@ export class CreateOrderUseCase {
     return newOrder;
   }
 
-  checkOrThrowBadrequest(condition: boolean, message: string) {
-    if (!condition) {
-      throw new BadRequestException(message);
-    }
-  }
+  
 }

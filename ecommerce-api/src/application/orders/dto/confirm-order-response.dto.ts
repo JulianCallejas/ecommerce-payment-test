@@ -9,7 +9,6 @@ class ProductInfoResponseDto {
 
   @ApiProperty({ description: 'Images' })
   images: string[];
-  
 }
 
 class CustomerInfoResponseDto {
@@ -24,34 +23,50 @@ class CustomerInfoResponseDto {
 }
 
 class AddressInfoResponseDto {
-  @ApiProperty({ description: 'Address line 1' })
+  @ApiProperty({
+    description: 'Address line 1',
+    example: 'Calle 123'
+  })
   addressLine1: string;
 
   @ApiProperty({ description: 'Address line 2' })
   addressLine2?: string;
 
-  @ApiProperty({ description: 'Country' })
+  @ApiProperty({
+    description: 'Country',
+    example: 'CO'
+  })
   country?: string;
 
-  @ApiProperty({ description: 'Region' })
+  @ApiProperty({
+    description: 'Region',
+    example: 'Valle'
+  })
   region: string;
 
-  @ApiProperty({ description: 'City' })
+  @ApiProperty({
+    description: 'City',
+    example: 'Cali'
+  })
   city: string;
 
-  @ApiProperty({ description: 'Postal code' })
+  @ApiProperty({
+    description: 'Postal code',
+    example: '111111'
+  })
   postalCode?: string;
 
   @ApiProperty({ description: 'Contact name' })
   contactName?: string;
 
-  @ApiProperty({ description: 'Phone number' })
+  @ApiProperty({
+    description: 'Phone number',
+    example: '3201111111'
+  })
   phoneNumber?: string;
 }
 
-
 export class ConfirmOrderResponseDto {
-  
   @ApiProperty({ description: 'Product information' })
   product: ProductInfoResponseDto;
 
@@ -72,5 +87,4 @@ export class ConfirmOrderResponseDto {
 
   @ApiProperty({ description: 'Address information' })
   address: AddressInfoResponseDto;
-
 }
