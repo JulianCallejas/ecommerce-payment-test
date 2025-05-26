@@ -11,16 +11,16 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route path="/:slug" element={<ProductPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route path="/:slug" element={<ProductPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
       </PersistGate>
     </Provider>
   );
