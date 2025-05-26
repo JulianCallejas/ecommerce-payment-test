@@ -1,6 +1,7 @@
 # compiled output
 /dist
 **/dist
+**/build
 
 /node_modules
 **/node_modules
