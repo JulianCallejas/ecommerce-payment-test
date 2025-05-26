@@ -1,22 +1,24 @@
 import {
-  CreatePaymentSourceParams,
+//   CreatePaymentSourceParams,
   CreateTransactionParams,
-  PaymentSourceResponse,
+    CreateTransactionResponse,
+    GetTransactionStatusData,
+//   PaymentSourceResponse,
   TokenizeCardParams,
   TokenizeCardResponse
 } from './wompi-gateway.types';
 
-export interface PaymentGatewayServicePort {
+export interface WompiGatewayServicePort {
   tokenizeCard(params: TokenizeCardParams): Promise<TokenizeCardResponse>;
-  createPaymentSource(
-    params: CreatePaymentSourceParams
-  ): Promise<PaymentSourceResponse>;
-  createTransaction(params: CreateTransactionParams): Promise<string>;
-  getTransactionStatus(transactionId: string): Promise<{ status: string }>;
+//   createPaymentSource(
+//     params: CreatePaymentSourceParams
+//   ): Promise<PaymentSourceResponse>;
+  createTransaction(params: CreateTransactionParams): Promise<CreateTransactionResponse>;
+  getTransactionStatus(transactionId: string): Promise<GetTransactionStatusData>;
   generateSignature(
     transactionId: string,
     amountInCents: number,
     currency: string,
-    expiresAt: string
+    expiresAt: Date
   ): string;
 }

@@ -7,11 +7,15 @@ import { PrismaCustomerRepository } from 'src/infrastructure/database/repositori
 import { PrismaOrderRepository } from 'src/infrastructure/database/repositories/prisma-order.repository';
 import { PrismaOrderAddressRepository } from 'src/infrastructure/database/repositories/prisma-order-address.repository';
 import { PrismaTransactionRepository } from 'src/infrastructure/database/repositories/prisma-transaction.repository';
+import { WompiGatewayService } from 'src/infrastructure/wompi-gateway/wompi-gateway.service';
+import { HttpModule } from '@nestjs/axios';
 
 
 @Module({
+  imports: [HttpModule],
   controllers: [TransactionsController],
   providers: [
+    WompiGatewayService,
     {
       provide: 'ProductRepositoryPort',
       useExisting: PrismaProductRepository,
@@ -31,6 +35,10 @@ import { PrismaTransactionRepository } from 'src/infrastructure/database/reposit
     {
       provide: 'TransactionRepositoryPort',
       useExisting: PrismaTransactionRepository,
+    },
+    {
+      provide: 'WompiGatewayServicePort',
+      useExisting: WompiGatewayService,
     },
     
     CreateTransactionUseCase,

@@ -103,6 +103,7 @@ model Delivery {
 
 model Transaction {
   id         String   @id @default(uuid()) @db.Uuid
+  reference  String   @unique @db.Uuid
   externalId String   @map("external_id")
   order      Order    @relation(fields: [orderId], references: [id])
   orderId    String   @map("order_id") @db.Uuid

@@ -24,12 +24,7 @@ export class TransactionsController {
   async createTransaction(
     @Body() createTransactionDto: CreateTransactionDto,
   ): Promise<TransactionResponseDto> {
-    const result = await this.createTransactionUseCase.execute(createTransactionDto);
-
-    return {
-      transactionId: result.transactionId,
-      status: result.status,
-    };
+    return await this.createTransactionUseCase.execute(createTransactionDto);
   }
   
   @Get()

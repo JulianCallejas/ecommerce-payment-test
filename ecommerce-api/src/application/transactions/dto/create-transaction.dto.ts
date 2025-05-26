@@ -66,7 +66,7 @@ export class PaymentDto {
   })
   @IsNotEmpty()
   @IsString()
-  cardholderName: string;
+  cardHolder: string;
 
   @ApiProperty({
     description: 'Cardholder name',

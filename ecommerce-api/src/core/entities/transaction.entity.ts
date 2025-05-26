@@ -11,6 +11,7 @@ export enum TransactionStatus {
 
 export class Transaction {
   id: string;
+  reference: string;
   externalId: string;
   orderId: string;
   order?: Order;
