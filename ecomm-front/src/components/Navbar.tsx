@@ -43,7 +43,6 @@ const Navbar: React.FC = () => {
           <Link to="/" className="flex items-center">
             <LogoSvg className='h-10 text-white' />
           </Link>
-          
           <Box sx={{ display: { xs: 'none', md: 'flex' } }} className="ml-auto">
             {navItems.map((item) => (
               <Button 
@@ -57,7 +56,6 @@ const Navbar: React.FC = () => {
               </Button>
             ))}
           </Box>
-          
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -69,7 +67,6 @@ const Navbar: React.FC = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      
       <Drawer
         anchor="right"
         open={mobileOpen}
