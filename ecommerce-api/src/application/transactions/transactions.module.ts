@@ -10,6 +10,7 @@ import { PrismaTransactionRepository } from 'src/infrastructure/database/reposit
 import { WompiGatewayService } from 'src/infrastructure/wompi-gateway/wompi-gateway.service';
 import { HttpModule } from '@nestjs/axios';
 import { GetTransactionStatusUseCase } from 'src/core/use-cases/transactions/get-transaction-status.use-case';
+import { PrismaDeliveryRepository } from 'src/infrastructure/database/repositories/prisma-delivery.repository';
 
 
 @Module({
@@ -36,6 +37,10 @@ import { GetTransactionStatusUseCase } from 'src/core/use-cases/transactions/get
     {
       provide: 'TransactionRepositoryPort',
       useExisting: PrismaTransactionRepository,
+    },
+    {
+      provide: 'DeliveryRepositoryPort',
+      useExisting: PrismaDeliveryRepository,
     },
     {
       provide: 'WompiGatewayServicePort',

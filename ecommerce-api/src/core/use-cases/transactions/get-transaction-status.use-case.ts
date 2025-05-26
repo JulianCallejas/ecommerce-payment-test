@@ -3,12 +3,16 @@ import { TransactionRepositoryPort } from '../../ports/repositories/transaction.
 import { WompiGatewayServicePort } from 'src/core/ports/services/wompi-gateway.service.port';
 import { TransactionStatus } from 'src/core/entities/transaction.entity';
 import { GetTransactionStatusData } from 'src/core/ports/services/wompi-gateway.types';
+import { DeliveryRepositoryPort } from 'src/core/ports/repositories/delivery.repository.port';
 
 @Injectable()
 export class GetTransactionStatusUseCase {
   constructor(
     @Inject('TransactionRepositoryPort')
     private readonly transactionRepository: TransactionRepositoryPort,
+
+    @Inject('DeliveryRepositoryPort')
+    private readonly deliveryRepository: DeliveryRepositoryPort,
 
     @Inject('WompiGatewayServicePort')
     private readonly wompiGatewayService: WompiGatewayServicePort
@@ -36,7 +40,16 @@ export class GetTransactionStatusUseCase {
       const getTransactionStatus = await this.wompiGatewayService.getTransactionStatus(transaction);
       if (getTransactionStatus.data.status !== TransactionStatus.PENDING) {
         const updatedTransaction = await this.transactionRepository.updateStatus(transactionId, getTransactionStatus.data.status as TransactionStatus, getTransactionStatus.data as GetTransactionStatusData);
-        console.log(updatedTransaction);
+        
+        console.log({updatedTransaction});
+        if (getTransactionStatus.data.status === TransactionStatus.APPROVED) {
+          await this.deliveryRepository.create({
+            orderId: updatedTransaction.orderId,
+            addressId: updatedTransaction.order?.address.id,
+          })
+
+        }
+
         return {
           transactionId: updatedTransaction.id,
           status: updatedTransaction.status,
@@ -48,7 +61,9 @@ export class GetTransactionStatusUseCase {
         }
       }
 
-    }catch(error){}
+    }catch(error){
+      console.log(error);
+    }
     
     return {
       transactionId: transaction.id,

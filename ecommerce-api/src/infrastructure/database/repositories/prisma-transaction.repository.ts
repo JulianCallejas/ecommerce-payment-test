@@ -72,7 +72,6 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
     details: any
   ): Promise<Transaction> {
     if (!uuidValidate(id)) return null;
-    console.log(status);
     const updatedTransaction = await this.prisma.transaction.update({
       where: { id },
       data: {
@@ -83,7 +82,8 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
         order: {
           select: {
             product: true,
-            customer: true
+            customer: true,
+            address: true,
           }
         }
       }

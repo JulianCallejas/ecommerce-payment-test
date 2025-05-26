@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { DeliveryRepositoryPort } from 'src/core/ports/repositories/delivery.repository.port';
 import { Delivery } from 'src/core/entities/delivery.entity';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
@@ -71,7 +72,7 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
 
   async create(delivery: Partial<Delivery>): Promise<Delivery> {
     return this.prisma.delivery.create({
-      data: delivery as any,
+      data: delivery as Prisma.DeliveryCreateInput,
     });
   }
 }
