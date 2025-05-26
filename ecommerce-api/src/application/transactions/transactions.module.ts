@@ -9,6 +9,7 @@ import { PrismaOrderAddressRepository } from 'src/infrastructure/database/reposi
 import { PrismaTransactionRepository } from 'src/infrastructure/database/repositories/prisma-transaction.repository';
 import { WompiGatewayService } from 'src/infrastructure/wompi-gateway/wompi-gateway.service';
 import { HttpModule } from '@nestjs/axios';
+import { GetTransactionStatusUseCase } from 'src/core/use-cases/transactions/get-transaction-status.use-case';
 
 
 @Module({
@@ -43,6 +44,7 @@ import { HttpModule } from '@nestjs/axios';
     
     CreateTransactionUseCase,
     GetAllTransactionsUseCase,
+    GetTransactionStatusUseCase,
   ],
 })
 export class TransactionsModule {}

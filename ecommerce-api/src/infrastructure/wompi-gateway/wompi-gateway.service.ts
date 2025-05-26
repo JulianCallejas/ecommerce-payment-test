@@ -1,18 +1,17 @@
 import { HttpService } from '@nestjs/axios';
-import {
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import { catchError, firstValueFrom } from 'rxjs';
+import { Transaction } from 'src/core/entities/transaction.entity';
 
 import { WompiGatewayServicePort } from 'src/core/ports/services/wompi-gateway.service.port';
 import {
-//   CreatePaymentSourceParams,
-//   PaymentSourceResponse,
+  //   CreatePaymentSourceParams,
+  //   PaymentSourceResponse,
   CreateTransactionParams,
   CreateTransactionResponse,
-  GetTransactionStatusData,
+  GetTransactionStatusResponse,
   TokenizeCardParams,
   TokenizeCardResponse
 } from 'src/core/ports/services/wompi-gateway.types';
@@ -71,38 +70,6 @@ export class WompiGatewayService implements WompiGatewayServicePort {
     }
   }
 
-//   async createPaymentSource(
-//     createPaymentSourceParams: CreatePaymentSourceParams
-//   ): Promise<PaymentSourceResponse> {
-//     const body = {
-//       type: 'CARD',
-//       token: createPaymentSourceParams.token,
-//       customer_email: createPaymentSourceParams.customerEmail,
-//       acceptance_token: createPaymentSourceParams.acceptanceToken,
-//       accept_personal_auth: createPaymentSourceParams.acceptPersonalAuth
-//     };
-//     const headers = {
-//       Authorization: `Bearer ${this.apiKeySecret}`,
-//       'Content-Type': 'application/json'
-//     };
-
-//     try {
-//       const { data } = await firstValueFrom(
-//         this.httpService
-//           .post(`${this.apiBaseUrl}/payment_sources`, body, { headers })
-//           .pipe(
-//             catchError((error) => {
-//               throw `Payment rejected ${error.response}`;
-//             })
-//           )
-//       );
-
-//       return data;
-//     } catch (error) {
-//       throw new Error(error);
-//     }
-//   }
-
   async createTransaction(
     createTransactionParams: CreateTransactionParams
   ): Promise<CreateTransactionResponse> {
@@ -118,7 +85,7 @@ export class WompiGatewayService implements WompiGatewayServicePort {
         token: createTransactionParams.token,
         installments: createTransactionParams.installments
       },
-    //   payment_source_id: createTransactionParams.paymentSourceId,
+      //   payment_source_id: createTransactionParams.paymentSourceId,
       reference: createTransactionParams.reference,
       expiration_time: createTransactionParams.expiresAt,
       customer_data: {
@@ -142,7 +109,6 @@ export class WompiGatewayService implements WompiGatewayServicePort {
       Authorization: `Bearer ${this.apiKeySecret}`,
       'Content-Type': 'application/json'
     };
-
     try {
       const { data } = await firstValueFrom(
         this.httpService
@@ -153,7 +119,6 @@ export class WompiGatewayService implements WompiGatewayServicePort {
             })
           )
       );
-
       return data;
     } catch (error) {
       throw new Error(error);
@@ -161,34 +126,27 @@ export class WompiGatewayService implements WompiGatewayServicePort {
   }
 
   async getTransactionStatus(
-    transactionId: string
-  ): Promise<GetTransactionStatusData> {
+    transaction: Transaction
+  ): Promise<GetTransactionStatusResponse> {
     const headers = {
       'Content-Type': 'application/json'
     };
-
     try {
       const { data } = await firstValueFrom(
         this.httpService
-          .post(`${this.apiBaseUrl}/transactions/${transactionId}`, { headers })
+          .get(`${this.apiBaseUrl}/transactions/${transaction.externalId}`, {
+            headers
+          })
           .pipe(
             catchError((error) => {
-              throw `Payment rejected ${error.response}`;
+              throw `Transaction not found ${error.response}`;
             })
           )
       );
-
       return data;
     } catch (error) {
       throw new Error(error);
     }
-
-
-
-
-
-
-    return null;
   }
 
   generateSignature(
@@ -201,3 +159,37 @@ export class WompiGatewayService implements WompiGatewayServicePort {
     return crypto.createHash('sha256').update(signatureData).digest('hex');
   }
 }
+
+
+
+//   async createPaymentSource(
+  //     createPaymentSourceParams: CreatePaymentSourceParams
+  //   ): Promise<PaymentSourceResponse> {
+  //     const body = {
+  //       type: 'CARD',
+  //       token: createPaymentSourceParams.token,
+  //       customer_email: createPaymentSourceParams.customerEmail,
+  //       acceptance_token: createPaymentSourceParams.acceptanceToken,
+  //       accept_personal_auth: createPaymentSourceParams.acceptPersonalAuth
+  //     };
+  //     const headers = {
+  //       Authorization: `Bearer ${this.apiKeySecret}`,
+  //       'Content-Type': 'application/json'
+  //     };
+
+  //     try {
+  //       const { data } = await firstValueFrom(
+  //         this.httpService
+  //           .post(`${this.apiBaseUrl}/payment_sources`, body, { headers })
+  //           .pipe(
+  //             catchError((error) => {
+  //               throw `Payment rejected ${error.response}`;
+  //             })
+  //           )
+  //       );
+
+  //       return data;
+  //     } catch (error) {
+  //       throw new Error(error);
+  //     }
+  //   }

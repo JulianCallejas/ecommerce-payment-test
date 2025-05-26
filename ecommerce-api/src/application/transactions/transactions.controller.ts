@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateTransactionUseCase } from 'src/core/use-cases/transactions/create-transaction.use-case';
 import { GetAllTransactionsUseCase } from 'src/core/use-cases/transactions/get-all-transactions.use-case';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionResponseDto } from './dto/transaction-response.dto';
 import { PaginatedResponseDto, PaginationQueryDto } from '../common/pagination.dto';
+import { GetTransactionStatusUseCase } from 'src/core/use-cases/transactions/get-transaction-status.use-case';
 
 @ApiTags('Transactions')
 @Controller('transactions')
@@ -12,6 +13,7 @@ export class TransactionsController {
   constructor(
     private readonly createTransactionUseCase: CreateTransactionUseCase,
     private readonly getAllTransactionsUseCase: GetAllTransactionsUseCase,
+    private readonly getTransactionStatusUseCase: GetTransactionStatusUseCase,
   ) {}
 
   @Post()
@@ -52,4 +54,19 @@ export class TransactionsController {
     
     return new PaginatedResponseDto<TransactionResponseDto>(transactionDtos, total, page, pageSize);
   }
+
+  @Get(':transactionId')
+  @ApiOperation({ summary: 'Get transaction details' })
+  @ApiResponse({
+    status: 200,
+    description: 'Transaction details',
+    type: TransactionResponseDto,
+  })
+  async getTransaction(
+    @Param('transactionId') transactionId: string,
+  ): Promise<TransactionResponseDto> {
+     return await this.getTransactionStatusUseCase.execute(transactionId);
+  }
+
+
 }

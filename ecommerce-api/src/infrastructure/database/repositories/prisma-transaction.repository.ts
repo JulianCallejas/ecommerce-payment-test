@@ -72,14 +72,22 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
     details: any
   ): Promise<Transaction> {
     if (!uuidValidate(id)) return null;
+    console.log(status);
     const updatedTransaction = await this.prisma.transaction.update({
       where: { id },
       data: {
-        status,
+        status: status as string,
         details
+      },
+      include: {
+        order: {
+          select: {
+            product: true,
+            customer: true
+          }
+        }
       }
     });
-
     return this.parseTransactionStatus(updatedTransaction);
   }
 

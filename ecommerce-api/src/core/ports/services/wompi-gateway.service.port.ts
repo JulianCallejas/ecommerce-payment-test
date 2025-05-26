@@ -1,8 +1,9 @@
+import { Transaction } from 'src/core/entities/transaction.entity';
 import {
 //   CreatePaymentSourceParams,
   CreateTransactionParams,
     CreateTransactionResponse,
-    GetTransactionStatusData,
+    GetTransactionStatusResponse,
 //   PaymentSourceResponse,
   TokenizeCardParams,
   TokenizeCardResponse
@@ -14,7 +15,7 @@ export interface WompiGatewayServicePort {
 //     params: CreatePaymentSourceParams
 //   ): Promise<PaymentSourceResponse>;
   createTransaction(params: CreateTransactionParams): Promise<CreateTransactionResponse>;
-  getTransactionStatus(transactionId: string): Promise<GetTransactionStatusData>;
+  getTransactionStatus(transaction: Transaction): Promise<GetTransactionStatusResponse>;
   generateSignature(
     transactionId: string,
     amountInCents: number,
