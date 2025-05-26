@@ -46,12 +46,8 @@ export class CreateTransactionUseCase {
     // 1. Get and validate order
     const order = await this.orderRepository.findById(input.orderId);
     checkOrThrowBadrequest(!!order, `Order ${input.orderId} not found`);
-    
-    console.log({ order });
-    console.log( order.transactions );
 
     order.transactions.forEach((transaction) => {
-      console.log(transaction.status);
       checkOrThrowBadrequest(
         transaction.status as TransactionStatus !== TransactionStatus.PENDING,
         `Transaction ${transaction.id} in process`
@@ -79,8 +75,7 @@ export class CreateTransactionUseCase {
     // 3. Create Wompi tyransaction
     
     const cardToken = await this.generateCardToken(input, order);
-    console.log({ cardToken });
-
+    
     // Required transaction data
     const transactionId = uuidv4();
     const amountInCents = Math.round(totalAmount * 100);
@@ -187,16 +182,11 @@ export class CreateTransactionUseCase {
         expYear: input.payment.expYear,
         cardHolder: input.payment.cardHolder
       });
-
-      console.log({ cardToken });
+      
       return cardToken;
     } catch (error) {
       // Update stock
-      await this.updateProductStock(
-        order.quantity,
-        order.unitPrice,
-        order.product
-      );
+      await this.productRepository.rollbackStock(order.product.id, order.quantity);
       throw new BadRequestException('Payment rejected');
     }
   }
@@ -232,11 +222,7 @@ export class CreateTransactionUseCase {
       return wompiTransaction;
     } catch (error) {
       // Update stock
-      await this.updateProductStock(
-        order.quantity,
-        order.unitPrice,
-        order.product
-      );
+      await this.productRepository.rollbackStock(order.product.id, order.quantity);
       throw new BadRequestException('Payment rejected');
     }
   }
