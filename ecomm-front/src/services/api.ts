@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Product } from "../types";
+import type { OrderConfirmationResponse, OrderConfirmRequest, Product } from "../types";
 
 // Create axios instance with base URL from environment variables
 const api = axios.create({
@@ -13,6 +13,11 @@ const api = axios.create({
 export const apiService = {
   getProduct: async (slug: string): Promise<Product> => {
     const response = await api.get<Product>(`/stock/products/${slug}`);
+    return response.data;
+  },
+ 
+  confirmOrder: async (data: OrderConfirmRequest): Promise<OrderConfirmationResponse> => {
+    const response = await api.post<OrderConfirmationResponse>('/orders/confirm', data);
     return response.data;
   },
 };

@@ -22,13 +22,13 @@ import {
   setPaymentData,
 } from "./checkoutSlice";
 import CustomerInfoForm from "./forms/CustomerInfoForm";
-import { type CheckoutFormData } from "../../utils/validation";
 import { FormProvider } from "react-hook-form";
-import { useCheckoutContextForms, type ITermsFormData } from "../../hooks";
-import type { Address, Customer, PaymentData } from "../../types";
+import { useCheckoutContextForms, useToast, type ITermsFormData } from "../../hooks";
+import type { Address, Customer, OrderConfirmRequest, PaymentData } from "../../types";
 import PaymentDataForm from "./forms/PaymentDataForm";
 import ShippingAddressForm from "./forms/ShippingAddressForm";
 import TermsAndPrivacyForm from "./forms/TermsAndPrivacyForm";
+import apiService from "../../services/api";
 
 const steps = [
   "Informacón Personal",
@@ -45,33 +45,35 @@ const checkoutFormDataMap: Record<number, string> = {
 
 const CheckoutModal: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  
+
   const navigate = useNavigate();
 
+  const { Toast, showToast } = useToast();
+
   const isOpen = useSelector((state: RootState) => state.checkout.isModalOpen);
-  const product = useSelector((state: RootState) => state.product.data);
-  const { customer, paymentData, address } = useSelector(
+  const { customer, paymentData, address, quantity, productId } = useSelector(
     (state: RootState) => state.checkout
   );
-
+ 
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState<Partial<CheckoutFormData>>({
-    customer: customer || undefined,
-    paymentData: paymentData || undefined,
-    address: address || undefined,
+  
+  const {
+    formContextMap,
+    customerFormContext,
+    paymentFormContext,
+    shippingFormContext,
+    termsFormContext,
+  } = useCheckoutContextForms({
+    customer,
+    paymentData,
+    address,
   });
 
-  const { formContextMap, customerFormContext, paymentFormContext, shippingFormContext, termsFormContext } =
-    useCheckoutContextForms({
-      customer,
-      paymentData,
-      address
-    });
-
-  const [termsAccepted, privacyAccepted] = termsFormContext.watch(['termsAccepted', 'privacyAccepted']);
+  const [termsAccepted, privacyAccepted] = termsFormContext.watch([
+    "termsAccepted",
+    "privacyAccepted",
+  ]);
   const areTermsAccepted = termsAccepted && privacyAccepted;
-
-
 
   const handleClose = () => {
     dispatch(closeCheckoutModal());
@@ -94,20 +96,50 @@ const CheckoutModal: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!product || !formData.customer) {
-      return;
+
+    if (!productId || !customer || !address || !paymentData || !quantity ) return;
+    
+    const orderConfirmRequest: OrderConfirmRequest = {
+      productId,
+      quantity,
+      customer : {
+        fullname: customer.fullname,
+        email: customer.email,
+        customerId: `${customer.personalIdType}${customer.personalIdNumber}`,
+      },
+      address: {
+        ...address,
+        postalCode: address.postalCode ? address.postalCode : undefined,
+        addressLine2: address.addressLine2 ? address.addressLine2 : undefined,
+        
+      },
+    };
+
+
+    try {
+      const orderConfirmationResponse = await apiService.confirmOrder(orderConfirmRequest);
+      showToast("Datos recibidos", "success");
+      console.log(orderConfirmationResponse);
+    } catch (error) {
+      console.error(error);
+      showToast("Verifique los datos ingresados e intente nuevamente", "error");
     }
 
-    //TODO:
-    // Save all form data to Redux
+
+
+
+    
     // Confirm order
     // Close modal and navigate to summary page
 
-    dispatch(closeCheckoutModal());
-    navigate("/summary");
+    // dispatch(closeCheckoutModal());
+    //navigate("/summary");
   };
 
-  const updateGlobalState = (section: string, data: Customer | PaymentData | Address | ITermsFormData) => {
+  const updateGlobalState = (
+    section: string,
+    data: Customer | PaymentData | Address | ITermsFormData
+  ) => {
     switch (section) {
       case "customer":
         dispatch(setCustomer(data as Customer));
@@ -125,11 +157,6 @@ const CheckoutModal: React.FC = () => {
 
   const updateFormSection = async (section: string) => {
     const data = await formContextMap[activeStep].getValues();
-    setFormData((prev) => ({
-      ...prev,
-      [section as keyof CheckoutFormData]: data,
-    }));
-    // Update global state
     updateGlobalState(section, data);
   };
 
@@ -155,9 +182,9 @@ const CheckoutModal: React.FC = () => {
             className="mb-8 max-w-full overflow-x-auto !items-start md:!items-center"
           >
             {steps.map((label) => (
-              <Step key={label} >
+              <Step key={label}>
                 <StepLabel className="text-center flex flex-col items-center gap-1 md:flex-row md:gap-0 ">
-                    <span className="text-xs text-center" >{label}</span>
+                  <span className="text-xs text-center">{label}</span>
                 </StepLabel>
               </Step>
             ))}
@@ -194,18 +221,21 @@ const CheckoutModal: React.FC = () => {
               {activeStep === 0 ? "Cancel" : "Back"}
             </Button>
 
-            <Button variant="contained" color="primary" onClick={handleNext}
-              disabled={
-                activeStep === steps.length - 1 && !areTermsAccepted
-              }
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+              disabled={activeStep === steps.length - 1 && !areTermsAccepted}
             >
               {activeStep === steps.length - 1 ? "Confirm" : "Next"}
             </Button>
           </Box>
         </Box>
+      <Toast />
       </Card>
     </Modal>
   );
 };
 
 export default CheckoutModal;
+

@@ -17,6 +17,12 @@ export interface Customer {
   personalIdNumber: string;
 }
 
+export interface CustomerOrderRequest {
+  fullname: string;
+  email: string;
+  customerId: string;
+}
+
 // Payment types
 export interface PaymentData {
   cardNumber: string;
@@ -77,7 +83,7 @@ export interface TransactionResponse {
 export interface OrderConfirmRequest {
   productId: string;
   quantity: number;
-  customer: Customer;
+  customer: CustomerOrderRequest;
   address: Address;
 }
 

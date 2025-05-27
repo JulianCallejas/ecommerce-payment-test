@@ -1,4 +1,5 @@
 import { FormControlLabel, Checkbox, Typography, Box } from '@mui/material';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 export interface TermsFormData {
@@ -8,7 +9,12 @@ export interface TermsFormData {
 
 
 const TermsAndPrivacyForm = () => {
-  const { register, handleSubmit } = useFormContext<TermsFormData>();
+  const { register, handleSubmit, setValue } = useFormContext<TermsFormData>();
+
+  useEffect(() => {
+    setValue('termsAccepted', false);
+    setValue('privacyAccepted', false);
+  }, [setValue]);
 
   return (
     <form onSubmit={handleSubmit(()=>{})} className="space-y-6">

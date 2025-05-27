@@ -15,7 +15,7 @@ import { fetchProduct } from "./productSlice";
 import { currencyFormatter } from "../../utils";
 import ProductImageGallery from "../../components/ProductImageGallery";
 import CardWhyBuy from "../../components/CardWhyBuy";
-import { openCheckoutModal } from "../checkout/checkoutSlice";
+import { openCheckoutModal, setProductId } from "../checkout/checkoutSlice";
 import QuantityCounter from "../../components/QuantityCounter";
 
 const ProductPage: React.FC = () => {
@@ -37,6 +37,8 @@ const ProductPage: React.FC = () => {
   }, [dispatch, slug]);
 
   const handleBuyNowClick = () => {
+    if (!product) return;
+    dispatch(setProductId(product.id));
     dispatch(openCheckoutModal());
   };
 

@@ -20,7 +20,7 @@ const CustomerInfoForm = () => {
       <Grid container spacing={3}>
         <Grid size={{ xs: 12 }} > 
           <TextField
-            label="Full Name"
+            label="Nombre completo"
             {...register('fullname')}
             error={touchedFields.fullname && !!errors.fullname}
             helperText={touchedFields.fullname && errors.fullname?.message}
@@ -31,7 +31,7 @@ const CustomerInfoForm = () => {
         
         <Grid size={{ xs: 12 }} > 
           <TextField
-            label="Email Address"
+            label="Email"
             type="email"
             {...register('email')}
             error={touchedFields.email && !!errors.email}
@@ -50,7 +50,7 @@ const CustomerInfoForm = () => {
             <TextField
               {...field}
               select
-              label="ID Type"
+              label="Tipo documento"
               error={!!error}
               helperText={error?.message}
               fullWidth
@@ -68,7 +68,7 @@ const CustomerInfoForm = () => {
         
         <Grid size={{ xs: 12,  sm: 6 }} >
           <TextField
-            label="ID Number"
+            label="Número de documento"
             {...register('personalIdNumber')}
             error={touchedFields.personalIdNumber && !!errors.personalIdNumber}
             helperText={touchedFields.personalIdNumber && errors.personalIdNumber?.message}
