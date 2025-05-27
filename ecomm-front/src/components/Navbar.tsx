@@ -12,11 +12,11 @@ const Navbar: React.FC = () => {
   };
 
   const navItems = [
-    { label: 'Store', path: '/' },
-    { label: 'Categories', path: '/' },
-    { label: 'About Us', path: '/' },
-    { label: 'Contact us', path: '/' },
-    { label: 'Logout', path: '/' },
+    { label: 'Tienda', path: '/' },
+    { label: 'Categorias', path: '/' },
+    { label: 'Acerca de', path: '/' },
+    { label: 'Contactanos', path: '/' },
+    { label: 'Cerrar sesión', path: '/' },
   ];
 
   const drawer = (

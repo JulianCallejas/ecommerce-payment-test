@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Typography, Card, CardContent, Chip, Skeleton } from '@mui/material';
-import { CreditCard, ShieldCheck, TruckIcon } from 'lucide-react';
+import { Button, Typography, Card, Chip, Skeleton } from '@mui/material';
+import { CreditCard } from 'lucide-react';
 import { type RootState, type AppDispatch } from '../../store';
 import { fetchProduct } from './productSlice';
-
-
+import { currencyFormatter } from '../../utils';
+import ProductImageGallery from '../../components/ProductImageGallery';
+import CardWhyBuy from './CardWhyBuy';
 
 const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -78,20 +79,19 @@ const ProductPage: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      
-
-
-      
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <Typography variant="h3" component="h1" className="font-bold text-center md:hidden">
+            {product.name}
+          </Typography>
+      <ProductImageGallery images={product.images} />
       <div className="space-y-6">
         <div>
-          <Typography variant="h4" component="h1" className="font-bold">
-            {product.title}
+          <Typography variant="h3" component="h1" className="font-bold hidden md:block">
+            {product.name}
           </Typography>
-          
           <div className="flex items-center mt-2">
             <Typography variant="h5" color="primary" className="font-semibold">
-              ${product.price.toFixed(2)}
+              {currencyFormatter(product.unitPrice)}
             </Typography>
             
             <Chip
@@ -107,34 +107,11 @@ const ProductPage: React.FC = () => {
           {product.description}
         </Typography>
         
-        <Card variant="outlined" className="bg-gray-50">
-          <CardContent>
-            <Typography variant="subtitle2" className="mb-3 font-semibold">
-              Why buy from us?
-            </Typography>
-            
-            <div className="space-y-3">
-              <div className="flex items-center">
-                <ShieldCheck className="text-green-600 h-5 w-5 mr-2" />
-                <Typography variant="body2">Secure checkout process</Typography>
-              </div>
-              
-              <div className="flex items-center">
-                <TruckIcon className="text-blue-600 h-5 w-5 mr-2" />
-                <Typography variant="body2">Fast shipping options available</Typography>
-              </div>
-              
-              <div className="flex items-center">
-                <CreditCard className="text-purple-600 h-5 w-5 mr-2" />
-                <Typography variant="body2">Multiple payment methods accepted</Typography>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
+        <CardWhyBuy />
+                
         <Button
           variant="contained"
-          color="primary"
+          color="secondary"
           size="large"
           fullWidth
           startIcon={<CreditCard />}

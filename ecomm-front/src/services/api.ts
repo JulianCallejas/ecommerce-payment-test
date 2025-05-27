@@ -12,7 +12,7 @@ const api = axios.create({
 // API service for the e-commerce application
 export const apiService = {
   getProduct: async (slug: string): Promise<Product> => {
-    const response = await api.get<Product>(`/products/${slug}`);
+    const response = await api.get<Product>(`/stock/products/${slug}`);
     return response.data;
   },
 };
