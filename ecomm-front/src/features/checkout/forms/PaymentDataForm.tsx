@@ -54,6 +54,7 @@ const PaymentDataForm = () => {
         <Grid size={{ xs: 12 }}>
           <Box className="relative mt-2">
             <TextField
+              autoFocus
               label="Número de tarjeta"
               {...register("cardNumber")}
               error={touchedFields.cardNumber && !!errors.cardNumber}

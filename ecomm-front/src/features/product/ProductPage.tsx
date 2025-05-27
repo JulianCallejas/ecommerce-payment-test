@@ -1,19 +1,28 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Typography, Card, Chip, Skeleton } from "@mui/material";
-import { CreditCard } from "lucide-react";
+import {
+  Button,
+  Typography,
+  Card,
+  Chip,
+  Skeleton,
+  
+} from "@mui/material";
+import {  CreditCard } from "lucide-react";
 import { type RootState, type AppDispatch } from "../../store";
 import { fetchProduct } from "./productSlice";
 import { currencyFormatter } from "../../utils";
 import ProductImageGallery from "../../components/ProductImageGallery";
 import CardWhyBuy from "../../components/CardWhyBuy";
 import { openCheckoutModal } from "../checkout/checkoutSlice";
+import QuantityCounter from "../../components/QuantityCounter";
 
 const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  
 
   const {
     data: product,
@@ -103,7 +112,9 @@ const ProductPage: React.FC = () => {
           </Typography>
           <div className="flex items-center mt-2">
             <Typography variant="h5" color="primary" className="font-semibold">
-              {currencyFormatter(product.unitPrice)}
+              <span className="text-3xl">
+                {currencyFormatter(product.unitPrice)}
+              </span>
             </Typography>
 
             <Chip
@@ -114,16 +125,12 @@ const ProductPage: React.FC = () => {
               }
               color={product.stock > 0 ? "success" : "error"}
               size="small"
-              className="ml-4"
+              className="ml-5"
             />
           </div>
         </div>
 
-        <Typography variant="body1" className="text-gray-700">
-          {product.description}
-        </Typography>
-
-        <CardWhyBuy />
+        <QuantityCounter stock={product.stock} />
 
         <Button
           variant="contained"
@@ -137,6 +144,14 @@ const ProductPage: React.FC = () => {
         >
           Pay with Credit Card
         </Button>
+
+        <Typography variant="body1" className="text-gray-700">
+          {product.description}
+        </Typography>
+
+        <CardWhyBuy />
+
+        
       </div>
     </div>
   );

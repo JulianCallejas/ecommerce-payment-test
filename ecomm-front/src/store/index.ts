@@ -51,7 +51,7 @@ const checkoutPersistConfig = {
   key: 'checkout',
   storage,
   transforms: [encryptTransform(encryptConfig)],
-  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted', 'termsAccepted', 'privacyAccepted','isModalOpen'], // Exclude paymentData
+  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted', 'termsAccepted', 'privacyAccepted','isModalOpen', 'quantity'], // Exclude paymentData
 };
 
 const rootReducer = combineReducers({

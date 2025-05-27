@@ -24,10 +24,11 @@ import {
 import CustomerInfoForm from "./forms/CustomerInfoForm";
 import { type CheckoutFormData } from "../../utils/validation";
 import { FormProvider } from "react-hook-form";
-import { useCheckoutContextForms } from "../../hooks";
+import { useCheckoutContextForms, type ITermsFormData } from "../../hooks";
 import type { Address, Customer, PaymentData } from "../../types";
 import PaymentDataForm from "./forms/PaymentDataForm";
 import ShippingAddressForm from "./forms/ShippingAddressForm";
+import TermsAndPrivacyForm from "./forms/TermsAndPrivacyForm";
 
 const steps = [
   "Informacón Personal",
@@ -44,6 +45,7 @@ const checkoutFormDataMap: Record<number, string> = {
 
 const CheckoutModal: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  
   const navigate = useNavigate();
 
   const isOpen = useSelector((state: RootState) => state.checkout.isModalOpen);
@@ -59,12 +61,17 @@ const CheckoutModal: React.FC = () => {
     address: address || undefined,
   });
 
-  const { formContextMap, customerFormContext, paymentFormContext, shippingFormContext } =
+  const { formContextMap, customerFormContext, paymentFormContext, shippingFormContext, termsFormContext } =
     useCheckoutContextForms({
       customer,
       paymentData,
       address
     });
+
+  const [termsAccepted, privacyAccepted] = termsFormContext.watch(['termsAccepted', 'privacyAccepted']);
+  const areTermsAccepted = termsAccepted && privacyAccepted;
+
+
 
   const handleClose = () => {
     dispatch(closeCheckoutModal());
@@ -100,7 +107,7 @@ const CheckoutModal: React.FC = () => {
     navigate("/summary");
   };
 
-  const updateGlobalState = (section: string, data: Customer | PaymentData | Address) => {
+  const updateGlobalState = (section: string, data: Customer | PaymentData | Address | ITermsFormData) => {
     switch (section) {
       case "customer":
         dispatch(setCustomer(data as Customer));
@@ -172,6 +179,11 @@ const CheckoutModal: React.FC = () => {
                 <ShippingAddressForm />
               </FormProvider>
             )}
+            {activeStep === 3 && (
+              <FormProvider {...termsFormContext}>
+                <TermsAndPrivacyForm />
+              </FormProvider>
+            )}
           </Paper>
 
           <Box className="flex justify-between">
@@ -182,7 +194,11 @@ const CheckoutModal: React.FC = () => {
               {activeStep === 0 ? "Cancel" : "Back"}
             </Button>
 
-            <Button variant="contained" color="primary" onClick={handleNext}>
+            <Button variant="contained" color="primary" onClick={handleNext}
+              disabled={
+                activeStep === steps.length - 1 && !areTermsAccepted
+              }
+            >
               {activeStep === steps.length - 1 ? "Confirm" : "Next"}
             </Button>
           </Box>

@@ -8,7 +8,6 @@ const ShippingAddressForm = () => {
     handleSubmit,
     formState: { errors, touchedFields },
   } = useFormContext<Address>();
-  
 
   return (
     <form onSubmit={handleSubmit(() => {})} className="space-y-6">
@@ -17,26 +16,9 @@ const ShippingAddressForm = () => {
       </Typography>
 
       <Grid container spacing={3}>
-        {/* <Grid size={{ xs: 12}} >
+        <Grid size={{ xs: 12 }}>
           <TextField
-            select
-            label="Country"
-            {...register("country")}
-            error={touchedFields.country && !!errors.country}
-            helperText={touchedFields.country && errors.country?.message}
-            fullWidth
-            required
-          >
-            {countries.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid> */}
-
-        <Grid size={{ xs: 12}} >
-          <TextField
+            autoFocus
             label="Dirección"
             {...register("addressLine1")}
             error={touchedFields.addressLine1 && !!errors.addressLine1}
@@ -48,7 +30,7 @@ const ShippingAddressForm = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12}} >
+        <Grid size={{ xs: 12 }}>
           <TextField
             label="Dirección complementaria (Optional)"
             {...register("addressLine2")}
@@ -60,7 +42,7 @@ const ShippingAddressForm = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 4}} >
+        <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
             label="Número de teléfono"
             placeholder="3201111111"
@@ -74,7 +56,7 @@ const ShippingAddressForm = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 4}} >
+        <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
             label="Departamento"
             {...register("region")}
@@ -85,7 +67,7 @@ const ShippingAddressForm = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 4}} >
+        <Grid size={{ xs: 12, sm: 4 }}>
           <TextField
             label="Ciudad"
             {...register("city")}
@@ -96,7 +78,7 @@ const ShippingAddressForm = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6}} >
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             label="Nombre de contacto (recibe el envío)"
             {...register("contactName")}
@@ -108,7 +90,7 @@ const ShippingAddressForm = () => {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6}} >
+        <Grid size={{ xs: 12, sm: 6 }}>
           <TextField
             label="Código Postal"
             {...register("postalCode")}
@@ -117,8 +99,6 @@ const ShippingAddressForm = () => {
             fullWidth
           />
         </Grid>
-
-        
       </Grid>
     </form>
   );

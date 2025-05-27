@@ -53,6 +53,16 @@ export const addressSchema = z.object({
     .regex(/^\d+$/, 'Solo se permiten números (sin espacios)'),
 });
 
+export const termsSchema = z.object({
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: 'Debe aceptar los términos y condiciones',
+  }),
+  privacyAccepted: z.boolean().refine(val => val === true, {
+    message: 'Debe aceptar la política de uso de datos personales',
+  }),
+});
+
+
 export const checkoutSchema = z.object({
   customer: customerSchema,
   paymentData: paymentSchema,

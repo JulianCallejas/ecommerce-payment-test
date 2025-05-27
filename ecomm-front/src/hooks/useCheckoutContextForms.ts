@@ -1,11 +1,17 @@
 import { useForm, type UseFormReturn } from "react-hook-form";
 import type { Address, Customer, PaymentData } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addressSchema, customerSchema, paymentSchema } from "../utils";
+import { addressSchema, customerSchema, paymentSchema, termsSchema } from "../utils";
+
+export interface ITermsFormData {
+  termsAccepted: boolean;
+  privacyAccepted: boolean;
+  
+}
 
 export type FormContextDictType = Record<
   string,
-  UseFormReturn<Customer> | UseFormReturn<PaymentData> | UseFormReturn<Address>
+  UseFormReturn<Customer> | UseFormReturn<PaymentData> | UseFormReturn<Address> | UseFormReturn<ITermsFormData>
 >;
 
 export interface IDefaultValuesContextForms {
@@ -59,16 +65,27 @@ export const useCheckoutContextForms = (
       mode: 'onChange',
     });
 
+    const termsFormContext = useForm<ITermsFormData>({
+      resolver: zodResolver(termsSchema),
+      defaultValues:  {
+        termsAccepted: false,
+        privacyAccepted: false
+      },
+      mode: 'onChange',
+    });
+
   const formContextMap: FormContextDictType = {
     0: customerFormContext,
     1: paymentFormContext,
     2: shippingFormContext,
+    3: termsFormContext,
   };
 
   return {
     customerFormContext,
     paymentFormContext,
     shippingFormContext,
+    termsFormContext,
 
     formContextMap,
   };

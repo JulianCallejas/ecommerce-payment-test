@@ -8,6 +8,7 @@ export interface CheckoutState {
   termsAccepted: string | null;
   privacyAccepted: string | null;
   isModalOpen: boolean;
+  quantity: number;
 }
 
 const initialState: CheckoutState = {
@@ -17,6 +18,7 @@ const initialState: CheckoutState = {
   termsAccepted: null,
   privacyAccepted: null,
   isModalOpen: false,
+  quantity: 1,
 };
 
 const checkoutSlice = createSlice({
@@ -38,6 +40,9 @@ const checkoutSlice = createSlice({
     setPrivacyAccepted: (state, action: PayloadAction<string>) => {
       state.privacyAccepted = action.payload;
     },
+    setQuantity: (state, action: PayloadAction<number>) => {
+      state.quantity = action.payload;
+    },
     openCheckoutModal: (state) => {
       state.isModalOpen = true;
     },
@@ -58,14 +63,16 @@ const checkoutSlice = createSlice({
         address: Address;
         termsAccepted: string;
         privacyAccepted: string;
+        quantity: number;
       }>
     ) => {
-      const { customer, paymentData, address, termsAccepted, privacyAccepted } = action.payload;
+      const { customer, paymentData, address, termsAccepted, privacyAccepted, quantity } = action.payload;
       state.customer = customer;
       state.paymentData = paymentData;
       state.address = address;
       state.termsAccepted = termsAccepted;
       state.privacyAccepted = privacyAccepted;
+      state.quantity = quantity;
     },
   },
 });
@@ -76,6 +83,7 @@ export const {
   setAddress,
   setTermsAccepted,
   setPrivacyAccepted,
+  setQuantity,
   openCheckoutModal,
   closeCheckoutModal,
   resetCheckout,
