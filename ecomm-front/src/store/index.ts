@@ -4,7 +4,6 @@ import {
   persistReducer,
   type PersistConfig,
 } from "redux-persist";
-import { EncryptStorage } from "encrypt-storage";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 import productReducer, {
   type ProductState,
@@ -16,10 +15,6 @@ const storageKey =
   import.meta.env.VITE_ENCRYPTSTORAGE_KEY || "41346ECD5EA232385355CDEF8B925";
 
 // Create a persisted storage with encryption
-const encryptStorage = new EncryptStorage(storageKey, {
-  storageType: "localStorage",
-});
-
 export interface RootState {
   product: ProductState;
   checkout: CheckoutState & PersistPartial;
@@ -34,13 +29,13 @@ const encryptConfig = {
 
 const storage = {
   getItem: (key: string): Promise<string | null> => {
-    return Promise.resolve(encryptStorage.getItem(key) || null);
+    return Promise.resolve(localStorage.getItem(key) || null);
   },
   setItem: (key: string, value: string): Promise<void> => {
-    return Promise.resolve(encryptStorage.setItem(key, value));
+    return Promise.resolve(localStorage.setItem(key, value));
   },
   removeItem: (key: string): Promise<void> => {
-    return Promise.resolve(encryptStorage.removeItem(key));
+    return Promise.resolve(localStorage.removeItem(key));
   },
 };
 
@@ -56,11 +51,12 @@ const checkoutPersistConfig = {
   key: 'checkout',
   storage,
   transforms: [encryptTransform(encryptConfig)],
-  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted'], // Exclude paymentData
+  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted', 'termsAccepted', 'privacyAccepted','isModalOpen'], // Exclude paymentData
 };
 
 const rootReducer = combineReducers({
   product: productReducer,
+
   checkout: persistReducer(checkoutPersistConfig, checkoutReducer),
 });
 

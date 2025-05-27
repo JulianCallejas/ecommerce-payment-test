@@ -14,7 +14,7 @@ const CustomerInfoForm = () => {
   return (
     <form onSubmit={handleSubmit(()=>{})} className="space-y-6">
       <Typography variant="h6" className="mb-4">
-        Customer Information
+        Información Personal
       </Typography>
       
       <Grid container spacing={3}>

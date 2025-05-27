@@ -40,9 +40,24 @@ export const paymentSchema = z.object({
     .regex(/^[A-Za-z\s]+$/, 'Debe contener solo letras y espacios'),
 });
 
+export const addressSchema = z.object({
+  country: z.string().min(2, 'Pais es requerido'),
+  addressLine1: z.string().min(3, 'La dirección es requerida'),
+  addressLine2: z.string().optional(),
+  region: z.string().min(2, 'Departamento requerido'),
+  city: z.string().min(2, 'Ciudad requerida'),
+  postalCode: z.string().optional(),
+  contactName: z.string().optional(),
+  phoneNumber: z.string()
+    .min(10, 'El número de teléfono debe tener al menos 10 caracteres')
+    .regex(/^\d+$/, 'Solo se permiten números (sin espacios)'),
+});
+
 export const checkoutSchema = z.object({
   customer: customerSchema,
   paymentData: paymentSchema,
+  address: addressSchema,
+
 });
 
 // Type for checkout form data

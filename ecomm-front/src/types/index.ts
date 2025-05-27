@@ -36,8 +36,8 @@ export interface Address {
   addressLine2?: string;
   region: string;
   city: string;
-  postalCode: string;
-  contactName: string;
+  postalCode?: string;
+  contactName?: string;
   phoneNumber: string;
 }
 

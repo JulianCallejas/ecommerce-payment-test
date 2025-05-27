@@ -1,22 +1,23 @@
 import { useForm, type UseFormReturn } from "react-hook-form";
-import type { Customer, PaymentData } from "../types";
+import type { Address, Customer, PaymentData } from "../types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { customerSchema, paymentSchema } from "../utils";
+import { addressSchema, customerSchema, paymentSchema } from "../utils";
 
 export type FormContextDictType = Record<
   string,
-  UseFormReturn<Customer> | UseFormReturn<PaymentData>
+  UseFormReturn<Customer> | UseFormReturn<PaymentData> | UseFormReturn<Address>
 >;
 
 export interface IDefaultValuesContextForms {
   customer: Customer | null;
   paymentData: PaymentData | null;
+  address: Address | null;
 }
 
 export const useCheckoutContextForms = (
   dafualtValues: IDefaultValuesContextForms
 ) => {
-  const { customer, paymentData } = dafualtValues;
+  const { customer, paymentData, address } = dafualtValues;
 
   const customerFormContext = useForm<Customer>({
     resolver: zodResolver(customerSchema),
@@ -26,7 +27,7 @@ export const useCheckoutContextForms = (
       personalIdType: "CC",
       personalIdNumber: "",
     },
-    mode: "all",
+    mode: "onChange",
   });
 
   const paymentFormContext = useForm<PaymentData>({
@@ -36,21 +37,38 @@ export const useCheckoutContextForms = (
       cvc: "",
       expMonth: "",
       expYear: "",
-      installments: 1,
+      installments: 12,
       cardHolder: "",
       acceptPersonalAuth: false,
     },
     mode: "onChange",
   });
 
+  const shippingFormContext = useForm<Address>({
+      resolver: zodResolver(addressSchema),
+      defaultValues: address || {
+        country: 'CO',
+        addressLine1: '',
+        addressLine2: '',
+        region: '',
+        city: '',
+        postalCode: '',
+        contactName: customer?.fullname || '',
+        phoneNumber: '',
+      },
+      mode: 'onChange',
+    });
+
   const formContextMap: FormContextDictType = {
     0: customerFormContext,
     1: paymentFormContext,
+    2: shippingFormContext,
   };
 
   return {
     customerFormContext,
     paymentFormContext,
+    shippingFormContext,
 
     formContextMap,
   };
