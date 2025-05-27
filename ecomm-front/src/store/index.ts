@@ -9,6 +9,8 @@ import { encryptTransform } from "redux-persist-transform-encrypt";
 import productReducer, {
   type ProductState,
 } from "../features/product/productSlice";
+import checkoutReducer, { type CheckoutState } from '../features/checkout/checkoutSlice';
+import type { PersistPartial } from "redux-persist/es/persistReducer";
 
 const storageKey =
   import.meta.env.VITE_ENCRYPTSTORAGE_KEY || "41346ECD5EA232385355CDEF8B925";
@@ -20,6 +22,7 @@ const encryptStorage = new EncryptStorage(storageKey, {
 
 export interface RootState {
   product: ProductState;
+  checkout: CheckoutState & PersistPartial;
 }
 
 const encryptConfig = {
@@ -49,8 +52,16 @@ const rootPersistConfig: PersistConfig<RootState> = {
   whitelist: ["product"],
 };
 
+const checkoutPersistConfig = {
+  key: 'checkout',
+  storage,
+  transforms: [encryptTransform(encryptConfig)],
+  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted'], // Exclude paymentData
+};
+
 const rootReducer = combineReducers({
   product: productReducer,
+  checkout: persistReducer(checkoutPersistConfig, checkoutReducer),
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

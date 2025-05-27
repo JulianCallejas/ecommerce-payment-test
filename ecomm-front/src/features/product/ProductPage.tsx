@@ -1,22 +1,26 @@
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Typography, Card, Chip, Skeleton } from '@mui/material';
-import { CreditCard } from 'lucide-react';
-import { type RootState, type AppDispatch } from '../../store';
-import { fetchProduct } from './productSlice';
-import { currencyFormatter } from '../../utils';
-import ProductImageGallery from '../../components/ProductImageGallery';
-import CardWhyBuy from './CardWhyBuy';
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Typography, Card, Chip, Skeleton } from "@mui/material";
+import { CreditCard } from "lucide-react";
+import { type RootState, type AppDispatch } from "../../store";
+import { fetchProduct } from "./productSlice";
+import { currencyFormatter } from "../../utils";
+import ProductImageGallery from "../../components/ProductImageGallery";
+import CardWhyBuy from "../../components/CardWhyBuy";
+import { openCheckoutModal } from "../checkout/checkoutSlice";
 
 const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  
-  const { data: product, loading, error } = useSelector((state: RootState) => state.product);
 
-  
+  const {
+    data: product,
+    loading,
+    error,
+  } = useSelector((state: RootState) => state.product);
+
   useEffect(() => {
     if (slug) {
       dispatch(fetchProduct(slug));
@@ -24,7 +28,7 @@ const ProductPage: React.FC = () => {
   }, [dispatch, slug]);
 
   const handleBuyNowClick = () => {
-    
+    dispatch(openCheckoutModal());
   };
 
   if (loading) {
@@ -51,7 +55,7 @@ const ProductPage: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => dispatch(fetchProduct(slug || ''))}
+          onClick={() => dispatch(fetchProduct(slug || ""))}
           className="mt-4"
         >
           Try Again
@@ -69,7 +73,7 @@ const ProductPage: React.FC = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           className="mt-4"
         >
           Back to Store
@@ -80,35 +84,47 @@ const ProductPage: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <Typography variant="h3" component="h1" className="font-bold text-center md:hidden">
-            {product.name}
-          </Typography>
+      <Typography
+        variant="h3"
+        component="h1"
+        className="font-bold text-center md:hidden"
+      >
+        {product.name}
+      </Typography>
       <ProductImageGallery images={product.images} />
       <div className="space-y-6">
         <div>
-          <Typography variant="h3" component="h1" className="font-bold hidden md:block">
+          <Typography
+            variant="h3"
+            component="h1"
+            className="font-bold hidden md:block"
+          >
             {product.name}
           </Typography>
           <div className="flex items-center mt-2">
             <Typography variant="h5" color="primary" className="font-semibold">
               {currencyFormatter(product.unitPrice)}
             </Typography>
-            
+
             <Chip
-              label={product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
-              color={product.stock > 0 ? 'success' : 'error'}
+              label={
+                product.stock > 0
+                  ? `In Stock (${product.stock})`
+                  : "Out of Stock"
+              }
+              color={product.stock > 0 ? "success" : "error"}
               size="small"
               className="ml-4"
             />
           </div>
         </div>
-        
+
         <Typography variant="body1" className="text-gray-700">
           {product.description}
         </Typography>
-        
+
         <CardWhyBuy />
-                
+
         <Button
           variant="contained"
           color="secondary"

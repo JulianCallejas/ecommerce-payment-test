@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom"
 import Navbar from "./Navbar"
+import CheckoutModal from "../features/checkout/CheckoutModal"
 
 
 const Layout = () => {
@@ -8,13 +9,14 @@ const Layout = () => {
       <header>
         <Navbar />
       </header>
-      <main className="px-3 md:p-0 w-full max-w-7xl mx-auto">
+      <main className="px-3 md:p-3 w-full max-w-7xl mx-auto">
         <Outlet />
       </main>
       <footer className="flex justify-center items-center bg-[#172B3C] " >
         <img src="https://res.cloudinary.com/dphleqb5t/image/upload/v1740783455/jc-develop/JC-LOGO-Horizontal-175-50_kv6fvk.svg" alt="jc-copy-rights" className="h-full"  />
         <span className="text-white text-xs">© 2025</span>
       </footer>
+      <CheckoutModal />
     </div>
   )
 }
