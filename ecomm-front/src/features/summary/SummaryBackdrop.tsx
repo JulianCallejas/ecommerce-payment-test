@@ -18,7 +18,7 @@ import { ShoppingBag, CreditCard, CircleX } from "lucide-react";
 import { type AppDispatch, type RootState } from "../../store";
 import { closeSummary, resetSummary, selectTotalAmount } from "./summarySlice";
 import OrderTotals from "../../components/OrderTotals";
-import type { OrderCreateRequest } from "../../types";
+import type { OrderCreateRequest, OrderResponse } from "../../types";
 import { createOrder, setOrder, setOrderError } from "../order/orderSlice";
 import { createTransaction, setPolling, setTransaction, setTransactionError } from "../transaction/transactionSlice";
 import { useNotifications } from "@toolpad/core/useNotifications";
@@ -110,9 +110,8 @@ const SummaryBackdrop: React.FC = () => {
 
   }
 
-
-  const paymentProcess = async () =>{
-    if (!order) return;
+  const paymentProcess = async (newOrder?: OrderResponse ) =>{
+    if (!order && !newOrder) return;
     setStatusModalOpen(true);
     if ( transaction?.id ) {
       await pollingTransaction();
@@ -126,7 +125,7 @@ const SummaryBackdrop: React.FC = () => {
       return;
     };
     const transactionBody = {
-      orderId: order.id,
+      orderId: order?.id || newOrder?.id || "",
       totalAmount: totalAmount,
       payment: {
         ...paymentData,
@@ -143,6 +142,12 @@ const SummaryBackdrop: React.FC = () => {
        console.log(error.message);
        if (error.response?.data.message.includes("Payment rejected")){
          dispatch(setTransactionError(error.message));
+         return;
+       }
+       if (error.response?.data.message.includes("already paid")){
+         const transactionId = error.response?.data.message.split(" ")[5];
+         const newTransaction = await apiService.getTransaction(transactionId);
+         dispatch(setTransaction(newTransaction));
          return;
        }
       }
@@ -184,8 +189,7 @@ const SummaryBackdrop: React.FC = () => {
     try {
       const newOrder = await apiService.createOrder(orderBody);
       dispatch(setOrder(newOrder));
-      console.log({order});
-      await paymentProcess();
+      await paymentProcess(newOrder);
     } catch (error) {
       console.log("crea orden",error);
       if (error instanceof Error) {
