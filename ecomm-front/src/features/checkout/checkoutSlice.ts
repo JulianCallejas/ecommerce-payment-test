@@ -28,14 +28,11 @@ export const fetchAcceptTokens = createAsyncThunk(
   'acceptance/tokens',
   async () => {
     try {
-      console.log("Fetching token");
       return await wompiService.getAcceptTokens();
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error);
         return ["", ""];
       }
-      console.log(error);
       return ["", ""];
     }
   }

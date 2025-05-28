@@ -17,6 +17,7 @@ const TermsAndPrivacyForm = () => {
   const { termsAccepted, privacyAccepted } = useSelector(
     (state: RootState) => state.checkout
   );
+  const isOpen = useSelector((state: RootState) => state.checkout.isModalOpen);
 
   useEffect(() => {
     setValue('termsAccepted', false);
@@ -25,9 +26,9 @@ const TermsAndPrivacyForm = () => {
   
   // Fetch acceptance tokens
   useEffect(() => {
-    if (termsAccepted && privacyAccepted) return;
+    if (termsAccepted && privacyAccepted && isOpen) return;
     dispatch(fetchAcceptTokens());
-  }, [dispatch, privacyAccepted, termsAccepted]);
+  }, [dispatch, isOpen, privacyAccepted, termsAccepted]);
 
   return (
     <form onSubmit={handleSubmit(()=>{})} className="space-y-6">

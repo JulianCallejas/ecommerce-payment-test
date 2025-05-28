@@ -58,6 +58,9 @@ const transactionSlice = createSlice({
     setPolling: (state, action: PayloadAction<boolean>) => {
       state.polling = action.payload;
     },
+    setTransactionError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
+    },
     resetTransaction: () => initialState,
   },
   extraReducers: (builder) => {
@@ -65,6 +68,7 @@ const transactionSlice = createSlice({
       // Create transaction cases
       .addCase(createTransaction.pending, (state) => {
         state.loaded = false;
+        state.polling = false;
         state.loading = true;
         state.error = null;
       })
@@ -78,13 +82,14 @@ const transactionSlice = createSlice({
       .addCase(createTransaction.rejected, (state, action) => {
         state.loading = false;
         state.loaded = true;
+        state.polling = false;
         state.error = action.payload as string;
       })
       // Poll transaction cases
       .addCase(pollTransaction.pending, (state) => {
-        if (state.polling) return;
         state.loaded = false;
         state.error = null;
+        if (state.polling) return;
         state.polling = true;
         
       })
@@ -97,10 +102,10 @@ const transactionSlice = createSlice({
       .addCase(pollTransaction.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loaded = true;
-        state.polling = false;
+        
       });
   },
 });
 
-export const { setTransaction, setPolling, resetTransaction } = transactionSlice.actions;
+export const { setTransaction, setPolling, resetTransaction, setTransactionError } = transactionSlice.actions;
 export default transactionSlice.reducer;

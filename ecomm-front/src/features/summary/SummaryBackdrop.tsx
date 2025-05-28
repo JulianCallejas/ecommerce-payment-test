@@ -1,7 +1,6 @@
 //const SummaryBackdrop = () => {
 
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
@@ -15,24 +14,24 @@ import {
   Backdrop,
   IconButton,
 } from "@mui/material";
-import { ShoppingBag, CreditCard, ArrowLeft, CircleX } from "lucide-react";
+import { ShoppingBag, CreditCard, CircleX } from "lucide-react";
 import { type AppDispatch, type RootState } from "../../store";
 import { closeSummary, resetSummary, selectTotalAmount } from "./summarySlice";
-import { resetCheckout, clearPaymentData } from "../checkout/checkoutSlice";
-import { currencyFormatter } from "../../utils";
 import OrderTotals from "../../components/OrderTotals";
 import type { OrderCreateRequest } from "../../types";
-import apiService from "../../services/api";
-import { createOrder } from "../order/orderSlice";
-import { createTransaction } from "../transaction/transactionSlice";
+import { createOrder, setOrder, setOrderError } from "../order/orderSlice";
+import { createTransaction, setPolling, setTransaction, setTransactionError } from "../transaction/transactionSlice";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import TransactionStatusModal from "../transaction/TransactionStatusModal";
+import apiService from "../../services/api";
+import { openCheckoutModal } from "../checkout/checkoutSlice";
+import { AxiosError } from "axios";
 
 const SummaryBackdrop: React.FC = () => {
-  const navigate = useNavigate();
+ 
   const dispatch = useDispatch<AppDispatch>();
 
-  const { orderLoaded, data: order, error: orderError } = useSelector(
+  const { loaded: orderLoaded, data: order, error: orderError } = useSelector(
     (state: RootState) => state.order
   );
   const {data: transaction, error: transactionError, loading, loaded: transactionLoaded, polling } = useSelector((state: RootState) => state.transaction);
@@ -54,28 +53,28 @@ const SummaryBackdrop: React.FC = () => {
   
   
   // trigger transaction
-  useEffect(() => {
-    if (orderError) {
-        console.log(orderError);
-        notifications.show("order error", {severity: "error"});
-    }
+  // useEffect(() => {
+  //   if (orderError) {
+  //       console.log(orderError);
+  //       notifications.show("order error", {severity: "error"});
+  //   }
     
-    if (!order || !termsAccepted || !privacyAccepted || transaction || !paymentData) return;
+  //   if (!order || !termsAccepted || !privacyAccepted || transaction || !paymentData) return;
 
-    setStatusModalOpen(true);
-    const transactionBody = {
-      orderId: order.id,
-      totalAmount: totalAmount,
-      payment: {
-        ...paymentData,
-        acceptanceToken: termsAccepted,
-        acceptPersonalAuth: privacyAccepted,
-      },
-    };
+  //   setStatusModalOpen(true);
+  //   const transactionBody = {
+  //     orderId: order.id,
+  //     totalAmount: totalAmount,
+  //     payment: {
+  //       ...paymentData,
+  //       acceptanceToken: termsAccepted,
+  //       acceptPersonalAuth: privacyAccepted,
+  //     },
+  //   };
 
-    dispatch(createTransaction(transactionBody));
-    console.log(transactionBody);
-  }, [orderLoaded, order, paymentData, privacyAccepted, termsAccepted, totalAmount]);
+  //   dispatch(createTransaction(transactionBody));
+  //   console.log(transactionBody);
+  // }, [orderLoaded, order, paymentData, privacyAccepted, termsAccepted, totalAmount]);
 
   const handleCloseBackdrop = () => {
     if (paymentProcessing) return;
@@ -87,11 +86,79 @@ const SummaryBackdrop: React.FC = () => {
     handleCloseBackdrop();
   };
 
+
+  const pollingTransaction = async () => {
+    if (!transaction || !polling) return;
+    if (transaction.status !== "PENDING") {
+      dispatch(setPolling(false));
+      return 
+    };
+
+    try {
+      const newTransaction = await apiService.getTransaction(transaction.id);
+      if (newTransaction.status === "PENDING") {
+        await pollingTransaction();
+      }
+      dispatch(setTransaction(newTransaction));
+      dispatch(setPolling(false));
+    } catch (error) {
+      console.log("polling", error);
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+    }
+
+  }
+
+
+  const paymentProcess = async () =>{
+    if (!order) return;
+    setStatusModalOpen(true);
+    if ( transaction?.id ) {
+      await pollingTransaction();
+      return;
+    }
+    if ( !paymentData || !termsAccepted || !privacyAccepted) {
+      setStatusModalOpen(false);
+      dispatch(closeSummary());
+      dispatch(openCheckoutModal());
+      notifications.show("Verifica nuevamenete los datos", {severity: "warning"});
+      return;
+    };
+    const transactionBody = {
+      orderId: order.id,
+      totalAmount: totalAmount,
+      payment: {
+        ...paymentData,
+        acceptanceToken: termsAccepted,
+        acceptPersonalAuth: privacyAccepted,
+      },
+    };
+    try {
+      const newTransaction = await apiService.createTransaction(transactionBody);
+      dispatch(setTransaction(newTransaction));
+    } catch (error) {
+      console.log("new Transa", error);
+      if (error instanceof AxiosError ) {
+       console.log(error.message);
+       if (error.response?.data.message.includes("Payment rejected")){
+         dispatch(setTransactionError(error.message));
+         return;
+       }
+      }
+      dispatch(setOrderError("No Transaction try again"))
+    }
+
+  }
+
   const handlePay = async () => {
     if (!summary || !paymentData) return;
     setPaymentProcessing(true);
     setStatusModalOpen(true);
-    if (order) return;
+    if (order) {
+      await paymentProcess();
+      return;
+    };
     const orderBody: OrderCreateRequest = {
       productId: summary.product.id,
       quantity: summary.quantity,
@@ -112,7 +179,21 @@ const SummaryBackdrop: React.FC = () => {
       baseAmount: summary.baseAmount,
       deliveryFee: summary.deliveryFee,
     };
-    dispatch(createOrder(orderBody));
+    //dispatch(createOrder(orderBody));
+
+    try {
+      const newOrder = await apiService.createOrder(orderBody);
+      dispatch(setOrder(newOrder));
+      console.log({order});
+      await paymentProcess();
+    } catch (error) {
+      console.log("crea orden",error);
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      dispatch(setOrderError("No order try again"))
+      
+    }
 
     //TODO PAYMENT PROCESS
   };

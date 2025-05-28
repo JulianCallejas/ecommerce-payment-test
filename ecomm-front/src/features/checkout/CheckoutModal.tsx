@@ -122,9 +122,8 @@ const CheckoutModal: React.FC = () => {
     try {
       const orderConfirmationResponse = await apiService.confirmOrder(orderConfirmRequest);
       dispatch(setSummary(orderConfirmationResponse));
+      handleClose();
       dispatch(openSummary());
-      setActiveStep(0);
-      dispatch(closeCheckoutModal());
 
     } catch (error) {
       console.error(error);

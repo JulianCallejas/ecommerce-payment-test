@@ -37,6 +37,9 @@ const orderSlice = createSlice({
     setOrder: (state, action: PayloadAction<OrderResponse>) => {
       state.data = action.payload;
     },
+    setOrderError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload;
+    },
     resetOrder: () => initialState,
   },
   extraReducers: (builder) => {
@@ -57,7 +60,7 @@ const orderSlice = createSlice({
   },
 });
 
-export const { setOrder, resetOrder } = orderSlice.actions;
+export const { setOrder, resetOrder, setOrderError } = orderSlice.actions;
 
 // Selector to get order ID
 export const selectOrderId = (state: RootState) => state.order.data?.id;

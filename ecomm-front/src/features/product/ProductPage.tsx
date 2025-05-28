@@ -24,7 +24,6 @@ const ProductPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   
-
   const {
     data: product,
     loading,
@@ -153,7 +152,7 @@ const ProductPage: React.FC = () => {
         </Typography>
         <CardWhyBuy />
       </div>
-      <SummaryBackdrop />
+       <SummaryBackdrop /> 
     </div>
   );
 };

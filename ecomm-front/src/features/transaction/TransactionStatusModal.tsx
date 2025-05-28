@@ -19,15 +19,13 @@ import {
   setTermsAccepted,
 } from "../checkout/checkoutSlice";
 import { fetchProduct } from "../product/productSlice";
-import { useNotifications } from "@toolpad/core/useNotifications";
 import TransactionPendingMessage from "./TransactionPendingMessage";
 import TransactionApprovedMessage from "./TransactionApprovedMessage";
 import TransactionRejectedMessage from "./TransactionRejectedMessage";
 import OrderErrorMessage from "./OrderErrorMessage";
 import TransactionErrorMessage from "./TransactionErrorMessage";
 
-// Polling interval in milliseconds
-// const POLLING_INTERVAL = 1000;
+
 
 interface Props {
   isOpen: boolean;
@@ -35,33 +33,26 @@ interface Props {
 
 const TransactionStatusModal: React.FC<Props> = ({ isOpen }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const notifications = useNotifications();
+  
 
-  const {data: transaction, error: transactionError} = useSelector((state: RootState) => state.transaction);
-  const polling = useSelector((state: RootState) => state.transaction.polling);
+  const { data: transaction, error: transactionError, polling, loaded: transactionLoaded } = useSelector(
+    (state: RootState) => state.transaction
+  );
+  
   const { data: order, error: orderError } = useSelector(
     (state: RootState) => state.order
   );
   const product = useSelector((state: RootState) => state.product.data);
 
-  //   const isOpen = !!transaction;
-
-  //   // Poll transaction status if needed
-  //   useEffect(() => {
-  //     let intervalId: number;
-
-  //     if (transaction && polling && transaction.status === 'PENDING') {
-  //       intervalId = window.setInterval(() => {
-  //         dispatch(pollTransaction(transaction.id));
-  //       }, POLLING_INTERVAL);
-  //     }
-
-  //     return () => {
-  //       if (intervalId) {
-  //         clearInterval(intervalId);
-  //       }
-  //     };
-  //   }, [dispatch, transaction, polling]);
+  // Poll transaction status if needed
+  // useEffect(() => {
+  //   if (!transaction || (transaction?.status !== "PENDING" && !polling)) return;
+  //   if (transactionLoaded && polling && !transactionError){
+  //     console.log("polling");
+  //     dispatch(pollTransaction(transaction!.id));
+  //   }
+    
+  // }, [dispatch, transaction, polling, transactionLoaded, transactionError]);
 
   // Update product stock when transaction completes
   useEffect(() => {
@@ -91,10 +82,6 @@ const TransactionStatusModal: React.FC<Props> = ({ isOpen }) => {
   if (!isOpen) {
     return null;
   }
-
-  console.log(transaction?.status);
-  console.log(transaction?.status);
-
 
   return (
     <Modal
@@ -137,12 +124,15 @@ const TransactionStatusModal: React.FC<Props> = ({ isOpen }) => {
               </Typography>
             </div>
           )}
-          {!transaction && orderError  && (
+          {!transaction && orderError && (
             <OrderErrorMessage handleFinish={handleFinish} />
           )}
-          {
-            transactionError && <TransactionErrorMessage handleFinish={handleFinish} handleRetry={handleRetry} />
-          }
+          {transactionError && (
+            <TransactionErrorMessage
+              handleFinish={handleFinish}
+              handleRetry={handleRetry}
+            />
+          )}
         </Paper>
       </Fade>
     </Modal>
