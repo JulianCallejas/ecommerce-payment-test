@@ -40,7 +40,7 @@ const QuantityCounter = ({ stock }: Props) => {
         value={quantity}
         variant="outlined"
         className="max-w-24"
-        sx={{ textAlign: "center" }}
+        sx={{ textAlign: "center", zIndex:1 }}
         onChange={handleOnChange}
       />
       <IconButton aria-label="Aumentar cantidad" onClick={handleOnIncrement}>

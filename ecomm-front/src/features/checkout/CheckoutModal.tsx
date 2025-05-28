@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
   Modal,
   Box,
@@ -12,6 +11,7 @@ import {
   Paper,
   IconButton,
   Card,
+  CircularProgress,
 } from "@mui/material";
 import { X } from "lucide-react";
 import { type AppDispatch, type RootState } from "../../store";
@@ -29,6 +29,7 @@ import PaymentDataForm from "./forms/PaymentDataForm";
 import ShippingAddressForm from "./forms/ShippingAddressForm";
 import TermsAndPrivacyForm from "./forms/TermsAndPrivacyForm";
 import apiService from "../../services/api";
+import { openSummary, setSummary } from "../summary/summarySlice";
 
 const steps = [
   "Informacón Personal",
@@ -46,16 +47,18 @@ const checkoutFormDataMap: Record<number, string> = {
 const CheckoutModal: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { Toast, showToast } = useToast();
 
   const isOpen = useSelector((state: RootState) => state.checkout.isModalOpen);
-  const { customer, paymentData, address, quantity, productId } = useSelector(
+  const { customer, paymentData, address, quantity, productId, termsAccepted, privacyAccepted } = useSelector(
     (state: RootState) => state.checkout
   );
- 
+  const hasAcceptTokens = !!termsAccepted && !!privacyAccepted;
+
   const [activeStep, setActiveStep] = useState(0);
+  const [isProcessingSummary, setIsProcessingSummary] = useState(false);
   
   const {
     formContextMap,
@@ -69,11 +72,11 @@ const CheckoutModal: React.FC = () => {
     address,
   });
 
-  const [termsAccepted, privacyAccepted] = termsFormContext.watch([
+  const [termsAcceptedCheck  , privacyAcceptedCheck] = termsFormContext.watch([
     "termsAccepted",
     "privacyAccepted",
   ]);
-  const areTermsAccepted = termsAccepted && privacyAccepted;
+  const areTermsAccepted = termsAcceptedCheck && privacyAcceptedCheck;
 
   const handleClose = () => {
     dispatch(closeCheckoutModal());
@@ -81,6 +84,7 @@ const CheckoutModal: React.FC = () => {
   };
 
   const handleNext = async () => {
+    
     if (!(await formContextMap[activeStep].trigger())) return;
     updateFormSection(checkoutFormDataMap[activeStep]);
 
@@ -96,9 +100,8 @@ const CheckoutModal: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-
     if (!productId || !customer || !address || !paymentData || !quantity ) return;
-    
+    setIsProcessingSummary(true);
     const orderConfirmRequest: OrderConfirmRequest = {
       productId,
       quantity,
@@ -115,25 +118,18 @@ const CheckoutModal: React.FC = () => {
       },
     };
 
-
     try {
       const orderConfirmationResponse = await apiService.confirmOrder(orderConfirmRequest);
-      showToast("Datos recibidos", "success");
-      console.log(orderConfirmationResponse);
+      dispatch(setSummary(orderConfirmationResponse));
+      dispatch(openSummary());
+      dispatch(closeCheckoutModal());
+
     } catch (error) {
       console.error(error);
       showToast("Verifique los datos ingresados e intente nuevamente", "error");
     }
-
-
-
-
+    setIsProcessingSummary(false);
     
-    // Confirm order
-    // Close modal and navigate to summary page
-
-    // dispatch(closeCheckoutModal());
-    //navigate("/summary");
   };
 
   const updateGlobalState = (
@@ -225,9 +221,10 @@ const CheckoutModal: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={handleNext}
-              disabled={activeStep === steps.length - 1 && !areTermsAccepted}
+              disabled={activeStep === steps.length - 1 && (!areTermsAccepted || isProcessingSummary || !hasAcceptTokens)}
             >
               {activeStep === steps.length - 1 ? "Confirm" : "Next"}
+              {isProcessingSummary && <CircularProgress size={24} className="ml-2" color="inherit" />}
             </Button>
           </Box>
         </Box>

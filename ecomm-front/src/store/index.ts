@@ -10,6 +10,10 @@ import productReducer, {
 } from "../features/product/productSlice";
 import checkoutReducer, { type CheckoutState } from '../features/checkout/checkoutSlice';
 import type { PersistPartial } from "redux-persist/es/persistReducer";
+import type { SummaryState } from "../features/summary/summarySlice";
+import summaryReducer from '../features/summary/summarySlice';
+import orderReducer from '../features/order/orderSlice';
+import type { OrderState } from "../features/order/orderSlice";
 
 const storageKey =
   import.meta.env.VITE_ENCRYPTSTORAGE_KEY || "41346ECD5EA232385355CDEF8B925";
@@ -18,6 +22,8 @@ const storageKey =
 export interface RootState {
   product: ProductState;
   checkout: CheckoutState & PersistPartial;
+  summary: SummaryState;
+  order: OrderState;
 }
 
 const encryptConfig = {
@@ -44,20 +50,21 @@ const rootPersistConfig: PersistConfig<RootState> = {
   key: "root",
   storage,
   transforms: [encryptTransform(encryptConfig)],
-  whitelist: ["product"],
+  whitelist: ["product", "summary", "order"],
 };
 
 const checkoutPersistConfig = {
   key: 'checkout',
   storage,
   transforms: [encryptTransform(encryptConfig)],
-  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted', 'termsAccepted', 'privacyAccepted','isModalOpen', 'quantity'], // Exclude paymentData
+  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted', 'termsAccepted', 'privacyAccepted','isModalOpen', 'quantity', 'productId'], // Exclude paymentData
 };
 
 const rootReducer = combineReducers({
   product: productReducer,
-
   checkout: persistReducer(checkoutPersistConfig, checkoutReducer),
+  summary: summaryReducer,
+  order: orderReducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

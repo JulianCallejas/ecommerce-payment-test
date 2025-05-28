@@ -17,6 +17,7 @@ import ProductImageGallery from "../../components/ProductImageGallery";
 import CardWhyBuy from "../../components/CardWhyBuy";
 import { openCheckoutModal, setProductId } from "../checkout/checkoutSlice";
 import QuantityCounter from "../../components/QuantityCounter";
+import SummaryBackdrop from "../summary/SummaryBackdrop";
 
 const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -150,11 +151,9 @@ const ProductPage: React.FC = () => {
         <Typography variant="body1" className="text-gray-700">
           {product.description}
         </Typography>
-
         <CardWhyBuy />
-
-        
       </div>
+      <SummaryBackdrop />
     </div>
   );
 };

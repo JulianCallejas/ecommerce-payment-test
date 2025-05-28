@@ -1,5 +1,6 @@
-import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type Customer, type PaymentData, type Address } from '../../types';
+import wompiService from '../../services/acceptToken';
 
 export interface CheckoutState {
   customer: Customer | null;
@@ -16,12 +17,30 @@ const initialState: CheckoutState = {
   customer: null,
   paymentData: null,
   address: null,
-  termsAccepted: null,
-  privacyAccepted: null,
+  termsAccepted: "yes",
+  privacyAccepted: "yes",
   isModalOpen: false,
   quantity: 1,
   productId: ""
 };
+
+export const fetchAcceptTokens = createAsyncThunk(
+  'acceptance/tokens',
+  async () => {
+    try {
+      console.log("Fetching token");
+      return await wompiService.getAcceptTokens();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error);
+        return ["", ""];
+      }
+      console.log(error);
+      return ["", ""];
+    }
+  }
+);
+
 
 const checkoutSlice = createSlice({
   name: 'checkout',
@@ -82,6 +101,17 @@ const checkoutSlice = createSlice({
       state.productId = productId;
     },
   },
+  extraReducers: (builder) => {
+      builder
+        .addCase(fetchAcceptTokens.fulfilled, (state, action) => {
+          state.termsAccepted = action.payload[0];
+          state.privacyAccepted = action.payload[1];
+        })
+        .addCase(fetchAcceptTokens.rejected, (state) => {
+          state.termsAccepted = null;
+          state.privacyAccepted = null;
+        });
+    },
 });
 
 export const {
