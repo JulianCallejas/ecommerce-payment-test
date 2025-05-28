@@ -23,13 +23,14 @@ import {
 } from "./checkoutSlice";
 import CustomerInfoForm from "./forms/CustomerInfoForm";
 import { FormProvider } from "react-hook-form";
-import { useCheckoutContextForms, useToast, type ITermsFormData } from "../../hooks";
+import { useCheckoutContextForms, type ITermsFormData } from "../../hooks";
 import type { Address, Customer, OrderConfirmRequest, PaymentData } from "../../types";
 import PaymentDataForm from "./forms/PaymentDataForm";
 import ShippingAddressForm from "./forms/ShippingAddressForm";
 import TermsAndPrivacyForm from "./forms/TermsAndPrivacyForm";
 import apiService from "../../services/api";
 import { openSummary, setSummary } from "../summary/summarySlice";
+import { useNotifications } from "@toolpad/core/useNotifications";
 
 const steps = [
   "Informacón Personal",
@@ -49,7 +50,7 @@ const CheckoutModal: React.FC = () => {
 
   // const navigate = useNavigate();
 
-  const { Toast, showToast } = useToast();
+  const notifications = useNotifications();
 
   const isOpen = useSelector((state: RootState) => state.checkout.isModalOpen);
   const { customer, paymentData, address, quantity, productId, termsAccepted, privacyAccepted } = useSelector(
@@ -122,11 +123,15 @@ const CheckoutModal: React.FC = () => {
       const orderConfirmationResponse = await apiService.confirmOrder(orderConfirmRequest);
       dispatch(setSummary(orderConfirmationResponse));
       dispatch(openSummary());
+      setActiveStep(0);
       dispatch(closeCheckoutModal());
 
     } catch (error) {
       console.error(error);
-      showToast("Verifique los datos ingresados e intente nuevamente", "error");
+      notifications.show("Verifique los datos ingresados e intente nuevamente", {
+        severity: "error",
+      });
+      
     }
     setIsProcessingSummary(false);
     
@@ -228,7 +233,6 @@ const CheckoutModal: React.FC = () => {
             </Button>
           </Box>
         </Box>
-      <Toast />
       </Card>
     </Modal>
   );

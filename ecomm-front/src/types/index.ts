@@ -32,7 +32,7 @@ export interface PaymentData {
   installments: number;
   cardHolder: string;
   acceptanceToken?: string;
-  acceptPersonalAuth?: boolean;
+  acceptPersonalAuth?: string;
 }
 
 // Address types

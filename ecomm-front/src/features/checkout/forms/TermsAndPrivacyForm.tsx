@@ -25,7 +25,6 @@ const TermsAndPrivacyForm = () => {
   
   // Fetch acceptance tokens
   useEffect(() => {
-    return;
     if (termsAccepted && privacyAccepted) return;
     dispatch(fetchAcceptTokens());
   }, [dispatch, privacyAccepted, termsAccepted]);

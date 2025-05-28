@@ -45,7 +45,7 @@ export const useCheckoutContextForms = (
       expYear: "",
       installments: 12,
       cardHolder: "",
-      acceptPersonalAuth: false,
+      acceptPersonalAuth: "",
     },
     mode: "onChange",
   });

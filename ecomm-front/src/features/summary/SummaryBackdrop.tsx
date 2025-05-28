@@ -24,33 +24,45 @@ import OrderTotals from "../../components/OrderTotals";
 import type { OrderCreateRequest } from "../../types";
 import apiService from "../../services/api";
 import { createOrder } from "../order/orderSlice";
+import { createTransaction } from "../transaction/transactionSlice";
+import { useNotifications } from "@toolpad/core/useNotifications";
+import TransactionStatusModal from "../transaction/TransactionStatusModal";
 
 const SummaryBackdrop: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { loaded, data: order } = useSelector(
+  const { orderLoaded, data: order, error: orderError } = useSelector(
     (state: RootState) => state.order
   );
+  const {data: transaction, error: transactionError, loading, loaded: transactionLoaded, polling } = useSelector((state: RootState) => state.transaction);
   const summary = useSelector((state: RootState) => state.summary.data);
   const open = useSelector((state: RootState) => state.summary.open);
   const title = useSelector((state: RootState) => state.product.data?.name);
   const { customer, paymentData, termsAccepted, privacyAccepted } = useSelector(
     (state: RootState) => state.checkout
   );
+  const [statusModalOpen, setStatusModalOpen] = useState(false);
+
+  const notifications = useNotifications();
 
   const totalAmount = useSelector(selectTotalAmount);
   const [paymentProcessing, setPaymentProcessing] = useState(false);
 
+  //Block if missed data
+  const openBackdrop = !!open && !!paymentData && !!termsAccepted && !!privacyAccepted;
+  
+  
   // trigger transaction
   useEffect(() => {
-    if (!loaded || !order) return;
-    console.log(order);
-    if (!paymentData) {
-      console.log("ingrese los datos de pago");
-      return;
+    if (orderError) {
+        console.log(orderError);
+        notifications.show("order error", {severity: "error"});
     }
+    
+    if (!order || !termsAccepted || !privacyAccepted || transaction || !paymentData) return;
 
+    setStatusModalOpen(true);
     const transactionBody = {
       orderId: order.id,
       totalAmount: totalAmount,
@@ -61,8 +73,9 @@ const SummaryBackdrop: React.FC = () => {
       },
     };
 
+    dispatch(createTransaction(transactionBody));
     console.log(transactionBody);
-  }, [loaded, order, paymentData, privacyAccepted, termsAccepted, totalAmount]);
+  }, [orderLoaded, order, paymentData, privacyAccepted, termsAccepted, totalAmount]);
 
   const handleCloseBackdrop = () => {
     if (paymentProcessing) return;
@@ -73,11 +86,11 @@ const SummaryBackdrop: React.FC = () => {
     dispatch(resetSummary());
     handleCloseBackdrop();
   };
-  
 
   const handlePay = async () => {
     if (!summary || !paymentData) return;
     setPaymentProcessing(true);
+    setStatusModalOpen(true);
     if (order) return;
     const orderBody: OrderCreateRequest = {
       productId: summary.product.id,
@@ -138,7 +151,7 @@ const SummaryBackdrop: React.FC = () => {
   };
 
   return (
-    <Backdrop open={open} sx={{ zIndex: 100 }}>
+    <Backdrop open={openBackdrop} sx={{ zIndex: 100 }}>
       <Paper className="max-w-5xl w-full mx-auto max-h-[95vh] overflow-auto">
         <Box className="w-full flex justify-between items-start mt-11 md:mt-0">
           <Typography variant="h5" component="h1" className="mb-6 px-3 pt-6">
@@ -272,6 +285,7 @@ const SummaryBackdrop: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
+      <TransactionStatusModal isOpen={statusModalOpen && openBackdrop} />
     </Backdrop>
   );
 };

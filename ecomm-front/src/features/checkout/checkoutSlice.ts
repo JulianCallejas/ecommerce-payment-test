@@ -17,8 +17,8 @@ const initialState: CheckoutState = {
   customer: null,
   paymentData: null,
   address: null,
-  termsAccepted: "yes",
-  privacyAccepted: "yes",
+  termsAccepted: null,
+  privacyAccepted: null,
   isModalOpen: false,
   quantity: 1,
   productId: ""

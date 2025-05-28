@@ -13,7 +13,9 @@ import type { PersistPartial } from "redux-persist/es/persistReducer";
 import type { SummaryState } from "../features/summary/summarySlice";
 import summaryReducer from '../features/summary/summarySlice';
 import orderReducer from '../features/order/orderSlice';
+import transactionReducer from '../features/transaction/transactionSlice';
 import type { OrderState } from "../features/order/orderSlice";
+import type { TransactionState } from "../features/transaction/transactionSlice";
 
 const storageKey =
   import.meta.env.VITE_ENCRYPTSTORAGE_KEY || "41346ECD5EA232385355CDEF8B925";
@@ -24,6 +26,7 @@ export interface RootState {
   checkout: CheckoutState & PersistPartial;
   summary: SummaryState;
   order: OrderState;
+  transaction: TransactionState;
 }
 
 const encryptConfig = {
@@ -50,7 +53,7 @@ const rootPersistConfig: PersistConfig<RootState> = {
   key: "root",
   storage,
   transforms: [encryptTransform(encryptConfig)],
-  whitelist: ["product", "summary", "order"],
+  whitelist: ["product", "summary", "order", "transaction"],
 };
 
 const checkoutPersistConfig = {
@@ -65,6 +68,7 @@ const rootReducer = combineReducers({
   checkout: persistReducer(checkoutPersistConfig, checkoutReducer),
   summary: summaryReducer,
   order: orderReducer,
+  transaction: transactionReducer,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
