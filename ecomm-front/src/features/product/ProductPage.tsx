@@ -7,6 +7,7 @@ import {
   Card,
   Chip,
   Skeleton,
+  Box,
   
 } from "@mui/material";
 import {  CreditCard } from "lucide-react";
@@ -15,14 +16,14 @@ import { fetchProduct } from "./productSlice";
 import { currencyFormatter } from "../../utils";
 import ProductImageGallery from "../../components/ProductImageGallery";
 import CardWhyBuy from "../../components/CardWhyBuy";
-import { openCheckoutModal, setProductId } from "../checkout/checkoutSlice";
 import QuantityCounter from "../../components/QuantityCounter";
-import SummaryBackdrop from "../summary/SummaryBackdrop";
+import { usePurchaseProcess } from "../../hooks";
 
 const ProductPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const { startCheckout } = usePurchaseProcess();
   
   const {
     data: product,
@@ -38,8 +39,7 @@ const ProductPage: React.FC = () => {
 
   const handleBuyNowClick = () => {
     if (!product) return;
-    dispatch(setProductId(product.id));
-    dispatch(openCheckoutModal());
+    startCheckout(product.id);
   };
 
   if (loading) {
@@ -60,17 +60,27 @@ const ProductPage: React.FC = () => {
     return (
       <Card className="p-6 text-center">
         <Typography variant="h5" color="error" gutterBottom>
-          Error Loading Product
+          Error al cargar el producto
         </Typography>
-        <Typography>{error}</Typography>
+        <Box className="flex justify-center items-center gap-4 flex-col md:flex-row mt-4">
+
         <Button
           variant="contained"
           color="primary"
           onClick={() => dispatch(fetchProduct(slug || ""))}
           className="mt-4"
-        >
-          Try Again
+          >
+          Intentar nuevamente
         </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate("/")}
+          className="mt-4"
+          >
+          Regresar
+        </Button>
+          </Box>
       </Card>
     );
   }
@@ -152,7 +162,6 @@ const ProductPage: React.FC = () => {
         </Typography>
         <CardWhyBuy />
       </div>
-       <SummaryBackdrop /> 
     </div>
   );
 };

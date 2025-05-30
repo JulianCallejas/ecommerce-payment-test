@@ -26,12 +26,7 @@ import OrderErrorMessage from "./OrderErrorMessage";
 import TransactionErrorMessage from "./TransactionErrorMessage";
 
 
-
-interface Props {
-  isOpen: boolean;
-}
-
-const TransactionStatusModal: React.FC<Props> = ({ isOpen }) => {
+const TransactionStatusModal: React.FC<Props> = () => {
   const dispatch = useDispatch<AppDispatch>();
   
 

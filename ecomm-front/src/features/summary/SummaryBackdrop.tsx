@@ -370,7 +370,7 @@ const SummaryBackdrop: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      <TransactionStatusModal isOpen={statusModalOpen && openBackdrop} />
+      {/* <TransactionStatusModal isOpen={statusModalOpen && openBackdrop} /> */}
     </Backdrop>
   );
 };

@@ -3,7 +3,6 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Product } from '../../types';
 import api from '../../services/api';
 
-
 export interface ProductState {
   data: Product | null;
   loading: boolean;

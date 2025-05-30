@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom"
 import Navbar from "./Navbar"
-import CheckoutModal from "../features/checkout/CheckoutModal"
+import PurchaseComponents from "./PurchaseComponents"
 
 
 const Layout = () => {
@@ -16,7 +16,7 @@ const Layout = () => {
         <img src="https://res.cloudinary.com/dphleqb5t/image/upload/v1740783455/jc-develop/JC-LOGO-Horizontal-175-50_kv6fvk.svg" alt="jc-copy-rights" className="h-full"  />
         <span className="text-white text-xs">© 2025</span>
       </footer>
-      <CheckoutModal />
+      <PurchaseComponents />
     </div>
   )
 }

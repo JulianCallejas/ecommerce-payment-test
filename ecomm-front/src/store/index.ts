@@ -8,14 +8,14 @@ import { encryptTransform } from "redux-persist-transform-encrypt";
 import productReducer, {
   type ProductState,
 } from "../features/product/productSlice";
+import { type PersistPartial } from "redux-persist/es/persistReducer";
+import summaryReducer, { type SummaryState } from "../features/summary/summarySlice";
+import orderReducer, { type OrderState } from "../features/order/orderSlice";
+import transactionReducer, { type TransactionState } from "../features/transaction/transactionSlice";
 import checkoutReducer, { type CheckoutState } from '../features/checkout/checkoutSlice';
-import type { PersistPartial } from "redux-persist/es/persistReducer";
-import type { SummaryState } from "../features/summary/summarySlice";
-import summaryReducer from '../features/summary/summarySlice';
-import orderReducer from '../features/order/orderSlice';
-import transactionReducer from '../features/transaction/transactionSlice';
-import type { OrderState } from "../features/order/orderSlice";
-import type { TransactionState } from "../features/transaction/transactionSlice";
+import purchaseStageReducer, { type PurchaseStageState} from '../features/purchase/purchaseStageSlice';
+
+
 
 const storageKey =
   import.meta.env.VITE_ENCRYPTSTORAGE_KEY || "41346ECD5EA232385355CDEF8B925";
@@ -27,6 +27,7 @@ export interface RootState {
   summary: SummaryState;
   order: OrderState;
   transaction: TransactionState;
+  purchaseStageState: PurchaseStageState;
 }
 
 const encryptConfig = {
@@ -53,14 +54,14 @@ const rootPersistConfig: PersistConfig<RootState> = {
   key: "root",
   storage,
   transforms: [encryptTransform(encryptConfig)],
-  whitelist: ["product", "summary", "order", "transaction"],
+  whitelist: ["product", "summary", "order", "transaction", "purchaseStageState"],
 };
 
 const checkoutPersistConfig = {
   key: 'checkout',
   storage,
   transforms: [encryptTransform(encryptConfig)],
-  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted', 'termsAccepted', 'privacyAccepted','isModalOpen', 'quantity', 'productId'], // Exclude paymentData
+  whitelist: ['customer', 'address', 'termsAccepted', 'privacyAccepted', 'termsAccepted', 'privacyAccepted', 'quantity', 'productId'], // Exclude paymentData
 };
 
 const rootReducer = combineReducers({
@@ -69,6 +70,7 @@ const rootReducer = combineReducers({
   summary: summaryReducer,
   order: orderReducer,
   transaction: transactionReducer,
+  purchaseStageState: purchaseStageReducer
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
