@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import { catchError, firstValueFrom } from 'rxjs';
@@ -22,6 +22,7 @@ export class WompiGatewayService implements WompiGatewayServicePort {
   private readonly apiKeyPublic: string;
   private readonly apiKeySecret: string;
   private readonly integrityKey: string;
+  private readonly logger = new Logger("Wompi-Service");
 
   constructor(
     private readonly httpService: HttpService,
@@ -60,6 +61,8 @@ export class WompiGatewayService implements WompiGatewayServicePort {
           .post(`${this.apiBaseUrl}/tokens/cards`, body, { headers })
           .pipe(
             catchError((error) => {
+              this.logger.error(`[Card-Token] - ${error.response.data.error.messages}`);
+              console.error(error.response.data.error.messages);
               throw `Payment rejected ${error.response}`;
             })
           )
@@ -96,13 +99,13 @@ export class WompiGatewayService implements WompiGatewayServicePort {
       },
       shipping_address: {
         address_line_1: shippingAddress.addressLine1,
-        address_line_2: shippingAddress.addressLine2,
+        address_line_2: shippingAddress.addressLine2.trim() || "0000",
         country: 'CO',
         region: shippingAddress.region,
         city: shippingAddress.city,
-        name: shippingAddress.contactName,
+        name: shippingAddress.contactName || customerData.fullname || "",
         phone_number: shippingAddress.phoneNumber,
-        postal_code: shippingAddress.postalCode
+        postal_code: shippingAddress.postalCode || "000000"
       }
     };
     const headers = {
@@ -115,6 +118,8 @@ export class WompiGatewayService implements WompiGatewayServicePort {
           .post(`${this.apiBaseUrl}/transactions`, body, { headers })
           .pipe(
             catchError((error) => {
+              this.logger.error(`[Create-Transaction] - ${error.response.data.error.messages}`);
+              console.error(error.response.data.error.messages);
               throw `Payment rejected ${error.response}`;
             })
           )
@@ -139,6 +144,8 @@ export class WompiGatewayService implements WompiGatewayServicePort {
           })
           .pipe(
             catchError((error) => {
+              this.logger.error(`[Get-Transaction] - ${error.response.data.error.messages}`);
+              console.error(error.response.data.error.messages);
               throw `Transaction not found ${error.response}`;
             })
           )

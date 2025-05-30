@@ -8,8 +8,12 @@ import { Product } from 'src/core/entities/product.entity';
 import { Decimal } from '@prisma/client/runtime/library';
 import { WompiGatewayServicePort } from 'src/core/ports/services/wompi-gateway.service.port';
 import { v4 as uuidv4 } from 'uuid';
-import { CreateTransactionResponse, TokenizeCardResponse } from 'src/core/ports/services/wompi-gateway.types';
+import {
+  CreateTransactionResponse,
+  TokenizeCardResponse
+} from 'src/core/ports/services/wompi-gateway.types';
 import { Order } from 'src/core/entities/order.entity';
+import { GetTransactionStatusUseCase } from './get-transaction-status.use-case';
 
 export interface CreateTransactionInput {
   orderId: string;
@@ -39,7 +43,9 @@ export class CreateTransactionUseCase {
     private readonly transactionRepository: TransactionRepositoryPort,
 
     @Inject('WompiGatewayServicePort')
-    private readonly wompiGatewayService: WompiGatewayServicePort
+    private readonly wompiGatewayService: WompiGatewayServicePort,
+
+    private readonly getTransactionStatusUseCase: GetTransactionStatusUseCase
   ) {}
 
   async execute(input: CreateTransactionInput) {
@@ -47,17 +53,20 @@ export class CreateTransactionUseCase {
     const order = await this.orderRepository.findById(input.orderId);
     checkOrThrowBadrequest(!!order, `Order ${input.orderId} not found`);
 
-    order.transactions.forEach((transaction) => {
-      checkOrThrowBadrequest(
-        transaction.status as TransactionStatus !== TransactionStatus.PENDING,
-        `Transaction ${transaction.id} in process`
-      );
-      checkOrThrowBadrequest(
-        transaction.status as TransactionStatus !== TransactionStatus.APPROVED,
-        `Order ${order.id} already paid, transaction ${transaction.id} approved`
-      );
+    // 2. Look for pending  or approved transactions
+    order.transactions.forEach(async (transaction) => {
+      if (
+        (transaction.status as TransactionStatus) ===
+          TransactionStatus.PENDING ||
+        (transaction.status as TransactionStatus) === TransactionStatus.APPROVED
+      ) {
+        return await this.getTransactionStatusUseCase.checkTransactionStatus(
+          transaction
+        );
+      }
     });
 
+    // Verify data for transaction
     const totalAmount =
       Number(order.unitPrice) * order.quantity + Number(order.deliveryFee);
     checkOrThrowBadrequest(
@@ -71,11 +80,11 @@ export class CreateTransactionUseCase {
       order.unitPrice,
       order.product
     );
-    
+
     // 3. Create Wompi tyransaction
-    
+
     const cardToken = await this.generateCardToken(input, order);
-    
+
     // Required transaction data
     const transactionId = uuidv4();
     const amountInCents = Math.round(totalAmount * 100);
@@ -106,24 +115,17 @@ export class CreateTransactionUseCase {
     // Create transaction record
 
     const newTransaction = await this.transactionRepository.create({
-        reference: transactionId,
-        externalId: wompiTransaction.data.id,
-        orderId: order.id,
-        status: wompiTransaction.data.status,
-        amount: Decimal(wompiTransaction.data.amount_in_cents / 100),
-        details: wompiTransaction.data
-      }
-    );
-    
-    return {
-      transactionId: newTransaction.id,
-      status: newTransaction.status,
-      amount: newTransaction.amount,
-      createdAt: newTransaction.createdAt,
-      orderId: newTransaction.orderId,
-      customerName: order.customer.fullname,
-      productName: order.product.product
-    };
+      reference: transactionId,
+      externalId: wompiTransaction.data.id,
+      orderId: order.id,
+      status: wompiTransaction.data.status,
+      amount: Decimal(wompiTransaction.data.amount_in_cents / 100),
+      details: wompiTransaction.data
+    });
+
+    // Check transaction status
+    return await this.getTransactionStatusUseCase.checkTransactionStatus(newTransaction);
+
   }
 
   async updateProductStock(
@@ -182,12 +184,15 @@ export class CreateTransactionUseCase {
         expYear: input.payment.expYear,
         cardHolder: input.payment.cardHolder
       });
-      
+
       return cardToken;
     } catch (error) {
       // Update stock
-      await this.productRepository.rollbackStock(order.product.id, order.quantity);
-      throw new BadRequestException('Payment rejected');
+      await this.productRepository.rollbackStock(
+        order.product.id,
+        order.quantity
+      );
+      throw new BadRequestException('Card rejected');
     }
   }
 
@@ -222,17 +227,20 @@ export class CreateTransactionUseCase {
       return wompiTransaction;
     } catch (error) {
       // Update stock
-      await this.productRepository.rollbackStock(order.product.id, order.quantity);
+      await this.productRepository.rollbackStock(
+        order.product.id,
+        order.quantity
+      );
       throw new BadRequestException('Payment rejected');
     }
   }
+  
 }
 
-
 // const paymentSource = await this.wompiGatewayService.createPaymentSource({
-    //   type: "CARD",
-    //   token: cardToken.data.id,
-    //   customerEmail: order.customer.email,
-    //   acceptanceToken: input.payment.acceptanceToken,
-    //   acceptPersonalAuth: input.payment.acceptPersonalAuth,
-    // });
+//   type: "CARD",
+//   token: cardToken.data.id,
+//   customerEmail: order.customer.email,
+//   acceptanceToken: input.payment.acceptanceToken,
+//   acceptPersonalAuth: input.payment.acceptPersonalAuth,
+// });
