@@ -62,7 +62,7 @@ export class WompiGatewayService implements WompiGatewayServicePort {
           .pipe(
             catchError((error) => {
               this.logger.error(`[Card-Token] - ${error.response.data.error.messages}`);
-              console.log(error.response.data.error.messages);
+              console.error(error.response.data.error.messages);
               throw `Payment rejected ${error.response}`;
             })
           )
@@ -119,7 +119,7 @@ export class WompiGatewayService implements WompiGatewayServicePort {
           .pipe(
             catchError((error) => {
               this.logger.error(`[Create-Transaction] - ${error.response.data.error.messages}`);
-              console.log(error.response.data.error.messages);
+              console.error(error.response.data.error.messages);
               throw `Payment rejected ${error.response}`;
             })
           )
@@ -145,7 +145,7 @@ export class WompiGatewayService implements WompiGatewayServicePort {
           .pipe(
             catchError((error) => {
               this.logger.error(`[Get-Transaction] - ${error.response.data.error.messages}`);
-              console.log(error.response.data.error.messages);
+              console.error(error.response.data.error.messages);
               throw `Transaction not found ${error.response}`;
             })
           )
