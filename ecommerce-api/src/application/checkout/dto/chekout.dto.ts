@@ -10,10 +10,11 @@ import {
   Length,
   Matches,
   Min,
+  MinLength,
   ValidateNested
 } from 'class-validator';
 
-export class OrderAddressDto {
+export class ChekoutAddressDto {
   @ApiProperty({ 
     description: 'Address line 1',
     example: 'Calle 123'
@@ -25,6 +26,7 @@ export class OrderAddressDto {
   @ApiProperty({ description: 'Address line 2', required: false })
   @IsOptional()
   @IsString()
+  @MinLength(4)
   addressLine2?: string;
 
   @ApiProperty({ 
@@ -78,7 +80,7 @@ export class OrderAddressDto {
   phoneNumber: string;
 }
 
-export class OrderCustomerDto {
+export class CheckoutCustomerDto {
   @ApiProperty({
     description: 'Customer ID in the format ${legal_id_type}${legal_id}',
     example: 'CC123456789'
@@ -105,7 +107,7 @@ export class OrderCustomerDto {
   
 }
 
-export class ConfirmOrderDto {
+export class CheckoutDto {
   @ApiProperty({ description: 'Product ID' })
   @IsUUID()
   productId: string;
@@ -117,17 +119,17 @@ export class ConfirmOrderDto {
 
   @ApiProperty({
     description: 'Customer ID',
-    type: OrderCustomerDto
+    type: CheckoutCustomerDto
   })
   @ValidateNested()
-  @Type(() => OrderCustomerDto)
-  customer: OrderCustomerDto;
+  @Type(() => CheckoutCustomerDto)
+  customer: CheckoutCustomerDto;
 
   @ApiProperty({
     description: 'Shipping address',
-    type: OrderAddressDto
+    type: ChekoutAddressDto
   })
   @ValidateNested()
-  @Type(() => OrderAddressDto)
-  address: OrderAddressDto;
+  @Type(() => ChekoutAddressDto)
+  address: ChekoutAddressDto;
 }

@@ -1,18 +1,16 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ConfirmOrderResponseDto } from './dto/confirm-order-response.dto';
-import { ConfirmOrderDto } from './dto/confirm-order.dto';
-import { ConfirmOrderUseCase } from 'src/core/use-cases/orders/confirm-order.use-case';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from 'src/core/entities/order.entity';
 import { CreateOrderUseCase } from 'src/core/use-cases/orders/create-order.use-case';
+import { GetOrderIdUseCase } from 'src/core/use-cases/orders/get-order-id.use-case';
 
 @ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(
-    private readonly confirmOrderUseCase: ConfirmOrderUseCase,
-    private readonly createOrderUseCase: CreateOrderUseCase
+    private readonly createOrderUseCase: CreateOrderUseCase,
+    private readonly getOrderIdUseCase: GetOrderIdUseCase
   ) {}
 
   @Post()
@@ -25,34 +23,18 @@ export class OrdersController {
   async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     return await this.createOrderUseCase.execute(createOrderDto);
   }
-
-  @Post('/confirm')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Confirm order data' })
-  @ApiResponse({
-    status: 200,
-    description: 'Order data confirmed successfully',
-    type: ConfirmOrderResponseDto
-  })
-  async confirmOrder(
-    @Body() confirmOrderDto: ConfirmOrderDto
-  ): Promise<ConfirmOrderResponseDto> {
-    const confirmationData = await this.confirmOrderUseCase.execute(
-      confirmOrderDto.productId,
-      confirmOrderDto.quantity
-    );
-    return {
-      product: {
-        id: confirmationData.product.id,
-        product: confirmationData.product.product,
-        images: confirmationData.product.images
-      },
-      quantity: confirmationData.quantity,
-      baseAmount: confirmationData.baseAmount,
-      deliveryFee: confirmationData.deliveryFee,
-      customer: confirmOrderDto.customer,
-      address: { ...confirmOrderDto.address, country: 'CO' },
-      unitPrice: Number(confirmationData.unitPrice)
-    };
-  }
+  
+  @Get(':orderId')
+    @ApiOperation({ summary: 'Get order details' })
+    @ApiResponse({
+      status: 200,
+      description: 'Order details',
+      type: Order,
+    })
+    async getTransaction(
+      @Param('orderId') transactionId: string,
+    ): Promise<Order> {
+       return await this.getOrderIdUseCase.execute(transactionId);
+    }
+  
 }

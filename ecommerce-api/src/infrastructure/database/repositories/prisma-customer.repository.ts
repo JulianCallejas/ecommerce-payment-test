@@ -12,7 +12,16 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   async findById(id: string): Promise<Customer | null> {
     if (!uuidValidate(id)) return null;
     return this.prisma.customer.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        orders: {
+          include: {
+            product: true,
+            address: true,
+            transactions: true
+          }
+        }
+      }
     });
   }
 

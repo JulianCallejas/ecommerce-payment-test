@@ -66,7 +66,7 @@ class AddressInfoResponseDto {
   phoneNumber?: string;
 }
 
-export class ConfirmOrderResponseDto {
+export class CheckoutResponseDto {
   @ApiProperty({ description: 'Product information' })
   product: ProductInfoResponseDto;
 

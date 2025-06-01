@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
-import { PrismaProductRepository } from '../../infrastructure/database/repositories/prisma-product.repository';
-import { ConfirmOrderUseCase } from 'src/core/use-cases/orders/confirm-order.use-case';
 import { CreateOrderUseCase } from 'src/core/use-cases/orders/create-order.use-case';
 import { PrismaOrderRepository } from 'src/infrastructure/database/repositories/prisma-order.repository';
+import { PrismaProductRepository } from 'src/infrastructure/database/repositories/prisma-product.repository';
+import { GetOrderIdUseCase } from 'src/core/use-cases/orders/get-order-id.use-case';
 
 @Module({
   controllers: [OrdersController],
@@ -17,8 +17,8 @@ import { PrismaOrderRepository } from 'src/infrastructure/database/repositories/
       useExisting: PrismaOrderRepository,
     },
     
-    ConfirmOrderUseCase,
-    CreateOrderUseCase
+    CreateOrderUseCase,
+    GetOrderIdUseCase
     
   ],
 })

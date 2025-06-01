@@ -18,7 +18,7 @@ export class ProductResponseDto {
   @ApiProperty({ description: 'Available stock' })
   stock: number;
 
-  @ApiProperty({ description: 'Unit price' })
+  @ApiProperty({ description: 'Unit price', type: 'number', format: 'double' })
   unitPrice: Decimal;
 
   @ApiProperty({ description: 'Product images', type: [String] })
@@ -26,6 +26,7 @@ export class ProductResponseDto {
 
   @ApiProperty({ description: 'Creation date' })
   createdAt: Date;
+
 
   static fromEntity(product: Product | null): ProductResponseDto {
     if (!product) return null;

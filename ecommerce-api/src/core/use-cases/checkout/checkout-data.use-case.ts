@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { ProductRepositoryPort } from 'src/core/ports/repositories/product.repository.port';
 
 @Injectable()
-export class ConfirmOrderUseCase {
+export class CheckoutDataUseCase {
   constructor(
     @Inject('ProductRepositoryPort')
     private readonly productRepository: ProductRepositoryPort,

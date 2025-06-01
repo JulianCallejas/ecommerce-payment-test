@@ -10,6 +10,7 @@ import {
   Matches,
   Max,
   Min,
+  MinLength,
   ValidateNested
 } from 'class-validator';
 
@@ -62,14 +63,15 @@ export class PaymentDto {
 
   @ApiProperty({
     description: 'Cardholder name',
-    example: 'John Doe'
+    example: 'John Connor'
   })
   @IsNotEmpty()
   @IsString()
+  @MinLength(5)
   cardHolder: string;
 
   @ApiProperty({
-    description: 'Cardholder name',
+    description: 'Acceptance terms token',
     example: 'XXXXXXX'
   })
   @IsNotEmpty()
@@ -77,7 +79,7 @@ export class PaymentDto {
   acceptanceToken: string;
   
   @ApiProperty({
-    description: 'Cardholder name',
+    description: 'Acceptance personal data policy token',
     example: 'XXXXXXX'
   })
   @IsNotEmpty()

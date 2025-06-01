@@ -6,6 +6,7 @@ import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionResponseDto } from './dto/transaction-response.dto';
 import { PaginatedResponseDto, PaginationQueryDto } from '../common/pagination.dto';
 import { GetTransactionStatusUseCase } from 'src/core/use-cases/transactions/get-transaction-status.use-case';
+import { TransactionDetailsResponseDto } from './dto/transaction-details-response.dto';
 
 @ApiTags('Transactions')
 @Controller('transactions')
@@ -60,11 +61,11 @@ export class TransactionsController {
   @ApiResponse({
     status: 200,
     description: 'Transaction details',
-    type: TransactionResponseDto,
+    type: TransactionDetailsResponseDto,
   })
   async getTransaction(
     @Param('transactionId') transactionId: string,
-  ): Promise<TransactionResponseDto> {
+  ): Promise<TransactionDetailsResponseDto> {
      return await this.getTransactionStatusUseCase.execute(transactionId);
   }
 

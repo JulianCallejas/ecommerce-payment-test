@@ -8,7 +8,7 @@ export class TransactionResponseDto {
   @ApiProperty({ description: 'Transaction status' })
   status: string;
   
-  @ApiProperty({ description: 'Transaction amount', required: false })
+  @ApiProperty({ description: 'Transaction amount', required: false, type: 'number', format: 'double' })
   amount?: Decimal;
 
   @ApiProperty({ description: 'Creation date', required: false })
