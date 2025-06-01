@@ -70,6 +70,7 @@ export class GetTransactionStatusUseCase {
 
         // Repeat until transaction is !== PENDING
         if (getTransactionStatus.data.status === TransactionStatus.PENDING) {
+          await new Promise(resolve => setTimeout(resolve, 300));
           continue;
         }
 
@@ -151,6 +152,7 @@ export class GetTransactionStatusUseCase {
   }
 
   async rollbackStock(productId: string, quantity: number) {
+
     try {
       this.productRepository.rollbackStock(productId, quantity);
     } catch (error) {
