@@ -8,6 +8,7 @@ import {
   PaginationQueryDto
 } from '../common/pagination.dto';
 import { Decimal } from '@prisma/client/runtime/library';
+import { Delivery } from 'src/core/entities/delivery.entity';
 
 @ApiTags('Deliveries')
 @Controller('deliveries')
@@ -59,13 +60,16 @@ export class DeliveriesController {
   }
 
   private mapDeliveriesToDtos(deliveries: any[]): DeliveryResponseDto[] {
-    return deliveries.map((delivery) => {
-      const order: OrderInfoDto = {
+    return deliveries.map((delivery) => this.deliveryToDto(delivery as Delivery));
+  }
+
+  private deliveryToDto(delivery: Delivery): DeliveryResponseDto {
+    const order: OrderInfoDto = {
         id: delivery.order?.id,
         productName: delivery.order?.product?.product || 'N/A',
         quantity: delivery.order?.quantity,
-        totalPrice: Decimal(delivery.order?.unitPrice * delivery.order?.quantity)  || Decimal(0),
-        deliveryFee: delivery.order?.deliveryFee || 0,
+        totalPrice: Decimal(Number(delivery.order?.unitPrice) * delivery.order?.quantity)  || Decimal(0),
+        deliveryFee: delivery.order?.deliveryFee || Decimal(0),
         customer: {
           id: delivery.order?.customer?.id,
           customerId: delivery.order?.customer?.customerId,
@@ -74,23 +78,25 @@ export class DeliveriesController {
           createdAt: delivery.order?.customer?.createdAt
         },
         address: {
-          addressLine1: delivery.address?.addressLine1,
-          addressLine2: delivery.address?.addressLine2,
-          city: delivery.address?.city,
-          region: delivery.address?.region,
-          country: delivery.address?.country,
-          postalCode: delivery.address?.postalCode,
-          contactName: delivery.address?.contact,
-          phoneNumber: delivery.address?.phoneNumber
+          addressLine1: delivery.order?.address?.addressLine1,
+          addressLine2: delivery.order?.address?.addressLine2,
+          city: delivery.order?.address?.city,
+          region: delivery.order?.address?.region,
+          country: delivery.order?.address?.country,
+          postalCode: delivery.order?.address?.postalCode,
+          contactName: delivery.order?.address?.contactName,
+          phoneNumber: delivery.order?.address?.phoneNumber
         }
       };
 
       return {
         id: delivery.id,
+        order,
         status: delivery.status,
         createdAt: delivery.createdAt,
-        order
       };
-    });
+
   }
+
+
 }

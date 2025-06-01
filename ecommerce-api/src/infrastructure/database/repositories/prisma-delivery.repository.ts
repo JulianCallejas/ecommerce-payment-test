@@ -35,16 +35,15 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
         include: {
           order: {
             include: {
-            product: true,
-            customer: true,
-            address: true,
-          },
+              product: true,
+              customer: true,
+              address: true
+            },
           },
         },
       }),
       this.prisma.delivery.count(),
     ]);
-    
     return [deliveries, count];
   }
 
@@ -62,7 +61,7 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
           include: {
             product: true,
             customer: true,
-            address: true,
+            address: true
           },
         },
         

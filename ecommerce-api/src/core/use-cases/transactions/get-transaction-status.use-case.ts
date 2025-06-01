@@ -41,7 +41,11 @@ export class GetTransactionStatusUseCase {
       );
     }
 
-    return await this.checkTransactionStatus(transaction);
+    const checkedTransaction = await this.checkTransactionStatus(transaction);
+    return {
+      ...checkedTransaction,
+      details: transaction.details
+    }
   }
 
   async checkTransactionStatus(transaction: Transaction) {
@@ -115,7 +119,7 @@ export class GetTransactionStatusUseCase {
       if (newTransactionStatus.data.status === TransactionStatus.APPROVED) {
         await this.createDelivery(
           updatedTransaction.orderId,
-          updatedTransaction.order?.address.id
+          // updatedTransaction.order?.address.id
         );
       } else {
         await this.rollbackStock(
@@ -140,11 +144,11 @@ export class GetTransactionStatusUseCase {
     }
   }
 
-  async createDelivery(orderId: string, addressId: string) {
+  async createDelivery(orderId: string) {
     try {
       await this.deliveryRepository.create({
         orderId: orderId,
-        addressId: addressId
+        // addressId: addressId
       });
     } catch (error) {
       this.logger.error(`[Delivery] Error creating delivery ${error.message}`);

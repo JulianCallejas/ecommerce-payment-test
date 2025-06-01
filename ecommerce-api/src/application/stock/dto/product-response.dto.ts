@@ -18,7 +18,7 @@ export class ProductResponseDto {
   @ApiProperty({ description: 'Available stock' })
   stock: number;
 
-  @ApiProperty({ description: 'Unit price', type: 'number' })
+  @ApiProperty({ description: 'Unit price', type: 'number', format: 'double' })
   unitPrice: Decimal;
 
   @ApiProperty({ description: 'Product images', type: [String] })
