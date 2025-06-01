@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ConfirmOrderDto } from './confirm-order.dto';
 import { IsNumber } from 'class-validator';
+import { CheckoutDto } from '../../checkout/dto/chekout.dto';
 
-export class CreateOrderDto extends ConfirmOrderDto {
+export class CreateOrderDto extends CheckoutDto {
   @ApiProperty({ description: 'Total value before delivery fee' })
   @IsNumber()
   baseAmount: number;

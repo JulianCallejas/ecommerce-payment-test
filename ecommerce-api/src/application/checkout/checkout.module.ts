@@ -1,25 +1,17 @@
 import { Module } from '@nestjs/common';
 import { CheckoutController } from './checkout.controller';
 import { PrismaProductRepository } from '../../infrastructure/database/repositories/prisma-product.repository';
-import { ConfirmOrderUseCase } from 'src/core/use-cases/orders/confirm-order.use-case';
-import { CreateOrderUseCase } from 'src/core/use-cases/orders/create-order.use-case';
-import { PrismaOrderRepository } from 'src/infrastructure/database/repositories/prisma-order.repository';
+import { CheckoutDataUseCase } from 'src/core/use-cases/checkout/checkout-data.use-case';
 
 @Module({
   controllers: [CheckoutController],
   providers: [
     {
       provide: 'ProductRepositoryPort',
-      useExisting: PrismaProductRepository,
+      useExisting: PrismaProductRepository
     },
-    {
-      provide: 'OrderRepositoryPort',
-      useExisting: PrismaOrderRepository,
-    },
-    
-    ConfirmOrderUseCase,
-    CreateOrderUseCase
-    
-  ],
+
+    CheckoutDataUseCase
+  ]
 })
 export class CheckoutModule {}

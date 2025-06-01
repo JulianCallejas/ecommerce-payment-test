@@ -8,6 +8,7 @@ import { DeliveriesModule } from './application/deliveries/deliveries.module';
 import { OrdersModule } from './application/orders/orders.module';
 import { TransactionsModule } from './application/transactions/transactions.module';
 import { WompiGatewayModule } from './infrastructure/wompi-gateway/wompi-gateway.module';
+import { CheckoutModule } from './application/checkout/checkout.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { WompiGatewayModule } from './infrastructure/wompi-gateway/wompi-gateway
     }),
     PrismaModule,
     StockModule,
+    CheckoutModule,
     OrdersModule,
     CustomersModule,
     DeliveriesModule,

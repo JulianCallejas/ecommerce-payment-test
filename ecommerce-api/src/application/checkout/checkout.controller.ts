@@ -1,14 +1,14 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ConfirmOrderUseCase } from 'src/core/use-cases/orders/confirm-order.use-case';
 import { CheckoutResponseDto } from './dto/checkout-response.dto';
 import { CheckoutDto } from './dto/chekout.dto';
+import { CheckoutDataUseCase } from 'src/core/use-cases/checkout/checkout-data.use-case';
 
 @ApiTags('Checkout')
 @Controller('checkout')
 export class CheckoutController {
   constructor(
-    private readonly confirmOrderUseCase: ConfirmOrderUseCase,
+    private readonly checkoutDataUseCase: CheckoutDataUseCase,
   ) {}
   
   @Post()
@@ -22,7 +22,7 @@ export class CheckoutController {
   async confirmOrder(
     @Body() confirmOrderDto: CheckoutDto
   ): Promise<CheckoutResponseDto> {
-    const confirmationData = await this.confirmOrderUseCase.execute(
+    const confirmationData = await this.checkoutDataUseCase.execute(
       confirmOrderDto.productId,
       confirmOrderDto.quantity
     );
