@@ -10,6 +10,7 @@ import {
   Length,
   Matches,
   Min,
+  MinLength,
   ValidateNested
 } from 'class-validator';
 
@@ -25,6 +26,7 @@ export class ChekoutAddressDto {
   @ApiProperty({ description: 'Address line 2', required: false })
   @IsOptional()
   @IsString()
+  @MinLength(4)
   addressLine2?: string;
 
   @ApiProperty({ 
