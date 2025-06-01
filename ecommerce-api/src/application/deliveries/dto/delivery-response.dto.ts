@@ -38,10 +38,10 @@ export class OrderInfoDto {
   @ApiProperty({ description: 'Quantity' })
   quantity: number;
 
-  @ApiProperty({ description: 'Total price' })
+  @ApiProperty({ description: 'Total price', type: 'number' })
   totalPrice: Decimal;
 
-  @ApiProperty({ description: 'Delivery fee' })
+  @ApiProperty({ description: 'Delivery fee', type: 'number' })
   deliveryFee: Decimal;
 
   @ApiProperty({
