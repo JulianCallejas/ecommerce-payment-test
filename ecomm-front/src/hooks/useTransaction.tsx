@@ -47,21 +47,18 @@ export const useTransaction = () => {
   );
 
   const placeTransaction = useCallback(() => {
-    // if (transactionModalMessage === "creating-transaction" && !transaction?.id) return;
-
-    if (transactionLoading) return;
+    console.log("point1")
 
     if (transactionError) {
-      console.log({ transactionError });
       return;
     }
 
-    if (transaction?.status) {
-      console.log("transaction status: ", transaction.status);
+    if (transaction?.status === "PENDING") {
+      dispatch(pollTransaction(transaction?.transactionId));
       return;
     }
 
-    if (!canCreateTransaction && !transaction?.id) {
+    if (!canCreateTransaction && !transaction?.transactionId) {
       notifications.show("Confirme los datos de pago para continuar", {
         severity: "warning",
       });
@@ -80,10 +77,11 @@ export const useTransaction = () => {
     };
 
     dispatch(createTransaction(body));
-  }, [canCreateTransaction, closeTransactionModal, dispatch, notifications, openCheckoutModal, order, paymentData, privacyAccepted, summary, termsAccepted, transaction?.id, transaction?.status, transactionError, transactionLoading]);
+  }, [canCreateTransaction, closeTransactionModal, dispatch, notifications, openCheckoutModal, order, paymentData, privacyAccepted, summary, termsAccepted, transaction?.transactionId, transaction?.status, transactionError, transactionLoading]);
 
   useEffect(() => {
     if (!order?.id) return;
+    console.log("place transaction")
     placeTransaction();
   }, [order?.id, placeTransaction]);
 
@@ -95,10 +93,10 @@ export const useTransaction = () => {
       transactionError
     )
       return;
-    dispatch(pollTransaction(transaction?.id));
+    dispatch(pollTransaction(transaction?.transactionId));
   }, [
     dispatch,
-    transaction?.id,
+    transaction?.transactionId,
     transaction?.status,
     transactionError,
     transactionLoaded,

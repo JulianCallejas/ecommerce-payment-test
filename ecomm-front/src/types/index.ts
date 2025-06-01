@@ -70,12 +70,14 @@ export interface OrderResponse extends OrderConfirmationResponse {
 }
 
 export interface TransactionResponse {
-  id: string;
+  transactionId: string;
   orderId: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  totalAmount: number;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'DECLINED';
+  amount: number;
   createdAt: string;
   updatedAt: string;
+  customerName: string;
+  productName: string;
   statusMessage?: string;
 }
 

@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { CheckCircle } from "lucide-react";
-import { currencyFormatter } from "../../utils";
+import { currencyFormatter, getShortId } from "../../utils";
 import type { TransactionResponse } from "../../types";
 
 interface Props {
@@ -17,30 +17,30 @@ const TransactionApprovedMessage = ({ transaction, handleFinish }: Props) => {
         ¡Pago exitoso!
       </Typography>
 
-      <Typography variant="body1" className="text-gray-800">
+      <Typography variant="body1" className="text-gray-800 mb-4">
         Estamos preparando tu compra para el envío, pronto recibirás un correo
         con todos los detalles.
       </Typography>
 
       {transaction && (
         <>
-          <Typography variant="body2" className="text-gray-700">
-            Orden de compra: {transaction.orderId}
+          <Typography variant="body1" component="p" className="text-gray-700">
+            Orden de compra: <strong>{getShortId(transaction.orderId)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Transaction ID: {transaction.id}
+          <Typography variant="body1" component="p" className="text-gray-700">
+            Transacción: <strong>{getShortId(transaction.transactionId)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Valor: {currencyFormatter(transaction.totalAmount)}
+          <Typography variant="body1" component="p" className="text-gray-700">
+            Valor: <strong>{currencyFormatter(transaction.amount)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-green-600">
-            Estado: {transaction.status}
+          <Typography variant="body1" component="p" className="text-green-600">
+            Estado: <strong>{transaction.status}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
+          <Typography variant="body1" component="p" className="text-gray-700">
             {transaction &&
               new Date(transaction.createdAt).toLocaleDateString()}
           </Typography>

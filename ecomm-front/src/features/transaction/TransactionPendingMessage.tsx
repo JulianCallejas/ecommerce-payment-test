@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { currencyFormatter } from "../../utils";
+import { currencyFormatter, getShortId } from "../../utils";
 import type { TransactionResponse } from "../../types";
 
 interface Props {
@@ -21,20 +21,20 @@ const TransactionPendingMessage = ({ transaction }: Props) => {
 
       {transaction && (
         <>
-          <Typography variant="body2" className="text-gray-700">
-            Orden de compra: {transaction.orderId}
+          <Typography variant="body1" className="text-gray-700">
+            Orden de compra: <strong>{getShortId(transaction.orderId)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Transaction ID: {transaction.id}
+          <Typography variant="body1" className="text-gray-700">
+            Transacción: <strong>{getShortId(transaction.transactionId)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Valor: {currencyFormatter(transaction.totalAmount)}
+          <Typography variant="body1" className="text-gray-700">
+            Valor: <strong>{currencyFormatter(transaction.amount)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Estado: {transaction.status}
+          <Typography variant="body1" className="text-gray-700">
+            Estado: <strong>{transaction.status}</strong>
           </Typography>
         </>
       )}

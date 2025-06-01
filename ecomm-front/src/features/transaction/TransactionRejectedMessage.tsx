@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { AlertCircle } from "lucide-react";
-import { currencyFormatter } from "../../utils";
+import { currencyFormatter, getShortId } from "../../utils";
 import type { TransactionResponse } from "../../types";
 
 interface Props {
@@ -29,23 +29,24 @@ const TransactionRejectedMessage = ({
             nuevamente, solo debes confirmar unos datos.
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Orden de compra: {transaction.orderId}
+          <Typography variant="body1" component="p" className="text-gray-700">
+            Orden de compra: <strong>{getShortId(transaction.orderId)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Transaction ID: {transaction.id}
+          <Typography variant="body1" component="p" className="text-gray-700">
+            Transacción:{" "}
+            <strong>{getShortId(transaction.transactionId)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
-            Valor: {currencyFormatter(transaction.totalAmount)}
+          <Typography variant="body1" component="p" className="text-gray-700">
+            Valor: <strong>{currencyFormatter(transaction.amount)}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-red-600">
-            Estado: {transaction.status}
+          <Typography variant="body1" component="p" className="text-red-600">
+            Estado: <strong>{transaction.status}</strong>
           </Typography>
 
-          <Typography variant="body2" className="text-gray-700">
+          <Typography variant="body1" component="p" className="text-gray-700">
             {transaction &&
               new Date(transaction.createdAt).toLocaleDateString()}
           </Typography>

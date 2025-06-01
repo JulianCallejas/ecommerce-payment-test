@@ -16,9 +16,6 @@ const TransactionStatusModal = () => {
 
   const { transaction, transactionModalMessage, handleFinish, handleRetry } = useTransaction();
 
-  console.log({transaction});
-   
-
   if (!transactionModalMessage) {
     return null;
   }
@@ -32,7 +29,7 @@ const TransactionStatusModal = () => {
       closeAfterTransition
     >
       <Fade in={!!transactionModalMessage}>
-        <Paper className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-6 rounded-lg">
+        <Paper className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 md:w-full max-w-md p-6 rounded-lg">
           {transactionModalMessage === "creating-order" && (
             <div className="w-full h-full flex justify-center items-center flex-col">
               <CircularProgress size={60} className="text-[#172B3C]" />
