@@ -7,8 +7,6 @@ import { Transaction } from 'src/core/entities/transaction.entity';
 
 import { WompiGatewayServicePort } from 'src/core/ports/services/wompi-gateway.service.port';
 import {
-  //   CreatePaymentSourceParams,
-  //   PaymentSourceResponse,
   CreateTransactionParams,
   CreateTransactionResponse,
   GetTransactionStatusResponse,
@@ -98,8 +96,8 @@ export class WompiGatewayService implements WompiGatewayServicePort {
         legal_id_type: customerData.customerId.slice(0, 2)
       },
       shipping_address: {
-        address_line_1: shippingAddress.addressLine1,
-        address_line_2: shippingAddress.addressLine2.trim() || "0000",
+        address_line_1: shippingAddress.addressLine1.trim(),
+        address_line_2: shippingAddress.addressLine2 ? shippingAddress.addressLine2.trim() : "No disponible",
         country: 'CO',
         region: shippingAddress.region,
         city: shippingAddress.city,
@@ -112,6 +110,7 @@ export class WompiGatewayService implements WompiGatewayServicePort {
       Authorization: `Bearer ${this.apiKeySecret}`,
       'Content-Type': 'application/json'
     };
+
     try {
       const { data } = await firstValueFrom(
         this.httpService
