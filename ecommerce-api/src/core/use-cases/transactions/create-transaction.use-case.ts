@@ -10,6 +10,7 @@ import { WompiGatewayServicePort } from 'src/core/ports/services/wompi-gateway.s
 import { v4 as uuidv4 } from 'uuid';
 import {
   CreateTransactionResponse,
+  TokenizeCardParams,
   TokenizeCardResponse
 } from 'src/core/ports/services/wompi-gateway.types';
 import { Order } from 'src/core/entities/order.entity';
@@ -82,7 +83,6 @@ export class CreateTransactionUseCase {
     );
 
     // 3. Create Wompi tyransaction
-
     const cardToken = await this.generateCardToken(input, order);
 
     // Required transaction data
@@ -113,7 +113,6 @@ export class CreateTransactionUseCase {
     );
 
     // Create transaction record
-
     const newTransaction = await this.transactionRepository.create({
       reference: transactionId,
       externalId: wompiTransaction.data.id,
@@ -177,13 +176,16 @@ export class CreateTransactionUseCase {
     order: Order
   ): Promise<TokenizeCardResponse> {
     try {
-      const cardToken = await this.wompiGatewayService.tokenizeCard({
+      
+      const body: TokenizeCardParams = {
         number: input.payment.cardNumber,
         cvc: input.payment.cvc,
         expMonth: input.payment.expMonth,
         expYear: input.payment.expYear,
         cardHolder: input.payment.cardHolder
-      });
+      }
+      
+      const cardToken = await this.wompiGatewayService.tokenizeCard(body);
 
       return cardToken;
     } catch (error) {
