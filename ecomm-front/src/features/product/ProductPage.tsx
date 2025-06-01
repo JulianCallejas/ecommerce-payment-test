@@ -39,6 +39,10 @@ const ProductPage: React.FC = () => {
 
   const handleBuyNowClick = () => {
     if (!product) return;
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
     startCheckout(product.id);
   };
 

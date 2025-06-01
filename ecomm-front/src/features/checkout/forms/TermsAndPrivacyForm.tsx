@@ -17,7 +17,7 @@ const TermsAndPrivacyForm = () => {
   const { termsAccepted, privacyAccepted } = useSelector(
     (state: RootState) => state.checkout
   );
-  const isOpen = useSelector((state: RootState) => state.checkout.isModalOpen);
+  const isOpen = useSelector((state: RootState) => state.purchaseStageState.isCheckoutModalOpen);
 
   useEffect(() => {
     setValue('termsAccepted', false);

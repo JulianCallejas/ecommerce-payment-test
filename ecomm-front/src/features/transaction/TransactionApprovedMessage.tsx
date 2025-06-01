@@ -1,14 +1,19 @@
 import { Box, Button, Typography } from "@mui/material";
 import { CheckCircle } from "lucide-react";
-import type { TransactionResponse } from "../../types";
+
 import { currencyFormatter } from "../../utils";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../store";
 
 interface Props {
-  transaction: TransactionResponse;
   handleFinish: () => void;
 }
 
-const TransactionApprovedMessage = ({ transaction, handleFinish }: Props) => {
+const TransactionApprovedMessage = ({ handleFinish }: Props) => {
+  const { data: transaction } = useSelector(
+    (state: RootState) => state.transaction
+  );
+
   return (
     <Box className="text-center space-y-4">
       <CheckCircle className="h-16 w-16 text-green-600 mx-auto" />
@@ -22,23 +27,23 @@ const TransactionApprovedMessage = ({ transaction, handleFinish }: Props) => {
       </Typography>
 
       <Typography variant="body2" className="text-gray-700">
-        Orden de compra: {transaction.orderId}
+        Orden de compra: {transaction?.orderId}
       </Typography>
 
       <Typography variant="body2" className="text-gray-700">
-        Transaction ID: {transaction.id}
+        Transaction ID: {transaction?.id}
       </Typography>
 
       <Typography variant="body2" className="text-gray-700">
-        Valor: {currencyFormatter(transaction.totalAmount)}
+        Valor: {transaction && currencyFormatter(transaction.totalAmount)}
       </Typography>
 
       <Typography variant="body2" className="text-green-600">
-        Estado: {transaction.status}
+        Estado: {transaction?.status}
       </Typography>
 
       <Typography variant="body2" className="text-gray-700">
-        {new Date(transaction.createdAt).toLocaleDateString()}
+        {transaction && new Date(transaction.createdAt).toLocaleDateString()}
       </Typography>
 
       <Button

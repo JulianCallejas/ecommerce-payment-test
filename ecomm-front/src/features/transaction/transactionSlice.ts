@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import api from '../../services/api';
 import type { TransactionCreateRequest, TransactionResponse } from '../../types';
+import { AxiosError } from 'axios';
 
 export interface TransactionState {
   data: TransactionResponse | null;
@@ -25,6 +26,9 @@ export const createTransaction = createAsyncThunk(
     try {
       return await api.createTransaction(request);
     } catch (error) {
+      if (error instanceof AxiosError) {
+        return rejectWithValue(error.response?.data.message);
+      }
       if (error instanceof Error) {
         return rejectWithValue(error.message);
       }
@@ -83,15 +87,17 @@ const transactionSlice = createSlice({
         state.loading = false;
         state.loaded = true;
         state.polling = false;
+        if (state.data?.status ) return
         state.error = action.payload as string;
+        console.log(action.payload);
       })
+
       // Poll transaction cases
       .addCase(pollTransaction.pending, (state) => {
         state.loaded = false;
         state.error = null;
         if (state.polling) return;
         state.polling = true;
-        
       })
       .addCase(pollTransaction.fulfilled, (state, action) => {
         state.data = action.payload;
@@ -101,8 +107,12 @@ const transactionSlice = createSlice({
       })
       .addCase(pollTransaction.rejected, (state, action) => {
         state.error = action.payload as string;
+        console.log(action.payload as string);
         state.loaded = true;
-        
+        state.polling = false;
+        if ((action.payload as string).includes("rejected")){
+          state.data!.status = "REJECTED";
+        }
       });
   },
 });

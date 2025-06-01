@@ -8,7 +8,6 @@ export interface CheckoutState {
   address: Address | null;
   termsAccepted: string | null;
   privacyAccepted: string | null;
-  isModalOpen: boolean;
   quantity: number | null;
   productId: string;
 }
@@ -19,7 +18,6 @@ const initialState: CheckoutState = {
   address: null,
   termsAccepted: null,
   privacyAccepted: null,
-  isModalOpen: false,
   quantity: 1,
   productId: ""
 };
@@ -37,7 +35,6 @@ export const fetchAcceptTokens = createAsyncThunk(
     }
   }
 );
-
 
 const checkoutSlice = createSlice({
   name: 'checkout',
@@ -63,12 +60,6 @@ const checkoutSlice = createSlice({
     },
     setProductId: (state, action: PayloadAction<string>) => {
       state.productId = action.payload;
-    },
-    openCheckoutModal: (state) => {
-      state.isModalOpen = true;
-    },
-    closeCheckoutModal: (state) => {
-      state.isModalOpen = false;
     },
     resetCheckout: () => initialState,
     // Special reducer to clear only payment data (sensitive info)
@@ -119,8 +110,6 @@ export const {
   setPrivacyAccepted,
   setQuantity,
   setProductId,
-  openCheckoutModal,
-  closeCheckoutModal,
   resetCheckout,
   clearPaymentData,
   setCheckoutData,

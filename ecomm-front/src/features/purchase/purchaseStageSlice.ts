@@ -1,25 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { createOrder } from "../order/orderSlice";
+import {
+  createTransaction,
+  pollTransaction,
+} from "../transaction/transactionSlice";
 
 export type PurchaseStageOptions =
   | "checkout"
   | "summary"
-  | "order-placed"
+  | "order-created"
   | "transaction-created"
+  | "";
+
+export type TransactionModalMessageOptions =
+  | "creating-order"
+  | "creating-transaction"
+  | "transaction-pending"
+  | "order-error"
+  | "transaction-error"
+  | "transaction-approved"
+  | "transaction-rejected"
   | "";
 
 export interface PurchaseStageState {
   stage: PurchaseStageOptions;
   isCheckoutModalOpen: boolean;
   isSummaryOpen: boolean;
-  isTransactionStatusModalOpen: boolean;
+  transactionModalMessage: TransactionModalMessageOptions;
 }
 
 const initialState: PurchaseStageState = {
   stage: "",
   isCheckoutModalOpen: false,
   isSummaryOpen: false,
-  isTransactionStatusModalOpen: false,
+  transactionModalMessage: "",
 };
 
 // PurchaseStageState slice
@@ -41,12 +56,72 @@ const purchaseStageSlice = createSlice({
       state.isSummaryOpen = action.payload;
     },
 
-    setIsTransactionStatusModalOpen: (
+    setTransactionModalMessage: (
       state,
-      action: PayloadAction<boolean>
+      action: PayloadAction<TransactionModalMessageOptions>
     ) => {
-      state.isTransactionStatusModalOpen = action.payload;
+      state.transactionModalMessage = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createOrder.pending, (state) => {
+        // Update stage when order is created
+        state.transactionModalMessage = "creating-order";
+      })
+      .addCase(createOrder.fulfilled, (state) => {
+        // Update stage when order is created
+        state.stage = "order-created";
+      })
+      .addCase(createOrder.rejected, (state) => {
+        // Update stage when order is created
+        state.transactionModalMessage = "order-error";
+      })
+
+      .addCase(createTransaction.pending, (state) => {
+        // Update stage when order is created
+        state.transactionModalMessage = "creating-transaction";
+      })
+      .addCase(createTransaction.fulfilled, (state, action) => {
+        // Update stage when order is created
+        state.stage = "transaction-created";
+        switch (action.payload.status) {
+          case "PENDING":
+            state.transactionModalMessage = "transaction-pending";
+            break;
+          case "APPROVED":
+            state.transactionModalMessage = "transaction-approved";
+            break;
+          default:
+            state.transactionModalMessage = "transaction-rejected";
+            break;
+        }
+      })
+      .addCase(createTransaction.rejected, (state) => {
+        // Update stage when order is created
+        state.transactionModalMessage = "transaction-rejected";
+      })
+      .addCase(pollTransaction.fulfilled, (state, action) => {
+        switch (action.payload.status) {
+          case "PENDING":
+            state.transactionModalMessage = "transaction-pending";
+            break;
+          case "APPROVED":
+            state.transactionModalMessage = "transaction-approved";
+            break;
+          default:
+            state.transactionModalMessage = "transaction-rejected";
+            break;
+        }
+      })
+      .addCase(pollTransaction.rejected, (state, action) => {
+        // Update stage when order is created
+        if ((action.payload as string).includes("rejected")){
+          state.transactionModalMessage = "transaction-rejected";
+          return;
+        }
+        state.transactionModalMessage = "transaction-error";
+      })
   },
 });
 
@@ -55,6 +130,6 @@ export const {
   setPurchaseStage,
   setIsCheckoutModalOpen,
   setIsSummaryOpen,
-  setIsTransactionStatusModalOpen,
+  setTransactionModalMessage,
 } = purchaseStageSlice.actions;
 export default purchaseStageSlice.reducer;

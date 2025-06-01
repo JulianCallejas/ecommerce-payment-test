@@ -7,12 +7,14 @@ import type { RootState } from "../store";
 const PurchaseComponents = () => {
   const { stage } = useSelector((state: RootState) => state.purchaseStageState);
   
+  console.log({stage});
+
   if (!stage) return null;
   return (
     <>
       { stage === "checkout" && <CheckoutModal /> }
-      {/* stage === "summary" && <SummaryBackdrop /> */}
-      {/* <TransactionStatusModal /> */}
+      { stage === "summary" && <SummaryBackdrop /> }
+      { stage && stage !== "checkout" && stage !== "summary" && <TransactionStatusModal /> }
     </>
   );
 };
