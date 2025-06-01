@@ -1,13 +1,11 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { currencyFormatter } from "../../utils";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../store";
+import type { TransactionResponse } from "../../types";
 
-const TransactionPendingMessage = () => {
-  const { data: transaction } = useSelector(
-    (state: RootState) => state.transaction
-  );
-
+interface Props {
+  transaction: TransactionResponse | null;
+}
+const TransactionPendingMessage = ({ transaction }: Props) => {
   return (
     <Box className="text-center space-y-4">
       <CircularProgress size={60} className="text-[#172B3C]" />
@@ -21,21 +19,25 @@ const TransactionPendingMessage = () => {
         minutos.
       </Typography>
 
-      <Typography variant="body2" className="text-gray-700">
-        Orden de compra: {transaction?.orderId}
-      </Typography>
+      {transaction && (
+        <>
+          <Typography variant="body2" className="text-gray-700">
+            Orden de compra: {transaction.orderId}
+          </Typography>
 
-      <Typography variant="body2" className="text-gray-700">
-        Transaction ID: {transaction?.id}
-      </Typography>
+          <Typography variant="body2" className="text-gray-700">
+            Transaction ID: {transaction.id}
+          </Typography>
 
-      <Typography variant="body2" className="text-gray-700">
-        Valor: {transaction && currencyFormatter(transaction.totalAmount)}
-      </Typography>
+          <Typography variant="body2" className="text-gray-700">
+            Valor: {currencyFormatter(transaction.totalAmount)}
+          </Typography>
 
-      <Typography variant="body2" className="text-gray-700">
-        Estado: {transaction?.status}
-      </Typography>
+          <Typography variant="body2" className="text-gray-700">
+            Estado: {transaction.status}
+          </Typography>
+        </>
+      )}
     </Box>
   );
 };

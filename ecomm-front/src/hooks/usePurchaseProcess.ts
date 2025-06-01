@@ -7,7 +7,7 @@ import {
   setPurchaseStage,
   setTransactionModalMessage,
 } from "../features/purchase/purchaseStageSlice";
-import { setProductId } from "../features/checkout/checkoutSlice";
+import { clearTermsAndPrivacy, setProductId } from "../features/checkout/checkoutSlice";
 import { useCallback } from "react";
 
 export const usePurchaseProcess = () => {
@@ -19,6 +19,7 @@ export const usePurchaseProcess = () => {
 
   const openCheckoutModal = useCallback(() => {
     dispatch(setPurchaseStage("checkout"));
+    dispatch(clearTermsAndPrivacy());
     dispatch(setIsCheckoutModalOpen(true));
   }, [dispatch]);
 

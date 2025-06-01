@@ -10,7 +10,7 @@ import {
 import { usePurchaseProcess } from "./usePurchaseProcess";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import { resetOrder } from "../features/order/orderSlice";
-import { clearPaymentData } from "../features/checkout/checkoutSlice";
+import { clearPaymentData, clearTermsAndPrivacy } from "../features/checkout/checkoutSlice";
 import { setTransactionModalMessage } from "../features/purchase/purchaseStageSlice";
 
 export const useTransaction = () => {
@@ -96,7 +96,6 @@ export const useTransaction = () => {
     )
       return;
     dispatch(pollTransaction(transaction?.id));
-    console.log("pole transaction");
   }, [
     dispatch,
     transaction?.id,
@@ -109,12 +108,14 @@ export const useTransaction = () => {
     dispatch(resetOrder());
     dispatch(resetTransaction());
     dispatch(clearPaymentData());
+    dispatch(clearTermsAndPrivacy());
     cancelProcess();
   }, [cancelProcess, dispatch]);
 
   const handleRetry = useCallback(() => {
     dispatch(setTransactionModalMessage(""));
     dispatch(resetTransaction());
+    dispatch(clearTermsAndPrivacy());
     closeTransactionModal();
     openCheckoutModal();
   }, [closeTransactionModal, dispatch, openCheckoutModal]);
@@ -123,5 +124,6 @@ export const useTransaction = () => {
     transactionModalMessage,
     handleFinish,
     handleRetry,
+    transaction
   };
 };

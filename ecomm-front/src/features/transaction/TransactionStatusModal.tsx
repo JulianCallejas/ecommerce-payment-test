@@ -14,7 +14,9 @@ import TransactionRejectedMessage from "./TransactionRejectedMessage";
 
 const TransactionStatusModal = () => {
 
-  const { transactionModalMessage, handleFinish, handleRetry } = useTransaction();
+  const { transaction, transactionModalMessage, handleFinish, handleRetry } = useTransaction();
+
+  console.log({transaction});
    
 
   if (!transactionModalMessage) {
@@ -63,15 +65,16 @@ const TransactionStatusModal = () => {
           )}
 
           {transactionModalMessage === "transaction-pending" && (
-            <TransactionPendingMessage />
+            <TransactionPendingMessage transaction={transaction} />
           )}
 
           {transactionModalMessage === "transaction-approved" && (
-            <TransactionApprovedMessage handleFinish={handleFinish} />
+            <TransactionApprovedMessage transaction={transaction} handleFinish={handleFinish} />
           )}
 
           {transactionModalMessage === "transaction-rejected" && (
             <TransactionRejectedMessage
+              transaction={transaction}
               handleRetry={handleRetry}
               handleFinish={handleFinish}
             />

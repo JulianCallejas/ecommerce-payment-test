@@ -66,6 +66,10 @@ const checkoutSlice = createSlice({
     clearPaymentData: (state) => {
       state.paymentData = null;
     },
+    clearTermsAndPrivacy: (state) => {
+      state.termsAccepted = null;
+      state.privacyAccepted = null;
+    },
     // Set checkout
     setCheckoutData: (
       state,
@@ -112,6 +116,7 @@ export const {
   setProductId,
   resetCheckout,
   clearPaymentData,
+  clearTermsAndPrivacy,
   setCheckoutData,
 } = checkoutSlice.actions;
 
