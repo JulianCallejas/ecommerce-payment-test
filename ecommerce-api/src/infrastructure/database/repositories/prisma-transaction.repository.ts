@@ -84,6 +84,8 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
             product: true,
             customer: true,
             address: true,
+            quantity: true,
+            productId: true,
           }
         }
       }

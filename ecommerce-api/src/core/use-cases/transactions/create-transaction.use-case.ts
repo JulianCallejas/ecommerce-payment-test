@@ -191,7 +191,7 @@ export class CreateTransactionUseCase {
     } catch (error) {
       // Update stock
       await this.productRepository.rollbackStock(
-        order.product.id,
+        order.productId,
         order.quantity
       );
       throw new BadRequestException('Card rejected');
@@ -230,7 +230,7 @@ export class CreateTransactionUseCase {
     } catch (error) {
       // Update stock
       await this.productRepository.rollbackStock(
-        order.product.id,
+        order.productId,
         order.quantity
       );
       throw new BadRequestException('Payment rejected');
