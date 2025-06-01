@@ -16,15 +16,22 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
     if (!uuidValidate(id)) return null;
     const order = await this.prisma.order.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        productId: true,
         product: true,
+        quantity: true,
+        unitPrice: true,
+        deliveryFee: true,
+        customerId: true,
         customer: true,
+        addressId: true,
         address: true,
-        transactions: true
+        transactions: true,
+        createdAt: true,
+        updatedAt: true,
       }
     });
-
-    [0];
     return {
       ...order,
       transactions: order.transactions.map((transaction) => ({
