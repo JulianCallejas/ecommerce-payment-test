@@ -27,7 +27,6 @@ export const useTransaction = () => {
     data: transaction,
     loaded: transactionLoaded,
     error: transactionError,
-    loading: transactionLoading,
   } = useSelector((state: RootState) => state.transaction);
 
   const { paymentData, privacyAccepted, termsAccepted } = useSelector(
@@ -77,7 +76,7 @@ export const useTransaction = () => {
     };
 
     dispatch(createTransaction(body));
-  }, [canCreateTransaction, closeTransactionModal, dispatch, notifications, openCheckoutModal, order, paymentData, privacyAccepted, summary, termsAccepted, transaction?.transactionId, transaction?.status, transactionError, transactionLoading]);
+  }, [canCreateTransaction, closeTransactionModal, dispatch, notifications, openCheckoutModal, order, paymentData, privacyAccepted, summary, termsAccepted, transaction?.transactionId, transaction?.status, transactionError]);
 
   useEffect(() => {
     if (!order?.id) return;

@@ -12,6 +12,12 @@ const QuantityCounter = ({ stock }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const quantity = useSelector((state: RootState) => state.checkout.quantity);
 
+  const handleQuantity = () => {
+    if (quantity && quantity > stock) {
+      dispatch(setQuantity(stock));
+    }
+  };
+  
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     dispatch(setQuantity(value));
@@ -36,12 +42,22 @@ const QuantityCounter = ({ stock }: Props) => {
       </IconButton>
       <TextField
         label="Comprar..."
-        type="number"
+        slotProps={{
+          input: {
+            type: "number",
+            inputProps: { 
+              style: { textAlign: "center" },
+              max: stock,
+              min: 1,
+            },
+          },
+        }}
         value={quantity}
         variant="outlined"
-        className="max-w-24"
-        sx={{ textAlign: "center", zIndex:1 }}
+        className="max-w-[85px]"
+        sx={{ textAlign: "center", zIndex: 1 }}
         onChange={handleOnChange}
+        onBlur={handleQuantity}
       />
       <IconButton aria-label="Aumentar cantidad" onClick={handleOnIncrement}>
         <CirclePlus />

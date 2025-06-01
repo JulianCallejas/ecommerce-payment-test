@@ -31,19 +31,7 @@ const PaymentDataForm = () => {
     () => detectCardType(cardNumber),
     [cardNumber]
   );
-
-  // Format card number with spaces
-  //   const formatCardNumber = (value: string) => {
-  //     const sanitized = value.replace(/\s+/g, '');
-  //     const chunks = [];
-
-  //     for (let i = 0; i < sanitized.length; i += 4) {
-  //       chunks.push(sanitized.substring(i, i + 4));
-  //     }
-
-  //     return chunks.join(' ');
-  //   };
-
+  
   return (
     <form onSubmit={handleSubmit(() => {})} className="space-y-6">
       <Typography variant="h6" className="mb-4">
@@ -63,7 +51,7 @@ const PaymentDataForm = () => {
               }
               fullWidth
               required
-              inputProps={{ maxLength: 19 }}
+              slotProps={{input: {inputProps: {maxLength: 19}}}}
             />
 
             <Box className="absolute right-3 top-[4px] transform  w-8 ">
@@ -84,7 +72,7 @@ const PaymentDataForm = () => {
             helperText={touchedFields.cvc && errors.cvc?.message}
             fullWidth
             required
-            inputProps={{ maxLength: 4 }}
+            slotProps={{input: {inputProps: {maxLength: 3}}}}
           />
         </Grid>
 
@@ -97,7 +85,7 @@ const PaymentDataForm = () => {
             helperText={touchedFields.expMonth && errors.expMonth?.message}
             fullWidth
             required
-            inputProps={{ maxLength: 2 }}
+            slotProps={{input: {inputProps: {maxLength: 2}}}}
           />
         </Grid>
 
@@ -110,7 +98,7 @@ const PaymentDataForm = () => {
             helperText={touchedFields.expYear && errors.expYear?.message}
             fullWidth
             required
-            inputProps={{ maxLength: 4 }}
+            slotProps={{input: {inputProps: {maxLength: 2}}}}
           />
         </Grid>
 
