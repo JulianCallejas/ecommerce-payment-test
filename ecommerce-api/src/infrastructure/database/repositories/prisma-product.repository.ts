@@ -10,16 +10,24 @@ export class PrismaProductRepository implements ProductRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
   async findBySlug(slug: string): Promise<Product | null> {
-    return this.prisma.product.findUnique({
-      where: { slug }
-    });
+    try {
+      return this.prisma.product.findUnique({
+        where: { slug }
+      });
+    } catch (error) {
+      return null;
+    }
   }
 
   async findById(id: string): Promise<Product | null> {
-    if (!uuidValidate(id)) return null;
-    return this.prisma.product.findUnique({
-      where: { id }
-    });
+    try {
+      if (!uuidValidate(id)) return null;
+      return this.prisma.product.findUnique({
+        where: { id }
+      });
+    } catch (error) {
+      return null;
+    }
   }
 
   async findAll(page: number, pageSize: number): Promise<[Product[], number]> {
@@ -38,9 +46,13 @@ export class PrismaProductRepository implements ProductRepositoryPort {
   }
 
   async create(product: Partial<Product>): Promise<Product> {
-    return this.prisma.product.create({
-      data: product as any
-    });
+    try {
+      return this.prisma.product.create({
+        data: product as any
+      });
+    } catch (error) {
+      return null;
+    }
   }
 
   async updateStock(
@@ -74,18 +86,22 @@ export class PrismaProductRepository implements ProductRepositoryPort {
     }
   }
   async rollbackStock(id: string, quantity: number): Promise<Product> {
-    return await this.prisma.product.update({
-      where: {
-        id
-      },
-      data: {
-        stock: {
-          increment: quantity
+    try {
+      return await this.prisma.product.update({
+        where: {
+          id
         },
-        version: {
-          increment: 1
+        data: {
+          stock: {
+            increment: quantity
+          },
+          version: {
+            increment: 1
+          }
         }
-      }
-    });
+      });
+    } catch (error) {
+      return null;
+    }
   }
 }

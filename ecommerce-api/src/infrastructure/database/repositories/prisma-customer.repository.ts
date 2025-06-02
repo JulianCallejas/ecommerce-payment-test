@@ -10,25 +10,33 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Customer | null> {
-    if (!uuidValidate(id)) return null;
-    return this.prisma.customer.findUnique({
-      where: { id },
-      include: {
-        orders: {
-          include: {
-            product: true,
-            address: true,
-            transactions: true
+    try {
+      if (!uuidValidate(id)) return null;
+      return this.prisma.customer.findUnique({
+        where: { id },
+        include: {
+          orders: {
+            include: {
+              product: true,
+              address: true,
+              transactions: true
+            }
           }
         }
-      }
-    });
+      });
+    } catch (error) {
+      return null;
+    }
   }
 
   async findByCustomerId(customerId: string): Promise<Customer | null> {
-    return this.prisma.customer.findUnique({
-      where: { customerId }
-    });
+    try {
+      return this.prisma.customer.findUnique({
+        where: { customerId }
+      });
+    } catch (error) {
+      return null;
+    }
   }
 
   async findAll(page: number, pageSize: number): Promise<[Customer[], number]> {
@@ -47,24 +55,32 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   }
 
   async create(customer: Partial<Customer>): Promise<Customer> {
-    return this.prisma.customer.create({
-      data: customer as Prisma.CustomerCreateInput
-    });
+    try {
+      return this.prisma.customer.create({
+        data: customer as Prisma.CustomerCreateInput
+      });
+    } catch (error) {
+      return null;
+    }
   }
 
   async findCustomerWithOrders(id: string): Promise<Customer | null> {
-    if (!uuidValidate(id)) return null;
-    return this.prisma.customer.findUnique({
-      where: { id },
-      include: {
-        orders: {
-          include: {
-            product: true,
-            address: true,
-            transactions: true
+    try {
+      if (!uuidValidate(id)) return null;
+      return this.prisma.customer.findUnique({
+        where: { id },
+        include: {
+          orders: {
+            include: {
+              product: true,
+              address: true,
+              transactions: true
+            }
           }
         }
-      }
-    });
+      });
+    } catch (error) {
+      return null;
+    }
   }
 }

@@ -13,33 +13,10 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Transaction | null> {
-    if (!uuidValidate(id)) return null;
-    const transaction = await this.prisma.transaction.findUnique({
-      where: { id },
-      include: {
-        order: {
-          include: {
-            product: true,
-            customer: true
-          }
-        }
-      }
-    });
-
-    return this.parseTransactionStatus(transaction);
-  }
-
-  async findAll(
-    page: number,
-    pageSize: number
-  ): Promise<[Transaction[], number]> {
-    const skip = (page - 1) * pageSize;
-
-    const [transactions, count] = await Promise.all([
-      this.prisma.transaction.findMany({
-        skip,
-        take: pageSize,
-        orderBy: { createdAt: 'desc' },
+    try {
+      if (!uuidValidate(id)) return null;
+      const transaction = await this.prisma.transaction.findUnique({
+        where: { id },
         include: {
           order: {
             include: {
@@ -48,22 +25,57 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
             }
           }
         }
-      }),
-      this.prisma.transaction.count()
-    ]);
+      });
+  
+      return this.parseTransactionStatus(transaction);
+    } catch (error) {
+      return null;
+    }
+  }
 
-    const mappedTransactions = transactions.map((transaction) =>
-      this.parseTransactionStatus(transaction)
-    );
-    return [mappedTransactions, count];
+  async findAll(
+    page: number,
+    pageSize: number
+  ): Promise<[Transaction[], number]> {
+    const skip = (page - 1) * pageSize;
+
+   try {
+     const [transactions, count] = await Promise.all([
+       this.prisma.transaction.findMany({
+         skip,
+         take: pageSize,
+         orderBy: { createdAt: 'desc' },
+         include: {
+           order: {
+             include: {
+               product: true,
+               customer: true
+             }
+           }
+         }
+       }),
+       this.prisma.transaction.count()
+     ]);
+ 
+     const mappedTransactions = transactions.map((transaction) =>
+       this.parseTransactionStatus(transaction)
+     );
+     return [mappedTransactions, count];
+   } catch (error) {
+    return [[], 0];
+   }
   }
 
   async create(transaction: Partial<Transaction>): Promise<Transaction> {
-    const createdTransaction = await this.prisma.transaction.create({
-      data: transaction as Prisma.TransactionCreateInput
-    });
-
-    return this.parseTransactionStatus(createdTransaction);
+    try {
+      const createdTransaction = await this.prisma.transaction.create({
+        data: transaction as Prisma.TransactionCreateInput
+      });
+  
+      return this.parseTransactionStatus(createdTransaction);
+    } catch (error) {
+      return null;
+    }
   }
 
   async updateStatus(
@@ -71,26 +83,31 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
     status: TransactionStatus,
     details: any
   ): Promise<Transaction> {
-    if (!uuidValidate(id)) return null;
-    const updatedTransaction = await this.prisma.transaction.update({
-      where: { id },
-      data: {
-        status: status as string,
-        details
-      },
-      include: {
-        order: {
-          select: {
-            product: true,
-            customer: true,
-            address: true,
-            quantity: true,
-            productId: true,
+    try {
+      if (!uuidValidate(id)) return null;
+      const updatedTransaction = await this.prisma.transaction.update({
+        where: { id },
+        data: {
+          status: status as string,
+          details
+        },
+        include: {
+          order: {
+            select: {
+              product: true,
+              customer: true,
+              address: true,
+              quantity: true,
+              productId: true,
+            }
           }
         }
-      }
-    });
-    return this.parseTransactionStatus(updatedTransaction);
+      });
+      return this.parseTransactionStatus(updatedTransaction);
+    } catch (error) {
+      return null;
+      
+    }
   }
 
   parseTransactionStatus(transaction): Transaction {
