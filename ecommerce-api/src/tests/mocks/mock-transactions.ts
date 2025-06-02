@@ -14,7 +14,7 @@ export const mockTransaction: Transaction = {
   reference: 'REF123',
   externalId: 'EXT456',
   orderId: transactionOrder.id,
-  status: TransactionStatus.APPROVED,
+  status: TransactionStatus.PENDING,
   amount: new Decimal(120),
   details: { provider: 'MockPay', success: true },
   createdAt: new Date(),
