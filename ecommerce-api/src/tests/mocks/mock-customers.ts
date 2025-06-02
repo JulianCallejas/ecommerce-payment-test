@@ -1,7 +1,7 @@
 import { Customer } from 'src/core/entities/customer.entity';
 
 export const mockCustomer: Customer = {
-  id: '1',
+  id: 'c1',
   fullname: 'Alice',
   email: 'alice@example.com',
   customerId: 'CC123456',
@@ -10,7 +10,7 @@ export const mockCustomer: Customer = {
 };
 
 export const mockCustomer2: Customer = {
-  id: '2',
+  id: 'c2',
   fullname: 'Bob',
   email: 'bob@example.com',
   customerId: 'CC456789',

@@ -2,7 +2,8 @@
 import { GetCustomerWithOrdersUseCase } from './get-customer-with-orders.use-case';
 import { CustomerRepositoryPort } from '../../ports/repositories/customer.repository.port';
 import { NotFoundException } from '@nestjs/common';
-import { mockCustomer } from 'src/tests/mocks/mock-customers';
+import { mockCustomer } from 'src/tests/mocks';
+
 
 describe('GetCustomerWithOrdersUseCase', () => {
   let useCase: GetCustomerWithOrdersUseCase;

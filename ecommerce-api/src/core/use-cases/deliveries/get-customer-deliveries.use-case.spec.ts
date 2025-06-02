@@ -2,7 +2,8 @@ import { GetCustomerDeliveriesUseCase } from './get-customer-deliveries.use-case
 import { DeliveryRepositoryPort } from '../../ports/repositories/delivery.repository.port';
 import { CustomerRepositoryPort } from '../../ports/repositories/customer.repository.port';
 import { NotFoundException } from '@nestjs/common';
-import { mockCustomer } from 'src/tests/mocks/mock-customers';
+import { mockCustomer } from 'src/tests/mocks';
+
 
 describe('GetCustomerDeliveriesUseCase', () => {
   let useCase: GetCustomerDeliveriesUseCase;

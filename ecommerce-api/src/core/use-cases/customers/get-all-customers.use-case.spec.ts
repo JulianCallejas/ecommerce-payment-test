@@ -2,7 +2,8 @@
 import { GetAllCustomersUseCase } from './get-all-customers.use-case';
 import { CustomerRepositoryPort } from '../../ports/repositories/customer.repository.port';
 import { Customer } from 'src/core/entities/customer.entity';
-import { mockCustomers } from 'src/tests/mocks/mock-customers';
+import { mockCustomers } from 'src/tests/mocks';
+
 
 describe('GetAllCustomersUseCase', () => {
   let useCase: GetAllCustomersUseCase;

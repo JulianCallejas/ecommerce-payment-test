@@ -1,5 +1,6 @@
 import { GetAllDeliveriesUseCase } from './get-all-deliveries.use-case';
 import { DeliveryRepositoryPort } from '../../ports/repositories/delivery.repository.port';
+import { mockDeliveries } from 'src/tests/mocks';
 
 describe('GetAllDeliveriesUseCase', () => {
   let useCase: GetAllDeliveriesUseCase;
@@ -14,16 +15,13 @@ describe('GetAllDeliveriesUseCase', () => {
   });
 
   it('should call findAll with pagination and return the result', async () => {
-    const mockDeliveries = [
-      { id: 'd1', orderId: 'o1', status: 'IN_TRANSIT' },
-      { id: 'd2', orderId: 'o2', status: 'DELIVERED' },
-    ] as any;
+    
 
-    mockDeliveryRepository.findAll.mockResolvedValue(mockDeliveries);
+    mockDeliveryRepository.findAll.mockResolvedValue([mockDeliveries, 2]);
 
     const result = await useCase.execute(1, 10);
 
     expect(mockDeliveryRepository.findAll).toHaveBeenCalledWith(1, 10);
-    expect(result).toEqual(mockDeliveries);
+    expect(result).toEqual([mockDeliveries, 2]);
   });
 });
