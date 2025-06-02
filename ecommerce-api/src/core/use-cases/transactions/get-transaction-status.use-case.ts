@@ -90,6 +90,7 @@ export class GetTransactionStatusUseCase {
         this.logger.error(
           `[GetTransaction] Check transaction status error ${error.message}`
         );
+        break;
       }
     }
 
@@ -158,7 +159,7 @@ export class GetTransactionStatusUseCase {
   async rollbackStock(productId: string, quantity: number) {
 
     try {
-      this.productRepository.rollbackStock(productId, quantity);
+      await this.productRepository.rollbackStock(productId, quantity);
     } catch (error) {
       this.logger.error(`[Product] Rollback stock error ${error.message}`);
     }
