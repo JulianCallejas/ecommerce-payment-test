@@ -30,7 +30,7 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
           address: true,
           transactions: true,
           createdAt: true,
-          updatedAt: true,
+          updatedAt: true
         }
       });
       return {
@@ -57,7 +57,6 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
       });
     } catch (error) {
       return null;
-
     }
   }
 
@@ -71,19 +70,19 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
         const addressData = await tx.orderAddress.create({
           data: address as Prisma.OrderAddressCreateInput
         });
-  
+
         let customerData = await tx.customer.findUnique({
           where: {
             customerId: customer.customerId
           }
         });
-  
+
         if (!customerData) {
           customerData = await tx.customer.create({
             data: customer as Prisma.CustomerCreateInput
           });
         }
-  
+
         const orderData = await tx.order.create({
           data: {
             productId: order.productId,

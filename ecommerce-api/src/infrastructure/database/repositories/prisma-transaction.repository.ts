@@ -26,7 +26,7 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
           }
         }
       });
-  
+
       return this.parseTransactionStatus(transaction);
     } catch (error) {
       return null;
@@ -39,31 +39,31 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
   ): Promise<[Transaction[], number]> {
     const skip = (page - 1) * pageSize;
 
-   try {
-     const [transactions, count] = await Promise.all([
-       this.prisma.transaction.findMany({
-         skip,
-         take: pageSize,
-         orderBy: { createdAt: 'desc' },
-         include: {
-           order: {
-             include: {
-               product: true,
-               customer: true
-             }
-           }
-         }
-       }),
-       this.prisma.transaction.count()
-     ]);
- 
-     const mappedTransactions = transactions.map((transaction) =>
-       this.parseTransactionStatus(transaction)
-     );
-     return [mappedTransactions, count];
-   } catch (error) {
-    return [[], 0];
-   }
+    try {
+      const [transactions, count] = await Promise.all([
+        this.prisma.transaction.findMany({
+          skip,
+          take: pageSize,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            order: {
+              include: {
+                product: true,
+                customer: true
+              }
+            }
+          }
+        }),
+        this.prisma.transaction.count()
+      ]);
+
+      const mappedTransactions = transactions.map((transaction) =>
+        this.parseTransactionStatus(transaction)
+      );
+      return [mappedTransactions, count];
+    } catch (error) {
+      return [[], 0];
+    }
   }
 
   async create(transaction: Partial<Transaction>): Promise<Transaction> {
@@ -71,7 +71,7 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
       const createdTransaction = await this.prisma.transaction.create({
         data: transaction as Prisma.TransactionCreateInput
       });
-  
+
       return this.parseTransactionStatus(createdTransaction);
     } catch (error) {
       return null;
@@ -98,7 +98,7 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
               customer: true,
               address: true,
               quantity: true,
-              productId: true,
+              productId: true
             }
           }
         }
@@ -106,7 +106,6 @@ export class PrismaTransactionRepository implements TransactionRepositoryPort {
       return this.parseTransactionStatus(updatedTransaction);
     } catch (error) {
       return null;
-      
     }
   }
 

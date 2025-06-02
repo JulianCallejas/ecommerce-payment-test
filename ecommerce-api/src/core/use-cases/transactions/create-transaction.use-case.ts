@@ -55,7 +55,7 @@ export class CreateTransactionUseCase {
     checkOrThrowBadrequest(!!order, `Order ${input.orderId} not found`);
 
     // 2. Look for pending  or approved transactions
-    order.transactions.forEach(async (transaction) => {
+    for (const transaction of order.transactions) {
       if (
         (transaction.status as TransactionStatus) ===
           TransactionStatus.PENDING ||
@@ -65,7 +65,7 @@ export class CreateTransactionUseCase {
           transaction
         );
       }
-    });
+    }
 
     // Verify data for transaction
     const totalAmount =
@@ -123,8 +123,9 @@ export class CreateTransactionUseCase {
     });
 
     // Check transaction status
-    return await this.getTransactionStatusUseCase.checkTransactionStatus(newTransaction);
-
+    return await this.getTransactionStatusUseCase.checkTransactionStatus(
+      newTransaction
+    );
   }
 
   async updateProductStock(
@@ -176,15 +177,14 @@ export class CreateTransactionUseCase {
     order: Order
   ): Promise<TokenizeCardResponse> {
     try {
-      
       const body: TokenizeCardParams = {
         number: input.payment.cardNumber,
         cvc: input.payment.cvc,
         expMonth: input.payment.expMonth,
         expYear: input.payment.expYear,
         cardHolder: input.payment.cardHolder
-      }
-      
+      };
+
       const cardToken = await this.wompiGatewayService.tokenizeCard(body);
 
       return cardToken;
@@ -236,7 +236,6 @@ export class CreateTransactionUseCase {
       throw new BadRequestException('Payment rejected');
     }
   }
-  
 }
 
 // const paymentSource = await this.wompiGatewayService.createPaymentSource({

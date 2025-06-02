@@ -18,10 +18,10 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
             include: {
               product: true,
               customer: true,
-              address: true,
-            },
-          },
-        },
+              address: true
+            }
+          }
+        }
       });
     } catch (error) {
       return null;
@@ -30,7 +30,7 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
 
   async findAll(page: number, pageSize: number): Promise<[Delivery[], number]> {
     const skip = (page - 1) * pageSize;
-    
+
     const [deliveries, count] = await Promise.all([
       this.prisma.delivery.findMany({
         skip,
@@ -42,11 +42,11 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
               product: true,
               customer: true,
               address: true
-            },
-          },
-        },
+            }
+          }
+        }
       }),
-      this.prisma.delivery.count(),
+      this.prisma.delivery.count()
     ]);
     return [deliveries, count];
   }
@@ -58,9 +58,9 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
         where: {
           order: {
             customer: {
-              id: customerId,
-            },
-          },
+              id: customerId
+            }
+          }
         },
         include: {
           order: {
@@ -68,9 +68,9 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
               product: true,
               customer: true,
               address: true
-            },
-          },
-        },
+            }
+          }
+        }
       });
     } catch (error) {
       return null;
@@ -80,7 +80,7 @@ export class PrismaDeliveryRepository implements DeliveryRepositoryPort {
   async create(delivery: Partial<Delivery>): Promise<Delivery> {
     try {
       return this.prisma.delivery.create({
-        data: delivery as Prisma.DeliveryCreateInput,
+        data: delivery as Prisma.DeliveryCreateInput
       });
     } catch (error) {
       return null;
