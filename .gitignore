@@ -47,3 +47,6 @@ lerna-debug.log*
 #Prisma - Postgres
 ecommerce-api/postgres
 ecommerce-api/prisma/migrations
+
+/coverage
+**/coverage
