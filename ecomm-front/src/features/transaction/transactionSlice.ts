@@ -80,6 +80,7 @@ const transactionSlice = createSlice({
         state.loading = false;
         state.loaded = true;
         state.data = action.payload;
+        state.error = null;
         // Start polling if status is PENDING
         state.polling = action.payload.status === 'PENDING';
       })

@@ -99,6 +99,7 @@ const purchaseStageSlice = createSlice({
       })
       .addCase(createTransaction.rejected, (state) => {
         // Update stage when order is created
+        if (state.transactionModalMessage === "transaction-approved") return;
         state.transactionModalMessage = "transaction-rejected";
       })
       .addCase(pollTransaction.fulfilled, (state, action) => {

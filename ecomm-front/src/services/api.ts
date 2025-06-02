@@ -17,7 +17,7 @@ export const apiService = {
   },
  
   confirmOrder: async (data: OrderConfirmRequest): Promise<OrderConfirmationResponse> => {
-    const response = await api.post<OrderConfirmationResponse>('/orders/confirm', data);
+    const response = await api.post<OrderConfirmationResponse>('/checkout', data);
     return response.data;
   },
 

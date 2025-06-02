@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { AlertCircle } from "lucide-react";
+import { Ban } from "lucide-react";
 import { currencyFormatter, getShortId } from "../../utils";
 import type { TransactionResponse } from "../../types";
 
@@ -16,7 +16,7 @@ const TransactionRejectedMessage = ({
 }: Props) => {
   return (
     <Box className="text-center space-y-4">
-      <AlertCircle className="h-16 w-16 text-red-600 mx-auto" />
+      <Ban className="h-16 w-16 text-red-600 mx-auto" />
 
       <Typography variant="h5" id="transaction-status-modal-title">
         Pago rechazado
@@ -26,7 +26,7 @@ const TransactionRejectedMessage = ({
         <>
           <Typography variant="body2" className="text-gray-700">
             Con esta orden de compra puedes intentar realizar el pago de
-            nuevamente, solo debes confirmar unos datos.
+            nuevamente, solo debes confirmar los datos de pago.
           </Typography>
 
           <Typography variant="body1" component="p" className="text-gray-700">

@@ -10,17 +10,16 @@ import {
 import { usePurchaseProcess } from "./usePurchaseProcess";
 import { useNotifications } from "@toolpad/core/useNotifications";
 import { resetOrder } from "../features/order/orderSlice";
-import { clearPaymentData, clearTermsAndPrivacy } from "../features/checkout/checkoutSlice";
+import {
+  clearPaymentData,
+  clearTermsAndPrivacy,
+} from "../features/checkout/checkoutSlice";
 import { setTransactionModalMessage } from "../features/purchase/purchaseStageSlice";
 
 export const useTransaction = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const {
-    closeTransactionModal,
-    openCheckoutModal,
-    cancelProcess,
-   
-  } = usePurchaseProcess();
+  const { closeTransactionModal, openCheckoutModal, cancelProcess } =
+    usePurchaseProcess();
   const { data: order } = useSelector((state: RootState) => state.order);
   const summary = useSelector((state: RootState) => state.summary.data);
   const {
@@ -29,7 +28,7 @@ export const useTransaction = () => {
     error: transactionError,
   } = useSelector((state: RootState) => state.transaction);
 
-  const { paymentData, privacyAccepted, termsAccepted } = useSelector(
+  const { paymentData, privacyAccepted, termsAccepted, customer } = useSelector(
     (state: RootState) => state.checkout
   );
   const notifications = useNotifications();
@@ -45,26 +44,73 @@ export const useTransaction = () => {
     (state: RootState) => state.purchaseStageState
   );
 
-  const placeTransaction = useCallback(() => {
-    console.log("point1")
+  const retakeTransaction = useCallback(async () => {
+    notifications.show("Retomando el pago", {
+        severity: "info",
+        autoHideDuration: 6000,
+      });
+      const body: TransactionCreateRequest = {
+        orderId: order!.id,
+        totalAmount: summary!.baseAmount + summary!.deliveryFee,
+        payment: {
+          cardHolder: customer?.fullname || "cardHolder",
+          cardNumber: "1111111111111111",
+          cvc: "000",
+          expMonth: "12",
+          expYear: new Date().getFullYear().toString().slice(-2),
+          installments: 12,
+          acceptanceToken: "termsToken",
+          acceptPersonalAuth: "privacyToken",
+        },
+      };
+      // 10 seconds while the intial transaction is created
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      dispatch(createTransaction(body));
 
-    if (transactionError) {
+  }, [customer?.fullname, dispatch, notifications, order, summary]);
+  
+  const placeTransaction = useCallback(async () => {
+
+    // Transaction completed, no need to place again
+    if (
+      transactionError ||
+      transactionModalMessage === "transaction-approved" ||
+      transaction?.status === "APPROVED"
+    ) {
       return;
     }
 
+    // Transaction pending, polling status
     if (transaction?.status === "PENDING") {
       dispatch(pollTransaction(transaction?.transactionId));
       return;
     }
 
-    if (!canCreateTransaction && !transaction?.transactionId) {
+    // Order created, but no data for transaction, go to checkout
+    if (
+      !canCreateTransaction &&
+      !transaction?.transactionId &&
+      transactionModalMessage === "creating-order"
+    ) {
       notifications.show("Confirme los datos de pago para continuar", {
         severity: "warning",
+        autoHideDuration: 6000,
       });
       closeTransactionModal();
       openCheckoutModal();
     }
 
+    // Transaction created, retaking process
+    if (
+      !canCreateTransaction &&
+      !transaction?.transactionId &&
+      transactionModalMessage === "creating-transaction"
+    ) {
+      await retakeTransaction();
+      return;
+    }
+
+    // Create Transaction
     const body: TransactionCreateRequest = {
       orderId: order!.id,
       totalAmount: summary!.baseAmount + summary!.deliveryFee,
@@ -76,11 +122,11 @@ export const useTransaction = () => {
     };
 
     dispatch(createTransaction(body));
-  }, [canCreateTransaction, closeTransactionModal, dispatch, notifications, openCheckoutModal, order, paymentData, privacyAccepted, summary, termsAccepted, transaction?.transactionId, transaction?.status, transactionError]);
+  }, [transactionError, transactionModalMessage, transaction?.status, transaction?.transactionId, canCreateTransaction, order, summary, paymentData, termsAccepted, privacyAccepted, dispatch, notifications, closeTransactionModal, openCheckoutModal, retakeTransaction]);
 
   useEffect(() => {
     if (!order?.id) return;
-    console.log("place transaction")
+    console.log("place transaction");
     placeTransaction();
   }, [order?.id, placeTransaction]);
 
@@ -121,6 +167,6 @@ export const useTransaction = () => {
     transactionModalMessage,
     handleFinish,
     handleRetry,
-    transaction
+    transaction,
   };
 };
