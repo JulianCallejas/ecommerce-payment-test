@@ -71,6 +71,7 @@ export class CustomersController {
       customerId: customer.customerId,
       fullname: customer.fullname,
       email: customer.email,
+      orders: customer.orders,
       createdAt: customer.createdAt
     };
   }
