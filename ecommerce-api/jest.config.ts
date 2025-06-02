@@ -21,7 +21,8 @@ const config: Config.InitialOptions = {
   coverageDirectory: 'coverage',
   // Map module aliases if you use any “paths” in tsconfig.json
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    '^src/(.*)$': '<rootDir>/src/$1',
+    '^test/(.*)$': '<rootDir>/test/$1'
   },
   globals: {
     'ts-jest': {
