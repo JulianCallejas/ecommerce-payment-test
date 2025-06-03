@@ -54,6 +54,18 @@ describe('CreateOrderUseCase', () => {
     expect(mockProductRepository.findById).toHaveBeenCalledWith(validInput.productId);
     expect(mockOrderRepository.createAddressAndCustomerAndOrder).toHaveBeenCalled();
   });
+  
+  it('should calculate delivery fee if base amount is not correct', async () => {
+    mockProductRepository.findById.mockResolvedValue(mockProduct);
+    mockConfigService.get.mockReturnValue(null);
+    mockOrderRepository.createAddressAndCustomerAndOrder.mockResolvedValue({ id: 'order-123' });
+
+    const result = await useCase.execute(validInput);
+
+    expect(result).toEqual({ id: 'order-123' });
+    expect(mockProductRepository.findById).toHaveBeenCalledWith(validInput.productId);
+    expect(mockOrderRepository.createAddressAndCustomerAndOrder).toHaveBeenCalled();
+  });
 
   it('should throw if product does not exist', async () => {
     mockProductRepository.findById.mockResolvedValue(null);

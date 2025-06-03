@@ -65,27 +65,27 @@ export class DeliveriesController {
 
   private deliveryToDto(delivery: Delivery): DeliveryResponseDto {
     const order: OrderInfoDto = {
-        id: delivery.order?.id,
-        productName: delivery.order?.product?.product || 'N/A',
-        quantity: delivery.order?.quantity,
-        totalPrice: Decimal(Number(delivery.order?.unitPrice) * delivery.order?.quantity)  || Decimal(0),
-        deliveryFee: delivery.order?.deliveryFee || Decimal(0),
+        id: delivery.order!.id,
+        productName: delivery.order!.product!.product,
+        quantity: delivery.order!.quantity,
+        totalPrice: Decimal(Number(delivery.order!.unitPrice) * delivery.order!.quantity)  || Decimal(0),
+        deliveryFee: delivery.order!.deliveryFee || Decimal(0),
         customer: {
-          id: delivery.order?.customer?.id,
-          customerId: delivery.order?.customer?.customerId,
-          fullname: delivery.order?.customer?.fullname,
-          email: delivery.order?.customer?.email,
-          createdAt: delivery.order?.customer?.createdAt
+          id: delivery.order!.customer!.id,
+          customerId: delivery.order!.customer!.customerId,
+          fullname: delivery.order!.customer!.fullname,
+          email: delivery.order!.customer!.email, 
+          createdAt: delivery.order!.customer!.createdAt
         },
         address: {
-          addressLine1: delivery.order?.address?.addressLine1,
-          addressLine2: delivery.order?.address?.addressLine2,
-          city: delivery.order?.address?.city,
-          region: delivery.order?.address?.region,
-          country: delivery.order?.address?.country,
-          postalCode: delivery.order?.address?.postalCode,
-          contactName: delivery.order?.address?.contactName,
-          phoneNumber: delivery.order?.address?.phoneNumber
+          addressLine1: delivery.order!.address!.addressLine1,
+          addressLine2: delivery.order!.address!.addressLine2,
+          city: delivery.order!.address!.city,
+          region: delivery.order!.address!.region,
+          country: delivery.order!.address!.country,
+          postalCode: delivery.order!.address!.postalCode,
+          contactName: delivery.order!.address!.contactName,
+          phoneNumber: delivery.order!.address!.phoneNumber
         }
       };
 

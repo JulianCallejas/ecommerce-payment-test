@@ -103,6 +103,44 @@ describe('WompiGatewayService', () => {
       const result = await service.createTransaction(params);
       expect(result).toEqual(mockResponse.data);
     });
+    
+    it('should create transaction successfully with missing data', async () => {
+      const mockResponse: AxiosResponse = { data: { transaction: 'ok' } } as any;
+      mockHttpService.post.mockReturnValueOnce(of(mockResponse));
+      const result = await service.createTransaction({
+        ...params,
+        shippingAddress: {
+          ...params.shippingAddress,
+          addressLine2: null,
+          contactName: null,
+          postalCode: null,
+        }
+      });
+      expect(result).toEqual(mockResponse.data);
+    });
+    
+    it('should create transaction successfully with addressLine2 wrong format', async () => {
+      const mockResponse: AxiosResponse = { data: { transaction: 'ok' } } as any;
+      mockHttpService.post.mockReturnValueOnce(of(mockResponse));
+      const result = await service.createTransaction({
+        ...params,
+        shippingAddress: {
+          ...params.shippingAddress,
+          addressLine2: " wrong format ",
+          contactName: null,
+          postalCode: null,
+        }
+      });
+      expect(result).toEqual(mockResponse.data);
+    });
+    
+    it('should use default values if no env data is set', async () => {
+      mockConfigService.get.mockReturnValue(null);
+      const mockResponse: AxiosResponse = { data: { transaction: 'ok' } } as any;
+      mockHttpService.post.mockReturnValueOnce(of(mockResponse));
+      const result = await service.createTransaction(params);
+      expect(result).toEqual(mockResponse.data);
+    });
 
     it('should throw error on failure', async () => {
       mockHttpService.post.mockReturnValueOnce(

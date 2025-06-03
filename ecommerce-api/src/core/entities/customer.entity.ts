@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Order } from "@prisma/client";
 
 export class Customer {

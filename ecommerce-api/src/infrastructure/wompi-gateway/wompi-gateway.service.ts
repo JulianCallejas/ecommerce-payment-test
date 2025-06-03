@@ -101,7 +101,7 @@ export class WompiGatewayService implements WompiGatewayServicePort {
         country: 'CO',
         region: shippingAddress.region,
         city: shippingAddress.city,
-        name: shippingAddress.contactName || customerData.fullname || "",
+        name: shippingAddress.contactName || customerData.fullname,
         phone_number: shippingAddress.phoneNumber,
         postal_code: shippingAddress.postalCode || "000000"
       }

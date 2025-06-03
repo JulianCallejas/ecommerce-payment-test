@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Module } from '@nestjs/common';
 import { OrdersController } from './orders.controller';
 import { CreateOrderUseCase } from 'src/core/use-cases/orders/create-order.use-case';

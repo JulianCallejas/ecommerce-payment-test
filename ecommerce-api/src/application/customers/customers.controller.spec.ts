@@ -41,6 +41,19 @@ describe('CustomersController', () => {
     expect(result.total).toBe(1);
     expect(getAllCustomersUseCase.execute).toHaveBeenCalledWith(1, 10);
   });
+  
+  it('should return paginated customers without params', async () => {
+    const mockCustomers = [
+      { id: '1', customerId: 'C1', fullname: 'John Doe', email: 'john@example.com', createdAt: new Date() },
+    ];
+    (getAllCustomersUseCase.execute as jest.Mock).mockResolvedValue([mockCustomers, 1]);
+
+    const result = await controller.getAllCustomers({});
+
+    expect(result.data.length).toBe(1);
+    expect(result.total).toBe(1);
+    expect(getAllCustomersUseCase.execute).toHaveBeenCalledWith(1, 10);
+  });
 
   it('should return customer by ID', async () => {
     const mockCustomer = {

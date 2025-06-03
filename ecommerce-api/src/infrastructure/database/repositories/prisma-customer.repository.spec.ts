@@ -20,9 +20,24 @@ describe('PrismaCustomerRepository', () => {
     expect(result).toEqual(mockCustomer);
     expect(prisma.customer.create).toHaveBeenCalledWith({ data: mockCustomer });
   });
+  
+  it('should return null for trhown error on create', async () => {
+    const mockCustomer = { id: uuidv4(), customerId: 'C123', fullname: 'John Doe' };
+    prisma.customer.create.mockRejectedValueOnce(new Error());
+
+    const result = await repository.create(mockCustomer);
+    expect(result).toEqual(null);
+    
+  });
 
   it('should return null for invalid UUID on findById', async () => {
     const result = await repository.findById('invalid-uuid');
+    expect(result).toBeNull();
+  });
+  
+  it('should return null for trhown error on findById', async () => {
+    prisma.customer.findUnique.mockRejectedValueOnce(new Error());
+    const result = await repository.findById(uuidv4());
     expect(result).toBeNull();
   });
 
@@ -50,5 +65,24 @@ describe('PrismaCustomerRepository', () => {
 
     const result = await repository.findByCustomerId('C321');
     expect(result).toEqual(mockCustomer);
+  });
+  
+  it('should find customer by customerId with orders', async () => {
+    const mockId = uuidv4();
+    const mockCustomer = { id: mockId, customerId: 'C321', orders: [{ id: uuidv4() }] };
+    prisma.customer.findUnique.mockResolvedValueOnce(mockCustomer as any);
+
+    const result = await repository.findCustomerWithOrders(mockId);
+    expect(Array.isArray(result.orders)).toBe(true);
+    
+  });
+  
+  it('should return null if thorw on findCustomerWithOrders', async () => {
+    const mockId = uuidv4();
+    prisma.customer.findUnique.mockRejectedValueOnce(new Error());
+
+    const result = await repository.findCustomerWithOrders(mockId);
+    expect(result).toBe(null);
+    
   });
 });

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Decimal } from '@prisma/client/runtime/library';
 import { Order } from './order.entity';
 

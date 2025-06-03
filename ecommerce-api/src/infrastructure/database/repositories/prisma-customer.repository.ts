@@ -12,7 +12,7 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   async findById(id: string): Promise<Customer | null> {
     try {
       if (!uuidValidate(id)) return null;
-      return this.prisma.customer.findUnique({
+      return await this.prisma.customer.findUnique({
         where: { id },
         include: {
           orders: {
@@ -31,7 +31,7 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
 
   async findByCustomerId(customerId: string): Promise<Customer | null> {
     try {
-      return this.prisma.customer.findUnique({
+      return await this.prisma.customer.findUnique({
         where: { customerId }
       });
     } catch (error) {
@@ -56,7 +56,7 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
 
   async create(customer: Partial<Customer>): Promise<Customer> {
     try {
-      return this.prisma.customer.create({
+      return await this.prisma.customer.create({
         data: customer as Prisma.CustomerCreateInput
       });
     } catch (error) {
@@ -67,7 +67,7 @@ export class PrismaCustomerRepository implements CustomerRepositoryPort {
   async findCustomerWithOrders(id: string): Promise<Customer | null> {
     try {
       if (!uuidValidate(id)) return null;
-      return this.prisma.customer.findUnique({
+      return await this.prisma.customer.findUnique({
         where: { id },
         include: {
           orders: {

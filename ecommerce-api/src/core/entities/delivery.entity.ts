@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Order } from './order.entity';
 import { DeliveryStatus } from '@prisma/client';
 

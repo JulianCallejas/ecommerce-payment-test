@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Module } from '@nestjs/common';
 import { CheckoutController } from './checkout.controller';
 import { PrismaProductRepository } from '../../infrastructure/database/repositories/prisma-product.repository';

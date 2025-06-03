@@ -96,6 +96,20 @@ describe('TransactionsController', () => {
     expect(result.data[0].transactionId).toBe('txn-001');
     expect(getAllTransactionsUseCase.execute).toHaveBeenCalledWith(1, 10);
   });
+  
+  it('should return paginated transactions without params', async () => {
+    
+    jest.spyOn(getAllTransactionsUseCase, 'execute').mockResolvedValue([mockTransactions, 2]);
+
+    const result = await controller.getAllTransactions({});
+
+    expect(result.data.length).toBe(2);
+    expect(result.total).toBe(2);
+    expect(result.page).toBe(1);
+    expect(result.pageSize).toBe(10);
+    expect(result.data[0].transactionId).toBe('txn-001');
+    expect(getAllTransactionsUseCase.execute).toHaveBeenCalledWith(1, 10);
+  });
 
   it('should return transaction details by id', async () => {
     jest.spyOn(getTransactionStatusUseCase, 'execute').mockResolvedValue(mockTransactionDetails as any);

@@ -51,4 +51,15 @@ describe('StockController', () => {
     expect(result.total).toBe(2);
     expect(getAllProductsUseCase.execute).toHaveBeenCalledWith(1, 10);
   });
+  
+  it('should return paginated products without params', async () => {
+    
+    jest.spyOn(getAllProductsUseCase, 'execute').mockResolvedValue([mockProducts, 2]);
+
+    const result = await controller.getAllProducts({});
+
+    expect(result.data.length).toBe(2);
+    expect(result.total).toBe(2);
+    expect(getAllProductsUseCase.execute).toHaveBeenCalledWith(1, 10);
+  });
 });
