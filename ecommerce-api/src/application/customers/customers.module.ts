@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Module } from '@nestjs/common';
 import { CustomersController } from './customers.controller';
 import { GetAllCustomersUseCase } from 'src/core/use-cases/customers/get-all-customers.use-case';

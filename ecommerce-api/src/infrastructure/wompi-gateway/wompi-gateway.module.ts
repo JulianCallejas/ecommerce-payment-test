@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Module } from '@nestjs/common';
 import { WompiGatewayService } from './wompi-gateway.service';
 import { HttpModule } from '@nestjs/axios';

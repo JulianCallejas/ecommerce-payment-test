@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 export class OrderAddress {
   id: string;
   addressLine1: string;

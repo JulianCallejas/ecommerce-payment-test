@@ -49,8 +49,8 @@ export class TransactionsController {
       amount: transaction.amount,
       createdAt: transaction.createdAt,
       orderId: transaction.orderId,
-      customerName: transaction.order?.customer?.fullname || 'N/A',
-      productName: transaction.order?.product?.product || 'N/A',
+      customerName: transaction.order?.customer?.fullname,
+      productName: transaction.order?.product?.product,
     }));
     
     return new PaginatedResponseDto<TransactionResponseDto>(transactionDtos, total, page, pageSize);

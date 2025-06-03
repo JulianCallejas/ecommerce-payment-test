@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Order } from 'src/core/entities/order.entity';
 
 export class CustomerResponseDto {
   @ApiProperty({ description: 'Customer ID' })
@@ -15,4 +16,8 @@ export class CustomerResponseDto {
   
   @ApiProperty({ description: 'Creation date' })
   createdAt: Date;
+
+  @ApiProperty({ description: 'Customer order list', type: [Order] })
+  orders?: Order[];
+
 }

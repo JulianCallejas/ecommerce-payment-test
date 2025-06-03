@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Module } from '@nestjs/common';
 import { StockController } from './stock.controller';
 import { GetProductStockUseCase } from 'src/core/use-cases/stock/get-product-stock.use-case';

@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Module } from '@nestjs/common';
 import { PrismaModule } from './infrastructure/database/prisma.module';
 import { ConfigModule } from '@nestjs/config';

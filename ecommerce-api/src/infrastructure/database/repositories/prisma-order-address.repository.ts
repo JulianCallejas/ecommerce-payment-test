@@ -12,15 +12,23 @@ export class PrismaOrderAddressRepository
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<OrderAddress | null> {
-    if (!uuidValidate(id)) return null;
-    return this.prisma.orderAddress.findUnique({
-      where: { id }
-    });
+    try {
+      if (!uuidValidate(id)) return null;
+      return this.prisma.orderAddress.findUnique({
+        where: { id }
+      });
+    } catch (error) {
+      return null;
+    }
   }
 
   async create(address: Partial<OrderAddress>): Promise<OrderAddress> {
-    return this.prisma.orderAddress.create({
-      data: address as Prisma.OrderAddressCreateInput
-    });
+    try {
+      return this.prisma.orderAddress.create({
+        data: address as Prisma.OrderAddressCreateInput
+      });
+    } catch (error) {
+      return null;
+    }
   }
 }

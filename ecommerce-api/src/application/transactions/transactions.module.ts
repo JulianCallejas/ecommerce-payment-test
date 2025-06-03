@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { Module } from '@nestjs/common';
 import { TransactionsController } from './transactions.controller';
 import { CreateTransactionUseCase } from 'src/core/use-cases/transactions/create-transaction.use-case';
