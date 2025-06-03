@@ -47,7 +47,7 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
 
   async create(order: Partial<Order>): Promise<Order> {
     try {
-      return this.prisma.order.create({
+      return await this.prisma.order.create({
         data: order as Prisma.OrderCreateInput,
         include: {
           product: true,
@@ -66,7 +66,7 @@ export class PrismaOrderRepository implements OrderRepositoryPort {
     order: Partial<Order>
   ): Promise<Order> {
     try {
-      return this.prisma.$transaction(async (tx) => {
+      return await this.prisma.$transaction(async (tx) => {
         const addressData = await tx.orderAddress.create({
           data: address as Prisma.OrderAddressCreateInput
         });

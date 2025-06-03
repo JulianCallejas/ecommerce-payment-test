@@ -11,7 +11,7 @@ export class PrismaProductRepository implements ProductRepositoryPort {
 
   async findBySlug(slug: string): Promise<Product | null> {
     try {
-      return this.prisma.product.findUnique({
+      return await this.prisma.product.findUnique({
         where: { slug }
       });
     } catch (error) {
@@ -22,7 +22,7 @@ export class PrismaProductRepository implements ProductRepositoryPort {
   async findById(id: string): Promise<Product | null> {
     try {
       if (!uuidValidate(id)) return null;
-      return this.prisma.product.findUnique({
+      return await this.prisma.product.findUnique({
         where: { id }
       });
     } catch (error) {
@@ -47,7 +47,7 @@ export class PrismaProductRepository implements ProductRepositoryPort {
 
   async create(product: Partial<Product>): Promise<Product> {
     try {
-      return this.prisma.product.create({
+      return await this.prisma.product.create({
         data: product as any
       });
     } catch (error) {
