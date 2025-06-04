@@ -18,8 +18,12 @@ const config: JestConfigWithTsJest = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '^../../services/api$': '<rootDir>/src/tests/__mocks__/api.ts',
+    '^../services/api$': '<rootDir>/src/tests/__mocks__/api.ts',
     '^../../hooks/usePurchaseProcess$': '<rootDir>/src/tests/__mocks__/usePurchaseProcess.ts', // Asegura esta línea
-    '@toolpad/core/useNotifications': '<rootDir>/src/tests/__mocks__/useNotifications.ts' // Asegura esta línea
+    '^./usePurchaseProcess$': '<rootDir>/src/tests/__mocks__/usePurchaseProcess.ts', // Asegura esta línea
+    '^./hooks/useCheckoutForms$': '<rootDir>/src/tests/__mocks__/useCheckoutForms.ts',
+    '^./useCheckoutForms$': '<rootDir>/src/tests/__mocks__/useCheckoutForms.ts',
+    '@toolpad/core/useNotifications': '<rootDir>/src/tests/__mocks__/useNotifications.ts'
   },
   setupFiles: ['<rootDir>/jest.env.js',],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],

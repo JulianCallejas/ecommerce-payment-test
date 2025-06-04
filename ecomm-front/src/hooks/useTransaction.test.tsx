@@ -3,12 +3,12 @@ import {
   setupStore,
   createWrapper,
   type DeepPartial,
-} from "../../tests/reduxTestingUtils";
-import { type RootState } from "../../store";
-import api from "../../tests/__mocks__/api";
-import { useNotifications } from "../../tests/__mocks__/useNotifications";
+} from "../tests/reduxTestingUtils";
+import { type RootState } from "../store";
+import api from "../tests/__mocks__/api";
+import { useNotifications } from "../tests/__mocks__/useNotifications";
 // import { usePurchaseProcess } from "../../tests/__mocks__/usePurchaseProcess";
-import { useTransaction } from "../../hooks";
+import { useTransaction } from ".";
 
 // Tipos mockeados basados en tus interfaces
 const mockProduct: RootState["product"]["data"] = {
@@ -55,9 +55,9 @@ const mockTransaction: RootState["transaction"]["data"] = {
 };
 
 describe("useTransaction", () => {
-  jest.mock("../../tests/__mocks__/api.ts");
+  jest.mock("../tests/__mocks__/api.ts");
   jest.mock("@toolpad/core/useNotifications");
-  jest.mock("../../hooks/usePurchaseProcess");
+  jest.mock("../hooks/usePurchaseProcess");
 
   beforeEach(() => {
     jest.clearAllMocks();
