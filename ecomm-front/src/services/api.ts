@@ -1,9 +1,10 @@
 import axios from "axios";
 import type { OrderConfirmationResponse, OrderConfirmRequest, OrderCreateRequest, OrderResponse, Product, TransactionCreateRequest, TransactionResponse } from "../types";
+import env from "../config/env";
 
 // Create axios instance with base URL from environment variables
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api/v1",
+  baseURL: env.API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

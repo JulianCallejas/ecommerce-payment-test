@@ -19,9 +19,7 @@ const TransactionStatusModal = () => {
   if (!transactionModalMessage) {
     return null;
   }
-
-  console.log({transactionModalMessage});
-
+  
   return (
     <Modal
       open={!!transactionModalMessage}

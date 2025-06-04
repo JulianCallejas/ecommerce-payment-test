@@ -26,6 +26,7 @@ const CustomerInfoForm = () => {
             helperText={touchedFields.fullname && errors.fullname?.message}
             fullWidth
             required
+            autoFocus
           />
         </Grid>
         

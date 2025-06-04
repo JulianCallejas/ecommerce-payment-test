@@ -1,9 +1,10 @@
 import axios from "axios";
 import type { AcceptanceTokenResponse } from "../types";
+import env from "../config/env";
 
 // Create axios instance with base URL from environment variables
 const wompiApi = axios.create({
-  baseURL: `${import.meta.env.VITE_ACCEPT_TOKENS_URL}/${import.meta.env.VITE_WOMPI_PUB_KEY}`,
+  baseURL: `${env.ACCEPT_TOKENS_URL}/${env.WOMPI_PUB_KEY}`,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json",

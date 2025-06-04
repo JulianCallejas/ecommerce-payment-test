@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": false,
+    "noEmit": true,
+    "outDir": "./dist-test",
+    "types": ["jest", "node"],
+    "jsx": "react-jsxdev",
+    "module": "ESNext",
+    "target": "ES2021",
+    "moduleResolution": "Node"
+  },
+  "include": [
+    "src/**/*",
+    "__tests__/**/*",
+    "__mocks__/**/*",
+    "jest.setup.ts",
+    "jest.config.ts"
+  ],
+  "exclude": ["node_modules"]
+}

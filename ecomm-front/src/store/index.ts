@@ -14,11 +14,12 @@ import orderReducer, { type OrderState } from "../features/order/orderSlice";
 import transactionReducer, { type TransactionState } from "../features/transaction/transactionSlice";
 import checkoutReducer, { type CheckoutState } from '../features/checkout/checkoutSlice';
 import purchaseStageReducer, { type PurchaseStageState} from '../features/purchase/purchaseStageSlice';
+import env from "../config/env";
 
 
 
 const storageKey =
-  import.meta.env.VITE_ENCRYPTSTORAGE_KEY || "41346ECD5EA232385355CDEF8B925";
+  env.ENCRYPTSTORAGE_KEY || "41346ECD5EA232385355CDEF8B925";
 
 // Create a persisted storage with encryption
 export interface RootState {
