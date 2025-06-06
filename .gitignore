@@ -52,6 +52,5 @@ ecommerce-api/prisma/migrations
 /coverage
 **/coverage
 
-**/__mocks__
 
-**jest.env**
+
