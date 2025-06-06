@@ -144,7 +144,6 @@ export const useTransaction = () => {
 
   useEffect(() => {
     if (!order?.id || transaction?.status || placeTransactionCounter) return;
-    console.log("place transaction");
     placeTransaction();
   }, [
     order?.id,
@@ -161,7 +160,6 @@ export const useTransaction = () => {
       transactionError
     )
       return;
-      console.log("Polling")
 
     dispatch(pollTransaction(transaction?.transactionId));
   }, [

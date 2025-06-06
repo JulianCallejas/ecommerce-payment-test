@@ -36,7 +36,7 @@ describe("useCheckout", () => {
       data: { id: "prod_123", name: "Test Product", unitPrice: 100 },
     },
   };
-  
+
   const mockCloseCheckoutModal = jest.fn();
 
   beforeEach(() => {
@@ -198,17 +198,16 @@ describe("useCheckout", () => {
     expect(result.current.activeStep).toBe(0);
     expect(usePurchaseProcess).toHaveBeenCalled();
     expect(mockCloseCheckoutModal).toHaveBeenCalled();
-    
   });
 
   it("debe validar términos y condiciones", () => {
     const wrapper = createWrapper({
-        ...baseState,
-        checkout: {
-          ...baseState.checkout,
-          termsAccepted: "token_terms",
-          privacyAccepted: "",
-        },
+      ...baseState,
+      checkout: {
+        ...baseState.checkout,
+        termsAccepted: "token_terms",
+        privacyAccepted: "",
+      },
     });
     const { result } = renderHook(() => useCheckout(), { wrapper });
 
@@ -216,7 +215,6 @@ describe("useCheckout", () => {
     expect(result.current.hasAcceptTokens).toBe(false);
   });
 });
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const nextLastStep = async (result: any) => {

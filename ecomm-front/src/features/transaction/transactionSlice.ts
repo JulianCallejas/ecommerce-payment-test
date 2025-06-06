@@ -1,7 +1,14 @@
-import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
-import api from '../../services/api';
-import type { TransactionCreateRequest, TransactionResponse } from '../../types';
-import { AxiosError } from 'axios';
+import {
+  createSlice,
+  createAsyncThunk,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
+import api from "../../services/api";
+import type {
+  TransactionCreateRequest,
+  TransactionResponse,
+} from "../../types";
+import { AxiosError } from "axios";
 
 export interface TransactionState {
   data: TransactionResponse | null;
@@ -21,7 +28,7 @@ const initialState: TransactionState = {
 
 // Async thunk for creating a transaction
 export const createTransaction = createAsyncThunk(
-  'transaction/createTransaction',
+  "transaction/createTransaction",
   async (request: TransactionCreateRequest, { rejectWithValue }) => {
     try {
       return await api.createTransaction(request);
@@ -32,14 +39,14 @@ export const createTransaction = createAsyncThunk(
       if (error instanceof Error) {
         return rejectWithValue(error.message);
       }
-      return rejectWithValue('Failed to create transaction');
+      return rejectWithValue("Failed to create transaction");
     }
   }
 );
 
 // Async thunk for polling transaction status
 export const pollTransaction = createAsyncThunk(
-  'transaction/pollTransaction',
+  "transaction/pollTransaction",
   async (id: string, { rejectWithValue }) => {
     try {
       return await api.getTransaction(id);
@@ -47,13 +54,13 @@ export const pollTransaction = createAsyncThunk(
       if (error instanceof Error) {
         return rejectWithValue(error.message);
       }
-      return rejectWithValue('Failed to get transaction status');
+      return rejectWithValue("Failed to get transaction status");
     }
   }
 );
 
 const transactionSlice = createSlice({
-  name: 'transaction',
+  name: "transaction",
   initialState,
   reducers: {
     setTransaction: (state, action: PayloadAction<TransactionResponse>) => {
@@ -82,15 +89,14 @@ const transactionSlice = createSlice({
         state.data = action.payload;
         state.error = null;
         // Start polling if status is PENDING
-        state.polling = action.payload.status === 'PENDING';
+        state.polling = action.payload.status === "PENDING";
       })
       .addCase(createTransaction.rejected, (state, action) => {
         state.loading = false;
         state.loaded = true;
         state.polling = false;
-        if (state.data?.status ) return
+        if (state.data?.status) return;
         state.error = action.payload as string;
-        console.log(action.payload);
       })
 
       // Poll transaction cases
@@ -104,19 +110,23 @@ const transactionSlice = createSlice({
         state.data = action.payload;
         state.loaded = true;
         // Continue polling only if still PENDING
-        state.polling = action.payload.status === 'PENDING';
+        state.polling = action.payload.status === "PENDING";
       })
       .addCase(pollTransaction.rejected, (state, action) => {
         state.error = action.payload as string;
-        console.log(action.payload as string);
         state.loaded = true;
         state.polling = false;
-        if ((action.payload as string).includes("rejected")){
+        if ((action.payload as string).includes("rejected")) {
           state.data!.status = "REJECTED";
         }
       });
   },
 });
 
-export const { setTransaction, setPolling, resetTransaction, setTransactionError } = transactionSlice.actions;
+export const {
+  setTransaction,
+  setPolling,
+  resetTransaction,
+  setTransactionError,
+} = transactionSlice.actions;
 export default transactionSlice.reducer;

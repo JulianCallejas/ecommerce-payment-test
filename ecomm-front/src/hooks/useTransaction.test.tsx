@@ -192,8 +192,6 @@ describe("useTransaction", () => {
 
     const store = setupStore(state);
 
-    console.log("Estado inicial:", store.getState().transaction);
-
     const wrapper = createWrapper(state);
     const { result } = renderHook(
       () => {
@@ -204,59 +202,52 @@ describe("useTransaction", () => {
     );
 
     await waitFor(() => {
-        expect(result.current.transactionModalMessage).toBe("transaction-approved");
-        expect(api.getTransaction).toHaveBeenCalled();
+      expect(result.current.transactionModalMessage).toBe(
+        "transaction-approved"
+      );
+      expect(api.getTransaction).toHaveBeenCalled();
     });
   });
 
   it("muestra notificación y abre checkout cuando faltan datos de pago", async () => {
-  // Mockear los hooks necesarios
-//   const mockShow = jest.fn();
-  
-  const state = {
-    ...baseState,
-    checkout: {
-      ...baseState.checkout,
-      paymentData: null,
-    },
-  };
+    const state = {
+      ...baseState,
+      checkout: {
+        ...baseState.checkout,
+        paymentData: null,
+      },
+    };
 
-//   const wrapper = createWrapper(state);
-//   const { result } = renderHook(() => useTransaction(), { wrapper });
+    const mockShow = jest.fn();
+    (useNotifications as jest.Mock).mockReturnValue({
+      show: mockShow,
+    });
 
-//   console.log({result});
+    const store = setupStore(state);
 
-  const mockShow = jest.fn();
-  (useNotifications as jest.Mock).mockReturnValue({
-    show: mockShow
-  });
-  
-  
-  const store = setupStore(state);
-
-    console.log("Estado inicial:", store.getState().transaction);
+    // console.log("Estado inicial:", store.getState().transaction);
 
     const wrapper = createWrapper(state);
-    const { result } = renderHook(
+    renderHook(
       () => {
         const hook = useTransaction();
         return { ...hook, store };
       },
       { wrapper }
     );
-    
-    console.log(result.current.store.getState().purchaseStageState)
+
+    // console.log(result.current.store.getState().purchaseStageState);
 
     await waitFor(() => {
-        expect(mockShow).toHaveBeenCalledWith("Confirme los datos de pago para continuar", {
-        severity: "warning",
-        autoHideDuration: 6000,
-      });
+      expect(mockShow).toHaveBeenCalledWith(
+        "Confirme los datos de pago para continuar",
+        {
+          severity: "warning",
+          autoHideDuration: 6000,
+        }
+      );
     });
-
-  
-
-});
+  });
 
   it("ejecuta reintento después de 5 segundos", async () => {
     const state = {
