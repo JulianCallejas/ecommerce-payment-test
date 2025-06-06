@@ -54,7 +54,7 @@ const PaymentDataForm = () => {
               slotProps={{input: {inputProps: {maxLength: 19}}}}
             />
 
-            <Box className="absolute right-3 top-[4px] transform  w-8 ">
+            <Box className="absolute right-3 top-[4px] transform  w-8 " data-testid="card-icon" >
               {cardType === "visa" && <VisaSvg />}
               {cardType === "mastercard" && <MasterSvg />}
               {cardType !== "visa" && cardType !== "mastercard" && (

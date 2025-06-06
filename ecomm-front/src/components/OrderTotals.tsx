@@ -25,11 +25,11 @@ const OrderTotals = () => {
         variant="fullWidth"
         sx={{ borderColor: "#172B3C" }}
       />
-      <ListItem disablePadding className="">
+      <ListItem disablePadding className="" data-testid="base-amount" >
         <ListItemText primary="Subtotal" />
         <Typography>{currencyFormatter(summary.baseAmount)}</Typography>
       </ListItem>
-      <ListItem disablePadding className="">
+      <ListItem disablePadding className="" data-testid="delivery-fee" >
         <ListItemText primary="Gastos de envío" />
         <Typography>{currencyFormatter(summary.deliveryFee)}</Typography>
       </ListItem>

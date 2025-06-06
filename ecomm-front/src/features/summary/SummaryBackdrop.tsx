@@ -37,6 +37,7 @@ const SummaryBackdrop: React.FC = () => {
           size="large"
           onClick={startPaymentProcess}
           disabled={!canStartpaymentProcess || isProcessingPayment}
+          data-testid="pmt-button"
         >
           Pay Now
         </Button>

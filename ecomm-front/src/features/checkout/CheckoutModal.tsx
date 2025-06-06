@@ -42,7 +42,7 @@ const CheckoutModal: React.FC = () => {
   );
 
   return (
-    <Modal open={isOpen} aria-labelledby="checkout-modal-title">
+    <Modal open={isOpen} aria-labelledby="checkout-modal-title" data-testid="checkout-modal" >
       <Card className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         <Box className="p-6 h-full ">
           <Box className="flex justify-between items-center mb-6">

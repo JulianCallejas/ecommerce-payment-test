@@ -49,12 +49,12 @@ const ProductPage: React.FC = () => {
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Skeleton variant="rectangular" height={400} />
+        <Skeleton variant="rectangular" height={400} data-testid="skeleton" />
         <div className="space-y-4">
-          <Skeleton variant="text" height={40} width="70%" />
-          <Skeleton variant="text" height={24} width="40%" />
-          <Skeleton variant="text" height={100} />
-          <Skeleton variant="rectangular" height={56} width="100%" />
+          <Skeleton variant="text" height={40} width="70%" data-testid="skeleton" />
+          <Skeleton variant="text" height={24} width="40%" data-testid="skeleton" />
+          <Skeleton variant="text" height={100} data-testid="skeleton" />
+          <Skeleton variant="rectangular" height={56} width="100%" data-testid="skeleton" />
         </div>
       </div>
     );
@@ -157,6 +157,7 @@ const ProductPage: React.FC = () => {
           onClick={handleBuyNowClick}
           disabled={product.stock <= 0}
           className="py-3"
+          data-testid="pmt-button"
         >
           Pay with Credit Card
         </Button>

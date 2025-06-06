@@ -4,10 +4,10 @@ import {
   mockCheckoutState,
   mockCheckoutStateIncomplete,
   mockOrderConfirmRequest,
-} from "../tests//__mocks__/checkoutMockData";
+} from "../tests/__mocks__/checkoutMockData";
 import {
-  mockcloseTransactionModal,
-  mockstartSummary,
+  mockCloseTransactionModal,
+  mockStartSummary,
   usePurchaseProcess,
 } from "../tests/__mocks__/usePurchaseProcess";
 import { useNotifications } from "../tests/__mocks__/useNotifications";
@@ -45,8 +45,8 @@ describe("useCheckout", () => {
     // Configuración base de mocks
 
     (usePurchaseProcess as jest.Mock).mockImplementation(() => ({
-      closeTransactionModal: mockcloseTransactionModal,
-      startSummary: mockstartSummary,
+      closeTransactionModal: mockCloseTransactionModal,
+      startSummary: mockStartSummary,
       closeCheckoutModal: mockCloseCheckoutModal,
     }));
 
@@ -151,7 +151,7 @@ describe("useCheckout", () => {
         usePurchaseProcess.mockImplementation(mockCloseCheckoutModal)
       ).toHaveBeenCalled();
       expect(
-        usePurchaseProcess.mockImplementation(mockstartSummary)
+        usePurchaseProcess.mockImplementation(mockStartSummary)
       ).toHaveBeenCalled();
       expect(result.current.isProcessingSummary).toBe(false);
     });
