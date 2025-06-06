@@ -13,7 +13,7 @@ export class CheckoutController {
   
   @Post()
   @HttpCode(200)
-  @ApiOperation({ summary: 'Confirm checkout information' })
+  @ApiOperation({ summary: 'Confirm checkout information (public)' })
   @ApiResponse({
     status: 200,
     description: 'Order data confirmed successfully',

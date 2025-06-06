@@ -22,7 +22,7 @@ export class CustomersController {
   ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all customers (protected)' })
+  @ApiOperation({ summary: 'Get all customers (protected admin)' })
   @ApiResponse({
     status: 200,
     description: 'List of customers',
@@ -54,7 +54,7 @@ export class CustomersController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get customer by ID' })
+  @ApiOperation({ summary: 'Get customer by ID (protected)' })
   @ApiParam({ name: 'id', description: 'Record ID' })
   @ApiResponse({
     status: 200,

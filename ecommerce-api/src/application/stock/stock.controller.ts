@@ -14,7 +14,7 @@ export class StockController {
   ) {}
 
   @Get('products/:slug')
-  @ApiOperation({ summary: 'Get product by slug' })
+  @ApiOperation({ summary: 'Get product by slug (public)' })
   @ApiParam({ name: 'slug', description: 'Product slug' })
   @ApiResponse({
     status: 200,
@@ -27,7 +27,7 @@ export class StockController {
   }
 
   @Get('products')
-  @ApiOperation({ summary: 'Get all products' })
+  @ApiOperation({ summary: 'Get all products (public)' })
   @ApiResponse({
     status: 200,
     description: 'Paginated list of products',
