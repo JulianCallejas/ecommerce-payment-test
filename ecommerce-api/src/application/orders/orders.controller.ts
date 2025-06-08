@@ -14,7 +14,7 @@ export class OrdersController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create order' })
+  @ApiOperation({ summary: 'Create order (protected)' })
   @ApiResponse({
     status: 201,
     description: 'Order created successfully',
@@ -25,7 +25,7 @@ export class OrdersController {
   }
   
   @Get(':orderId')
-    @ApiOperation({ summary: 'Get order details' })
+    @ApiOperation({ summary: 'Get order details (protected)' })
     @ApiResponse({
       status: 200,
       description: 'Order details',

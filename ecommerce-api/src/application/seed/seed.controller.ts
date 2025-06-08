@@ -8,7 +8,7 @@ import { ProductResponseDto } from '../stock/dto/product-response.dto';
 export class SeedController {
   constructor(private readonly seedProductsUseCase: SeedProductsUseCase) {}
   @Post('products')
-  @ApiOperation({ summary: 'Seed products (protected)' })
+  @ApiOperation({ summary: 'Seed products (protected admin)' })
   @ApiResponse({
     status: 201,
     description: 'Products created',

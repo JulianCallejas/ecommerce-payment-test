@@ -18,7 +18,7 @@ export class TransactionsController {
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create a new transaction' })
+  @ApiOperation({ summary: 'Create a new transaction (protected). It will update the product stock and create a delivery record upon successful transaction' })
   @ApiResponse({
     status: 201,
     description: 'Transaction created',
@@ -31,7 +31,7 @@ export class TransactionsController {
   }
   
   @Get()
-  @ApiOperation({ summary: 'Get all transactions' })
+  @ApiOperation({ summary: 'Get all transactions (protected admin)' })
   @ApiResponse({
     status: 200,
     description: 'List of transactions',
@@ -57,7 +57,7 @@ export class TransactionsController {
   }
 
   @Get(':transactionId')
-  @ApiOperation({ summary: 'Get transaction details' })
+  @ApiOperation({ summary: 'Get transaction details (protected)' })
   @ApiResponse({
     status: 200,
     description: 'Transaction details',

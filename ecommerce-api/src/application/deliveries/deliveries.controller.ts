@@ -19,7 +19,7 @@ export class DeliveriesController {
   ) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all deliveries (protected)' })
+  @ApiOperation({ summary: 'Get all deliveries (protected admin)' })
   @ApiResponse({
     status: 200,
     description: 'List of deliveries',
@@ -44,7 +44,7 @@ export class DeliveriesController {
   }
 
   @Get('customer/:customerId')
-  @ApiOperation({ summary: 'Get deliveries by customer ID' })
+  @ApiOperation({ summary: 'Get deliveries by customer ID (protected)' })
   @ApiParam({ name: 'customerId', description: 'Customer ID' })
   @ApiResponse({
     status: 200,
