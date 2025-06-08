@@ -1,4 +1,6 @@
-![Logo de E-Commerce](https://res.cloudinary.com/dphleqb5t/image/upload/v1749355793/ecommerce/ecomm-logo_1_ymy5nm.svg)
+<div align="center">
+<img src="https://res.cloudinary.com/dphleqb5t/image/upload/v1749415714/ecommerce/ecomm-logo_sr3dlh.svg" alt="ecomm" width="450px" />
+</div>
 
 Esta aplicación muestra el flujo completo de compra de un artículo, desde la visualización del producto hasta el pago y envío. Implementa una arquitectura full stack moderna con un backend en NestJS y un frontend en React.
 
