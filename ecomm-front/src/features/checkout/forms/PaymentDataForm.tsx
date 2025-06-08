@@ -51,7 +51,7 @@ const PaymentDataForm = () => {
               }
               fullWidth
               required
-              slotProps={{input: {inputProps: {maxLength: 19}}}}
+              slotProps={{input: {inputProps: {maxLength: 16}}}}
             />
 
             <Box className="absolute right-3 top-[4px] transform  w-8 " data-testid="card-icon" >

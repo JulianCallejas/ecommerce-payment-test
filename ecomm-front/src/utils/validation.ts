@@ -15,12 +15,12 @@ export const customerSchema = z.object({
 
 export const paymentSchema = z.object({
   cardNumber: z.string()
-    .min(16, 'Debe tener al menos 16 dígitos')
-    .max(19, 'Debe tener menos de 20 dígitos')
+    .min(16, 'Debe tener 16 dígitos')
+    .max(16, 'Debe tener 16 dígitos')
     .regex(/^\d+$/, 'Solo se permiten números (sin espacios)'),
   cvc: z.string()
-    .min(3, 'CVC debe ser de 3-4 dígitos')
-    .max(4, 'CVC debe ser de 3-4 dígitos')
+    .min(3, 'CVC debe ser de 3 dígitos')
+    .max(3, 'CVC debe ser de 3 dígitos')
     .regex(/^\d+$/, 'CVC must contain only digits'),
   expMonth: z.string()
     .regex(/^(0[1-9]|1[0-2])$/, 'Month must be between 01-12'),

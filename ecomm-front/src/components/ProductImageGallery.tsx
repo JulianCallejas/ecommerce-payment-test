@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Box, IconButton, Slide, } from "@mui/material";
+import { Box, IconButton, Slide } from "@mui/material";
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -10,7 +10,7 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   images,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<"right" | "left" | "up" >("right");
+  const [direction, setDirection] = useState<"right" | "left" | "up">("right");
   const initialDragX = useRef(0);
 
   const handlePrevious = () => {
@@ -33,17 +33,22 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   };
 
   const handleOnTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    initialDragX.current = e.touches[0].clientX;
+    console.log(e.touches[0].screenX);
+    initialDragX.current = e.touches[0].screenX;
   };
 
   const handleOnTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    const dragX = e.touches[0].clientX;
-    if (dragX > initialDragX.current){
-      setDirection("right");
-      return;
-    } 
-    handlePrevious();
     
+    console.log("touch");
+    console.log(e);
+    console.log(e.changedTouches[0].screenX);
+    
+    const dragX = e.changedTouches[0].screenX;
+    if (dragX > initialDragX.current) {
+      handlePrevious();
+      return;
+    }
+    handleNext();
   };
 
   if (!images || images.length === 0) {
@@ -56,16 +61,19 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="relative h-80 md:h-96 bg-white rounded-lg overflow-hidden">
-          <Slide direction={direction} in={true} key={`slide-${images[currentIndex]}`}>
+      <div className="relative h-80 md:h-96 bg-white rounded-lg overflow-hidden"
+      >
+        <Slide
+          direction={direction}
+          in={true}
+          key={`slide-${images[currentIndex]}`}
+        >
           <img
             src={images[currentIndex]}
             alt={`Product view ${currentIndex + 1}`}
             className="w-full h-full object-contain transition-opacity duration-300 "
-            onTouchStart={handleOnTouchStart}
-            onTouchMove={handleOnTouchMove}
           />
-          </Slide>
+        </Slide>
         <div className="absolute inset-0 flex items-center justify-between">
           <IconButton
             onClick={handlePrevious}
@@ -74,7 +82,11 @@ const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
           >
             <ChevronLeft className="h-6 w-6" />
           </IconButton>
-
+          <div className="flex-1 h-full" 
+          onTouchStart={handleOnTouchStart}
+          onTouchEnd={handleOnTouchMove}
+          >
+          </div>
           <IconButton
             onClick={handleNext}
             className="bg-white bg-opacity-70 hover:bg-opacity-100 transition-all"
