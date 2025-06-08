@@ -2,6 +2,14 @@
 
 Esta aplicación muestra el flujo completo de compra de un artículo, desde la visualización del producto hasta el pago y envío. Implementa una arquitectura full stack moderna con un backend en NestJS y un frontend en React.
 
+
+⏳ *Nota: La API está desplegada en un servidor gratuito. Si no ha recibido solicitudes en los últimos 15 minutos, puede tardar hasta 1 minuto en reiniciarse.*
+> 🌐 Aplicación Web: [ecomm app](https://ecomm-sbtj.onrender.com)
+
+> 🔗 Documentación API: [Documentación ecomm API](https://ecomm-api-5463.onrender.com/api)
+
+<br/>
+
 ---
 
 ## 🚀 Características principales
@@ -14,6 +22,8 @@ Esta aplicación muestra el flujo completo de compra de un artículo, desde la v
 - Resumen del pedido con botón **\"Pay Now\"**.
 - Creación de orden, transacción mediante **Wompi**, registro de envío y actualización de stock.
 - Mensaje de confirmación o rechazo según resultado de la transacción.
+
+<br/>
 
 ---
 
@@ -83,6 +93,8 @@ La base de datos está gestionada con **PostgreSQL** y el ORM **Prisma**, e incl
 - Prisma usa convenciones para nombres de columnas en snake_case y pluralización de tablas.
 - El manejo de estados de entrega y transacciones permite trazabilidad y consistencia.
 
+<br/>
+
 ---
 
 
@@ -98,6 +110,8 @@ La base de datos está gestionada con **PostgreSQL** y el ORM **Prisma**, e incl
 
 > 🔗 API URL: [https://ecomm-api-5463.onrender.com/api](https://ecomm-api-5463.onrender.com/api)
 
+<br/>
+
 ---
 
 ## 🧪 Resultados de Pruebas del Backend
@@ -112,6 +126,7 @@ Las pruebas del backend se realizaron con **Jest**, abarcando controladores, cas
 - **Snapshots:** 0
 - **Duración total:** ⏱ 27.85 segundos
 
+<br/>
 
 ---
 
@@ -154,6 +169,8 @@ Las pruebas del backend se realizaron con **Jest**, abarcando controladores, cas
 | `infrastructure/wompi-gateway/wompi-gateway.service.ts`                | 100     | 100      | 100     | 100     |                            |
 | `tests/mocks/*.ts`                                                     | 100     | 100      | 100     | 100     |                            |
 
+<br/>
+
 ---
 
 ### 🧩 Casos de Prueba Cubiertos
@@ -167,6 +184,7 @@ Las pruebas del backend se realizaron con **Jest**, abarcando controladores, cas
 
 > 🔍 La aplicación cuenta con **alta cobertura y pruebas robustas**, garantizando calidad y estabilidad en producción.
 
+<br/>
 
 ---
 
@@ -183,6 +201,7 @@ Las pruebas del backend se realizaron con **Jest**, abarcando controladores, cas
 
 ⏳ *Nota:* La API está desplegada en un servidor gratuito. Si no ha recibido solicitudes en los últimos 15 minutos, puede tardar hasta 1 minuto en reiniciarse.
 
+<br/>
 
 ---
 
@@ -198,6 +217,8 @@ Las pruebas fueron realizadas utilizando **Jest** en los componentes clave para 
 - **Snapshots:** 0
 - **Duración total:** ⏱ 17.316 segundos
 
+<br/>
+
 ---
 
 ### 📊 Cobertura de Código
@@ -212,6 +233,8 @@ Las pruebas fueron realizadas utilizando **Jest** en los componentes clave para 
 | `src/hooks/useCheckout.ts`            | 100       | 93.33      | 100       | 100       |
 | `src/utils/currencyFormatter.ts`       | 83.33     | 50         | 100       | 100       |
 
+<br/>
+
 ---
 
 ### 🧩 Componentes Cubiertos
@@ -222,6 +245,8 @@ Las pruebas fueron realizadas utilizando **Jest** en los componentes clave para 
 
 <p>Estos componentes se encargan de gestionar la lógica de captura de información y procesamiento de pago. Se agregarían más tests a otros componentes y funciones según las necesidades del proyecto y el tiempo disponible.
 </p>
+
+<br/>
 
 ---
 
@@ -278,6 +303,8 @@ npm run start:dev
 https://ecomm-api-5463.onrender.com/api
 ```
 
+<br/>
+
 ---
 
 ## 💻 Instalación del Frontend
@@ -302,6 +329,8 @@ npm run dev
 
 La aplicación estará disponible en: [http://localhost:3000](http://localhost:3000)
 
+<br/>
+
 ---
 
 ## ✅ Pruebas
@@ -315,10 +344,14 @@ npm run test
 
 ### Frontend
 
+
+
 ```bash
 cd frontend
 npm run test
 ```
+
+<br/>
 
 ---
 
@@ -329,11 +362,15 @@ npm run test
 - Se actualiza el stock disponible al finalizar la transacción.
 - La persistencia del estado se realiza con Redux Persist y almacenamiento cifrado en localStorage.
 
+<br/>
+
 ---
 
 ## 📄 Licencia
 
 Este proyecto está bajo la licencia MIT.
+
+<br/>
 
 #### 🌟 You’re the superstar of our show! Thanks for lighting up our repository with your presence. We hope you enjoy exploring our code as much as we enjoyed writing it.
 
